@@ -7,7 +7,7 @@ export default async function Home() {
   // const articles = await getAllArticles();
   // console.log(supabase);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, {
     cache: "no-store",
   });
   const articles = await res.json();

@@ -6,7 +6,7 @@ const Article = async ({ params }: { params: Promise<{ id: string }> }) => {
     const id = (await params).id;
     // const detailArticle = await getDetailArticle(id);
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/${(await params).id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${(await params).id}`, {
         next: { revalidate: 10 }, // ISR
     });
     const detailArticle = await res.json();

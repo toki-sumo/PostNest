@@ -10,7 +10,7 @@ const DeleteButton = ({ id }: { id: string }) => {
     const handleDeleteConfirmed = async () => {
         setShowModal(false);
         // await deleteArticle(id);
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${id}`, {
             method: 'DELETE',
         });
 
