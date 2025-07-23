@@ -29,14 +29,14 @@ export async function DELETE(req: Request) {
         return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
-    const { data, error } = await supabase
+    const { error: deletError } = await supabase
         .from("posts")
         .delete()
         .eq("id", id);
 
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    if (deletError) {
+        return NextResponse.json({ deletError }, { status: 500 });
     }
 
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json({ status: 200 });
 }

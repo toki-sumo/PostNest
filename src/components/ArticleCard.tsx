@@ -11,7 +11,14 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
     return (
         <article className='shadow my-4 flex flex-col' key={article.id}>
             <Link href={`articles/${article.id}/`} className='hover:opacity-75'>
-                <Image src="https://images.unsplash.com/photo-1544894079-e81a9eb1da8b" alt="" width={1280} height={300} className='h-[300px] object-cover' />
+                <Image
+                    src="https://images.unsplash.com/photo-1544894079-e81a9eb1da8b"
+                    alt="Article header image"
+                    width={1280}
+                    height={720} // アスペクト比16:9
+                    className="rounded-lg shadow-md"
+                />
+
             </Link>
             <div className='bg-white flex flex-col justify-start p-6'>
                 <Link href="#" className='text-blue-700 pb-4 font-bold'>
@@ -23,7 +30,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
                 </Link>
                 <p className='text-sm pb-3 text-slate-900 mt-1 ml-3'>
                     Published on {new Date(article.createdAt).toLocaleString('ja-JP', {
-                        weekday: 'short', // ← 火曜など
+                        weekday: 'short',
                         year: 'numeric',
                         month: '2-digit',
                         day: '2-digit',

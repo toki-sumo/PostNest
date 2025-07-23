@@ -1,11 +1,6 @@
-// "use client";
 import ArticleList from "@/components/ArticleList";
-// import { getAllArticles } from "./blogAPI";
-// import { supabase } from "@/utils/supabaseClient";
 
 export default async function Home() {
-  // const articles = await getAllArticles();
-  // console.log(supabase);
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, {
     cache: "no-store",

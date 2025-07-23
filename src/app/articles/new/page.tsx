@@ -1,5 +1,5 @@
 "use client";
-import { createArticle } from '@/app/blogAPI';
+// import { createArticle } from '@/app/blogAPI';
 import { useRouter } from 'next/navigation';
 import React from 'react'
 
@@ -13,7 +13,6 @@ const CreateBlogPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
-        // await createArticle(id, title, content);
 
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, {
             method: 'POST',

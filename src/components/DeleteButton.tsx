@@ -1,5 +1,5 @@
 "use client";
-import { deleteArticle } from "@/app/blogAPI";
+// import { deleteArticle } from "@/app/blogAPI";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -27,24 +27,26 @@ const DeleteButton = ({ id }: { id: string }) => {
             >
                 削除
             </button>
+            {/* <button
+                className */}
 
             {/* モーダル */}
             {showModal && (
                 <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-                    <div className="bg-white p-6 rounded shadow-lg w-80 text-center">
+                    <div className="bg-gray-100 p-6 rounded shadow-lg w-80 text-center">
                         <p className="mb-4 text-gray-800">本当に削除しますか？</p>
                         <div className="flex justify-center gap-4">
                             <button
-                                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded cursor-pointer"
-                                onClick={() => setShowModal(false)}
-                            >
-                                キャンセル
-                            </button>
-                            <button
-                                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                                className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
                                 onClick={handleDeleteConfirmed}
                             >
                                 削除する
+                            </button>
+                            <button
+                                className="bg-gray-600 hover:bg-gray-800 text-gray-100 px-4 py-2 rounded cursor-pointer"
+                                onClick={() => setShowModal(false)}
+                            >
+                                キャンセル
                             </button>
                         </div>
                     </div>
