@@ -1,19 +1,18 @@
 import { Article } from '@/types';
-import React from 'react'
 import ArticleCard from './ArticleCard';
 
-type ArticleListProps = {
-    articles: Article[];
-}
-
-const ArticleList = ({ articles }: ArticleListProps) => {
-    return (
-        <div>
-            {articles.map((article) => (
-                <ArticleCard article={article} key={article.id} />
-            ))}
-        </div>
-    );
+type Props = {
+  articles: Article[];
 };
 
-export default ArticleList
+const ArticleList = ({ articles }: Props) => {
+  return (
+    <div className="flex flex-col space-y-6 w-full">
+      {articles.map((article) => (
+        <ArticleCard key={article.id} article={article} />
+      ))}
+    </div>
+  );
+};
+
+export default ArticleList;
