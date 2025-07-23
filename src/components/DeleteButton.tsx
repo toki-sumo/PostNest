@@ -1,5 +1,5 @@
+// src/components/DeleteButton.tsx
 "use client";
-// import { deleteArticle } from "@/app/blogAPI";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -19,16 +19,14 @@ const DeleteButton = ({ id }: { id: string }) => {
     };
 
     return (
-        <div>
+        <>
             {/* 削除ボタン */}
             <button
                 onClick={() => setShowModal(true)}
-                className="bg-red-100 hover:bg-red-200 text-red-700 font-medium py-2 px-4 rounded-md cursor-pointer transition duration-200"
+                className="bg-gray-100 hover:bg-gray-500 hover:text-gray-100 text-gray-600 font-medium py-2 px-4 rounded-md cursor-pointer transition duration-200 shadow-md"
             >
-                削除
+                DELETE
             </button>
-            {/* <button
-                className */}
 
             {/* モーダル */}
             {showModal && (
@@ -52,7 +50,7 @@ const DeleteButton = ({ id }: { id: string }) => {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 };
 

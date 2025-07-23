@@ -9,7 +9,6 @@ type ArticleCardProps = {
 const ArticleCard = ({ article }: ArticleCardProps) => {
   return (
     <article className="flex flex-col md:flex-row bg-white shadow-md rounded overflow-hidden mb-6">
-      {/* 画像：固定幅 */}
       <Link href={`articles/${article.id}`} className="md:w-1/3 w-full">
         <Image
           src="https://images.unsplash.com/photo-1544894079-e81a9eb1da8b"
@@ -20,7 +19,6 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
         />
       </Link>
 
-      {/* テキスト部分：残りのスペースを使う */}
       <div className="flex flex-col justify-between p-4 md:w-2/3 w-full">
         <div>
           <Link href="#" className="text-blue-700 font-semibold text-sm">

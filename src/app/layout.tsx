@@ -1,3 +1,4 @@
+// /src/app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -28,12 +29,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className='container mx-auto bg-slate-700
-       text-slate-50'>
+      <body
+        className={`min-h-screen flex flex-col bg-slate-400 text-slate-50 pt-24 ${geistSans.variable} ${geistMono.variable}`}
+      >
         <Header />
-        <Suspense fallback={<Loading />}>
-        {children}
-        </Suspense>
+
+        <main className="flex-grow container mx-auto px-4">
+          <Suspense fallback={<Loading />}>
+            {children}
+          </Suspense>
+        </main>
+
         <Footer />
       </body>
     </html>

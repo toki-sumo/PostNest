@@ -16,14 +16,14 @@ export default async function Home() {
       {/* サイドバー（右側） */}
       <aside className="w-full md:w-1/4 p-4">
         <div className="bg-white shadow-md rounded p-4 mb-6">
-          <h3 className="font-bold text-gray-900 mb-2">About Me</h3>
+          <h3 className="font-bold text-gray-700 mb-2">About Me</h3>
           <p className="text-gray-600">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
             varius enim in eros elementum tristique.
           </p>
         </div>
         <div className="bg-white shadow-md rounded p-4 mb-6">
-          <h3 className="font-bold text-gray-900 mb-2">Category</h3>
+          <h3 className="font-bold text-gray-700 mb-2">Category</h3>
           <ul className="text-gray-600 mt-2 space-y-1">
             <li><a href="#">Technology</a></li>
             <li><a href="#">Automotive</a></li>
