@@ -1,6 +1,9 @@
+// src/app/page.tsx
 import ArticleList from "@/components/ArticleList";
+import {auth} from "../auth"
 
 export default async function Home() {
+  const session = await auth();
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, {
     cache: "no-store",
   });

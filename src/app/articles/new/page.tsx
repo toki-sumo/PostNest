@@ -1,5 +1,4 @@
 "use client";
-// import { createArticle } from '@/app/blogAPI';
 import { useRouter } from 'next/navigation';
 import React from 'react'
 
@@ -10,7 +9,19 @@ const CreateBlogPage = () => {
     const [content, setContent] = React.useState('');
     const [loading, setLoading] = React.useState(false);
 
+    // タグ生成APIを呼び出す関数
+    // const generateTags = async (content: string): Promise<string[]> => {
+    //     const res = await fetch("/api/generate-tags", {
+    //         method: "POST",
+    //         headers: { "Content-Type": "application/json" },
+    //         body: JSON.stringify({ content }),
+    //     });
+    //     const data = await res.json();
+    //     return data.tags;
+    // };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
         e.preventDefault();
         setLoading(true);
 
@@ -21,6 +32,15 @@ const CreateBlogPage = () => {
             },
             body: JSON.stringify({ id, title, content }),
         });
+
+        // // タグ生成APIを呼び出してタグを取得
+        // const tags = await generateTags(content);
+        // console.log("Generated Tags:");
+        // await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/generate-tags`, {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify({ title, content, tags }),
+        // });
 
         setLoading(false);
         router.push("/"); // Redirect to the home page after submission

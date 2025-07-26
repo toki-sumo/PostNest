@@ -7,6 +7,6 @@ module.exports = {
     extend: {},
   },
   plugins: [
-    require('@tailwindcss/line-clamp'), // ← これを追加
+    require('@tailwindcss/line-clamp', 'tailwindcss-textshadow'), // ← これを追加
   ],
 }
