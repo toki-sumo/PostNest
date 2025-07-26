@@ -33,7 +33,6 @@ export default function RootLayout({
       <body
         className={`min-h-screen flex flex-col bg-slate-400 text-slate-50 pt-24 ${geistSans.variable} ${geistMono.variable}`}
       >
-        {/* <SessionProvider> */}
         <Header />
         <main className="flex-grow container mx-auto px-4">
           <Suspense fallback={<Loading />}>
@@ -41,7 +40,6 @@ export default function RootLayout({
           </Suspense>
         </main>
         <Footer />
-        {/* </SessionProvider> */}
       </body>
     </html>
   );
