@@ -1,4 +1,4 @@
-import { Article } from "@/types";
+import { Article } from "../../types/article_type";
 import { notFound } from "next/navigation";
 
 export const getAllArticles = async (): Promise<Article[]> => {

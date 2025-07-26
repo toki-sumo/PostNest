@@ -8,7 +8,7 @@ export default async function Home() {
     cache: "no-store",
   });
   const articles = await res.json();
-
+  console.log("role : ", session?.user.role);
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen">
       {/* 記事一覧（左側） */}
