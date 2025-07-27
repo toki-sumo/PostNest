@@ -1,3 +1,5 @@
+// 使用していません
+
 "use client";
 
 import { useState } from "react";
@@ -19,10 +21,11 @@ export default function SignInPage() {
       password,
     });
 
-    if (res?.error) {
+    if (res && res?.error) {
       setError("メールアドレスかパスワードが違います");
     } else {
-      router.push("/dashboard");
+      // router.push("/dashboard");
+      router.push("/");
     }
   };
 
@@ -43,6 +46,7 @@ export default function SignInPage() {
         <button
           onClick={() =>
             signIn("github", { callbackUrl: "/dashboard" })
+            // signIn("github", { callbackUrl: "/" })
           }
           className="w-full bg-gray-800 text-white py-2 rounded"
         >

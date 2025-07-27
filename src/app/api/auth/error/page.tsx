@@ -1,3 +1,4 @@
+// 使用していない
 // src/app/auth/error/page.tsx (Next.js App Routerの場合)
 
 "use client";

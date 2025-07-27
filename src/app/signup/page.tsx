@@ -17,11 +17,13 @@ const SignupPage = () => {
         const hasLower = /[a-z]/.test(password)
         const hasNumber = /[0-9]/.test(password)
 
-        if (password.length < minLength) return "Password must be at least 8 characters"
-        if (!hasUpper) return "Password must include at least one uppercase letter"
-        if (!hasLower) return "Password must include at least one lowercase letter"
-        if (!hasNumber) return "Password must include at least one number"
-
+        // if (password.length < minLength) return "Password must be at least 8 characters"
+        // if (!hasUpper) return "Password must include at least one uppercase letter"
+        // if (!hasLower) return "Password must include at least one lowercase letter"
+        // if (!hasNumber) return "Password must include at least one number"
+        // if (password !== confirmPassword) {
+        //     return ("パスワードが一致しません")
+        // }
         return null // OK
     }
 
@@ -30,10 +32,6 @@ const SignupPage = () => {
         const error = validatePassword(password)
         if (error) {
             setError(error)
-            return
-        }
-        if (password !== confirmPassword) {
-            setError("パスワードが一致しません")
             return
         }
         const res = await fetch("/api/auth/signup", {

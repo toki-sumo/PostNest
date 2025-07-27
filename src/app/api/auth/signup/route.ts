@@ -1,9 +1,10 @@
 // src/app/api/auth/signup/route.ts
 import { NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 import { hash } from "bcryptjs"
 import { prisma } from "@/lib/prisma" // あなたのPrismaクライアントの場所に応じて修正
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
     const { email, password } = await req.json()
 
     if (!email || !password) {
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
 
     const existingUser = await prisma.user.findUnique({ where: { email } })
     if (existingUser) {
-        return NextResponse.json({ message: "User already exists" }, { status: 400 })
+        return NextResponse.json({ message: "Email is already used" }, { status: 400 })
     }
 
     const hashedPassword = await hash(password, 10)

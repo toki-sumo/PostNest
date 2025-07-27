@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import React from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const isLoading = status === 'loading';
   const user = session?.user;
 
@@ -25,9 +27,17 @@ const Header = () => {
             記事を書く
           </Link>
         )}
-
+        {/* ダッシュボードリンク（ログイン時のみ表示） */}
+        {user && (
+          <Link
+            href="/dashboard"
+            className="text-xl underline text-gray-300 hover:text-white"
+          >
+            Dashboard
+          </Link>
+        )}
         {/* 管理者用リンク */}
-        {user?.role === 'admin' && (
+        {user?.role === 'Admin' && (
           <Link
             href="/admin"
             className="text-xs underline text-gray-300 hover:text-white"
@@ -54,23 +64,24 @@ const Header = () => {
         ) : (
           <div className="flex items-center space-x-2">
             <button
-              onClick={() => signIn()}
+              // onClick={() => signIn()}
+              onClick={() => router.push("/signin")}
               className="text-s bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded"
             >
               ログイン
             </button>
-            {/* <button
-              onClick={() => signUp()}
-              className="text-s bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded"
-            >
-              新規登録
-            </button> */}
             {/* <Link
+              href="/signin"
+              className="text-s bg-green-600 hover:bg-green-800 text-white px-3 py-1 rounded"
+            >
+              サインイン
+            </Link> */}
+            <Link
               href="/signup"
               className="text-s bg-green-600 hover:bg-green-800 text-white px-3 py-1 rounded"
             >
               新規登録
-            </Link> */}
+            </Link>
           </div>
         )}
       </nav>
