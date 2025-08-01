@@ -1,5 +1,4 @@
 // auth.config.ts
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 import GitHub from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
@@ -8,7 +7,7 @@ import type { NextAuthConfig } from "next-auth";
 import bcrypt from "bcryptjs";
 
 export const authConfig = {
-  // providers: [GitHub, GoogleProvider, CredentialsProvider],
+
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID!,
@@ -49,21 +48,10 @@ export const authConfig = {
   ],
 
   secret: process.env.NEXTAUTH_SECRET,
-  // adapter: PrismaAdapter(db),
-  // session: {
-  //   strategy: 'jwt',
-  // },
+
   pages: {
     signIn: "/signin", // ログインページのルーティング
     error: "/auth/error",
   },
-  // callbacks: {
-  //   async session({ session, user }) {
-  //     if (session.user) {
-  //       session.user.id = user.id;
-  //       session.user.role = user.role;
-  //     }
-  //     return session;
-  //   },
-  // },
+
 } satisfies NextAuthConfig;

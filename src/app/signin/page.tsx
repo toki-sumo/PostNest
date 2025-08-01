@@ -1,5 +1,4 @@
-// 使用していません
-
+// src/app/signin/pagetsx
 "use client";
 
 import { useState } from "react";
@@ -24,8 +23,8 @@ export default function SignInPage() {
     if (res && res?.error) {
       setError("メールアドレスかパスワードが違います");
     } else {
-      // router.push("/dashboard");
-      router.push("/");
+      router.push("/dashboard");
+      // router.push("/");
     }
   };
 
@@ -46,7 +45,7 @@ export default function SignInPage() {
         <button
           onClick={() =>
             // signIn("github", { callbackUrl: "/dashboard" })
-            signIn("github", { callbackUrl: "/" })
+            signIn("github", { callbackUrl: "/dashboard" })
           }
           className="w-full bg-gray-800 text-white py-2 rounded"
         >
