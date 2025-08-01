@@ -12,6 +12,8 @@ import bcrypt from "bcryptjs";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   debug: !!process.env.AUTH_DEBUG,
   adapter: PrismaAdapter(db),
+  // session: { strategy: "database" },
+  session: { strategy: 'jwt' },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID!,
@@ -50,19 +52,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  pages: {
-    signIn: "/signin",
-    error: "/auth/error",
-  },
+
   secret: process.env.NEXTAUTH_SECRET,
-  session: { strategy: "database" },
-  callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        session.user.role = user.role;
-      }
-      return session;
-    },
-  },
+  // callbacks: {
+  //   async session({ session, user }) {
+  //     if (session.user) {
+  //       session.user.id = user.id;
+  //       session.user.role = user.role;
+  //     }
+  //     return session;
+  //   },
+  // },
 });

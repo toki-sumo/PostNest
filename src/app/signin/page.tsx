@@ -45,8 +45,8 @@ export default function SignInPage() {
         </button>
         <button
           onClick={() =>
-            signIn("github", { callbackUrl: "/dashboard" })
-            // signIn("github", { callbackUrl: "/" })
+            // signIn("github", { callbackUrl: "/dashboard" })
+            signIn("github", { callbackUrl: "/" })
           }
           className="w-full bg-gray-800 text-white py-2 rounded"
         >

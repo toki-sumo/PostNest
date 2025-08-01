@@ -10,9 +10,20 @@ export const authConfig = {
   providers: [GitHub, GoogleProvider, CredentialsProvider],
   adapter: PrismaAdapter(db),
   session: {
-    strategy: "database",
+    // strategy: "database",
+    strategy: 'jwt',
   },
-  pages: {
-    signIn: "/signin", // ログインページのルーティング
+  // pages: {
+  //   signIn: "/signin", // ログインページのルーティング
+  //     error: "/auth/error",
+  // },
+  callbacks: {
+    async session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
+        session.user.role = user.role;
+      }
+      return session;
+    },
   },
 } satisfies NextAuthConfig;

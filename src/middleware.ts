@@ -22,9 +22,11 @@ export async function middleware(req: NextRequest) {
 }
 
 // middleware を有効にするパスを定義
-export const config = {
-  matcher: ["/dashboard/:path*"],
-};
+// export const config = {
+//   matcher: ["/dashboard/:path*"],
+// };
+
+
 
 
 // // src/middleware.ts
