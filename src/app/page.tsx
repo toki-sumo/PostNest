@@ -1,6 +1,6 @@
 // src/app/page.tsx
-import ArticleList from "@/components/ArticleList";
-import {auth} from "../auth"
+import ArticleList from "@/components/article/ArticleList";
+import { auth } from "../auth"
 
 export default async function Home() {
   const session = await auth();

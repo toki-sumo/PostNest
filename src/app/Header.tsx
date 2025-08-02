@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 w-full bg-slate-800 text-white z-50 shadow py-5 px-10 flex border-b justify-between items-center">
       <h1 className="text-3xl font-extrabold text-gray-100 text-shadow-lg">
-        <Link href="/">Mosu Blog</Link>
+        <Link href="/">Article app</Link>
       </h1>
 
       <nav className="text-sm font-medium flex items-center space-x-4">

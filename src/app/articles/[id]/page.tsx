@@ -1,6 +1,6 @@
 // src/app/articles/[id]/page.tsx
-import DeleteButton from "@/components/DeleteButton";
-import EditButton from "@/components/EditButton";
+import DeleteButton from "@/components/ui/DeleteButton";
+import EditButton from "@/components/ui/EditButton";
 import Image from "next/image";
 
 const formatDate = (dateString: string): string => {

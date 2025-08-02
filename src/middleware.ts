@@ -1,27 +1,32 @@
-// src/middleware.ts
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const session = await auth();
-
   const { pathname } = req.nextUrl;
-  const protectedPaths = ["/dashboard"]; // 認証が必要なパスを追加していく
 
-  const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
+  // 公開パスの定義
+  const publicPaths = ["/", "/signin", "/signup", "/favicon.ico"];
 
-  if (isProtected && !session) {
+  const isPublicPath =
+    publicPaths.includes(pathname) ||
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.endsWith(".svg");
+
+  if (!isPublicPath && !session) {
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = "/signin";
-    loginUrl.searchParams.set("callbackUrl", pathname); // ログイン後戻すため
+    loginUrl.searchParams.set("callbackUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
 }
 
-// middleware を有効にするパスを定義
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: [
+    '/((?!api|_next|favicon.ico|.*\\.svg$).*)',
+  ],
 };
