@@ -1,15 +1,39 @@
 // src/app/signin/pagetsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button"; // 作成したButtonコンポーネントをimport
+import { Input } from "@/components/ui/input"; // 作成したInputコンポーネントをimport
+import { useSearchParams } from 'next/navigation';
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const oauthError = searchParams.get('error');
+
+  useEffect(() => {
+    if (oauthError) {
+      switch (oauthError) {
+        case 'OAuthAccountNotLinked':
+          setError('そのメールアドレスは別のログイン方法で既に使われています。');
+          break;
+        case 'AccessDenied':
+          setError('OAuthプロバイダーでのアクセスが拒否されました。');
+          break;
+        case 'Configuration':
+          setError('OAuth設定エラーが発生しました。管理者に連絡してください。');
+          break;
+        default:
+          setError('ログイン中にエラーが発生しました。もう一度お試しください。');
+          break;
+      }
+    }
+  }, [oauthError]);
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +48,6 @@ export default function SignInPage() {
       setError("メールアドレスかパスワードが違います");
     } else {
       router.push("/dashboard");
-      // router.push("/");
     }
   };
 
@@ -32,25 +55,13 @@ export default function SignInPage() {
     <div className="max-w-md mx-auto mt-10 p-6 border rounded">
       <h1 className="text-xl font-bold mb-4">ログイン</h1>
 
-      {/* OAuthログインボタン群 */}
       <div className="flex flex-col space-y-3 mb-6">
-        <button
-          onClick={() =>
-            signIn("google", { callbackUrl: "/dashboard" })
-          }
-          className="w-full bg-red-600 text-white py-2 rounded"
-        >
+        <Button variant="danger" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
           Googleでログイン
-        </button>
-        <button
-          onClick={() =>
-            // signIn("github", { callbackUrl: "/dashboard" })
-            signIn("github", { callbackUrl: "/dashboard" })
-          }
-          className="w-full bg-gray-800 text-white py-2 rounded"
-        >
+        </Button>
+        <Button variant="secondary" onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
           GitHubでログイン
-        </button>
+        </Button>
       </div>
 
       {/* 仕切り線 */}
@@ -62,29 +73,25 @@ export default function SignInPage() {
 
       {/* メールアドレスログインフォーム */}
       <form onSubmit={handleSignin} className="space-y-4">
-        <input
+        {/* Inputコンポーネントを使用 */}
+        <Input
           type="email"
           placeholder="メールアドレス"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full p-2 border rounded"
         />
-        <input
+        <Input
           type="password"
           placeholder="パスワード"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full p-2 border rounded"
         />
         {error && <p className="text-red-500">{error}</p>}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded"
-        >
+        <Button type="submit">
           ログイン
-        </button>
+        </Button>
       </form>
     </div>
   );

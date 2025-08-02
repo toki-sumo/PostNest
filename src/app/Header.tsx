@@ -64,18 +64,11 @@ const Header = () => {
         ) : (
           <div className="flex items-center space-x-2">
             <button
-              // onClick={() => signIn()}
               onClick={() => router.push("/signin")}
               className="text-s bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded"
             >
               ログイン
             </button>
-            {/* <Link
-              href="/signin"
-              className="text-s bg-green-600 hover:bg-green-800 text-white px-3 py-1 rounded"
-            >
-              サインイン
-            </Link> */}
             <Link
               href="/signup"
               className="text-s bg-green-600 hover:bg-green-800 text-white px-3 py-1 rounded"
