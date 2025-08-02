@@ -32,8 +32,9 @@ const DashboardPage = () => {
                 {/* ユーザー情報 */}
                 <div>
                     <p className="text-gray-600">Welcome,</p>
-                    <p className="text-xl font-semibold">{session?.user?.name || 'User'}</p>
-                    <p className="text-sm text-gray-500">{session?.user?.email}</p>
+                    <p className="text-xl font-semibold">{session?.user?.name || 'User'}</p><br />
+                    <p className="text-sm text-gray-500">email: {session?.user?.email}</p>
+                    <p className="text-sm text-gray-500">role: {session?.user?.role}</p>
                 </div>
 
                 {/* 投稿記事セクション */}

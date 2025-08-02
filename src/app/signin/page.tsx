@@ -57,14 +57,8 @@ export default function SignInPage() {
       <h1 className="text-xl font-bold mb-4">ログイン</h1>
 
       <div className="flex flex-col space-y-3 mb-6">
-        {/* Button variant="danger" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
-          Googleでログイン
-        </Button> */}
         <OAuthButton provider="google" />
         <OAuthButton provider="github" />
-        {/* <Button variant="secondary" onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
-          GitHubでログイン
-        </Button> */}
       </div>
 
       {/* 仕切り線 */}

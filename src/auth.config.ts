@@ -28,7 +28,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 // }
 
 export const authConfig = {
-  
+
   adapter: PrismaAdapter(db),
 
   providers: [
@@ -72,34 +72,24 @@ export const authConfig = {
   session: { strategy: 'jwt' },
 
   secret: process.env.NEXTAUTH_SECRET,
-  
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.role = user?.role;
       }
-      console.log("jwt user : ", user)
+      // console.log("jwt user : ", token)
       console.log("user id : ", token.id)
+      console.log("role : ", token.role)
       return token;
     },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
-        // session.user.role = 'guest';
       }
       return session;
     },
-    // async session({ session, user }) {
-    //   // if (session.user) {
-    //   //   session.user.id = user?.id;       // IDを追加（必要であれば）
-    //   //   session.user.role = user?.role;   // PrismaのUser.roleを追加
-    //   // }
-    //   console.log("user : ", user)
-    //   // console.log("session : ", session.user)
-    //   // console.log("session role : ", session.user.role)
-    //   return session;
-    // },
-
   },
 
   pages: {
