@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"; // 作成したButtonコンポーネントをimport
 import { Input } from "@/components/ui/input"; // 作成したInputコンポーネントをimport
 import { useSearchParams } from 'next/navigation';
+import OAuthButton from "@/components/ui/OAuthButton";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -56,12 +57,14 @@ export default function SignInPage() {
       <h1 className="text-xl font-bold mb-4">ログイン</h1>
 
       <div className="flex flex-col space-y-3 mb-6">
-        <Button variant="danger" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+        {/* Button variant="danger" onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
           Googleでログイン
-        </Button>
-        <Button variant="secondary" onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
+        </Button> */}
+        <OAuthButton provider="google" />
+        <OAuthButton provider="github" />
+        {/* <Button variant="secondary" onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
           GitHubでログイン
-        </Button>
+        </Button> */}
       </div>
 
       {/* 仕切り線 */}
