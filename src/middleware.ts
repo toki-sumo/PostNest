@@ -6,7 +6,6 @@ export async function middleware(req: NextRequest) {
   const session = await auth();
   const { pathname } = req.nextUrl;
 
-  // 公開パスの定義
   const publicPaths = ["/", "/signin", "/signup", "/favicon.ico"];
 
   const isPublicPath =

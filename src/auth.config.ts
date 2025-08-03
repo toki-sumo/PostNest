@@ -6,30 +6,15 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 import bcrypt from "bcryptjs";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-// import {  DefaultSession,  NextAuthOptions,  getServerSession,} from "next-auth";
-
-// declare module "next-auth" {
-//   interface User {
-//     role: string;
-//   }
-//   interface Session extends DefaultSession {
-//     user: {
-//       id: string;
-//       role: string;
-//     } & DefaultSession["user"];
-//   }
-// }
-
-// declare module "next-auth" {
-//   interface JWT {
-//     id: string;
-//     role: string;
-//   }
-// }
 
 export const authConfig = {
-
+  
   adapter: PrismaAdapter(db),
+  session: { strategy: 'jwt' },
+
+  jwt: {
+    maxAge: 3 * 24 * 60 * 60, // 3日
+  },
 
   providers: [
     GoogleProvider({
@@ -69,7 +54,6 @@ export const authConfig = {
       },
     }),
   ],
-  session: { strategy: 'jwt' },
 
   secret: process.env.NEXTAUTH_SECRET,
 
@@ -79,7 +63,6 @@ export const authConfig = {
         token.id = user.id;
         token.role = user?.role;
       }
-      // console.log("jwt user : ", token)
       console.log("user id : ", token.id)
       console.log("role : ", token.role)
       return token;
@@ -87,9 +70,10 @@ export const authConfig = {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
+        session.user.role = token.role as string;
       }
       return session;
-    },
+    }
   },
 
   pages: {
