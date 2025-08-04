@@ -1,4 +1,4 @@
-// arc/app/dashboard/profile/page.tsx
+// src/app/dashboard/profile/page.tsx
 'use client'
 
 import { useSession } from 'next-auth/react'
@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react'
 const ProfilePage = () => {
   const { data: session, status, update } = useSession()
   const router = useRouter()
-
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
   const [loading, setLoading] = useState(false)
@@ -29,7 +28,7 @@ const ProfilePage = () => {
     setLoading(true)
     setMessage('')
     try {
-      const res = await fetch('/api/user', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, bio }),

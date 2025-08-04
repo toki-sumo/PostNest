@@ -18,7 +18,7 @@ export async function GET() {
         },
       },
     });
-
+    
     return NextResponse.json(articles);
   } catch (error) {
     console.error("Failed to fetch articles:", error);
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     if (!title || !content || !authorId) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
-
+    
     const article = await db.article.create({
       data: {
         title,
