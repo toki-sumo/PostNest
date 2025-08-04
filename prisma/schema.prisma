@@ -8,13 +8,13 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String?  @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  role          String   @default("user")
+  role          String    @default("user")
   bio           String?   @default("")
   accounts      Account[]
   sessions      Session[]
@@ -63,6 +63,7 @@ model Article {
   content   String
   createdAt DateTime @default(now())
   published Boolean  @default(true)
+  updatedAt DateTime @updatedAt
   imageUrl  String?
   summary   String?
   tags      String[]
