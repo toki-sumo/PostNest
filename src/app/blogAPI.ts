@@ -25,7 +25,7 @@ export const getDetailArticle = async (id: string): Promise<Article> => {
         throw new Error("エラーが発生しました。");
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network delay
 
     const article: Article = await res.json();
     return article;
@@ -49,7 +49,7 @@ export const createArticle = async (id: string, title: string, content: string):
         throw new Error("エラーが発生しました。");
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network delay
 
     const newArticle: Article = await res.json();
     return newArticle;
@@ -66,7 +66,7 @@ export const deleteArticle = async (id: string,): Promise<Article> => {
         throw new Error("エラーが発生しました。");
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network delay
 
     const deleteArticle: Article = await res.json();
     return deleteArticle;

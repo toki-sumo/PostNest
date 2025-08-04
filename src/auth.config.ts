@@ -50,7 +50,17 @@ export const authConfig = {
         const isValid = await bcrypt.compare(credentials.password, user.password);
         if (!isValid) return null;
 
-        return user;
+        // Map nulls to undefined for NextAuth compatibility
+        return {
+          ...user,
+          name: user.name ?? undefined,
+          email: user.email ?? undefined,
+          emailVerified: user.emailVerified ?? undefined,
+          image: user.image ?? undefined,
+          password: user.password ?? undefined,
+          role: user.role ?? undefined,
+          bio: user.bio ?? undefined,
+        };
       },
     }),
   ],
@@ -61,19 +71,21 @@ export const authConfig = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.role = user?.role;
+        token.role = user.role;
+        token.name = user.name;
+        token.bio = user.bio;
       }
-      console.log("user id : ", token.id)
-      console.log("role : ", token.role)
       return token;
     },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;
         session.user.role = token.role as string;
+        session.user.name = token.name as string;
+        session.user.bio = token.bio as string;
       }
       return session;
-    }
+    },
   },
 
   pages: {
