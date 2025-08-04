@@ -1,14 +1,14 @@
 // src/app/page.tsx
 import ArticleList from "@/components/article/ArticleList";
-import { auth } from "../auth"
+// import { auth } from "@/auth"
 
 export default async function Home() {
-  const session = await auth();
+  // const session = await auth();
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, {
     cache: "no-store",
-  });
+  }); 
   const articles = await res.json();
-  console.log("role : ", session?.user.role);
+  // console.log("role : ", session?.user.role);
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen">
       {/* 記事一覧（左側） */}

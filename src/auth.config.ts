@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 export const authConfig = {
-  
+
   adapter: PrismaAdapter(db),
   session: { strategy: 'jwt' },
 
@@ -68,15 +68,36 @@ export const authConfig = {
   secret: process.env.NEXTAUTH_SECRET,
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.name = user.name;
         token.bio = user.bio;
       }
+      if (trigger === "update") {
+        console.log("trigger is update");
+        token.name = session.name;
+        token.bio = session.bio;
+      }
       return token;
     },
+    // async jwt({ token, user }) {
+    //   if (user) {
+    //     token.id = user.id;
+    //     token.role = user.role;
+    //     token.name = user.name;
+    //     token.bio = user.bio;
+    //   }
+    //   return token;
+    // },
+    // async jwt({ token, user, trigger, session }) {
+    //   if (trigger === "update" && session) {
+    //     token.name = session.name;
+    //     token.bio = session.bio;
+    //   }
+    //   return token;
+    // },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id as string;

@@ -1,3 +1,4 @@
+// src/api/blog/route.ts
 import { supabase } from "@/utils/supabaseClient";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";

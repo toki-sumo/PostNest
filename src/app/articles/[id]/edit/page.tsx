@@ -1,4 +1,4 @@
-// app/articles/[id]/edit/page.tsx
+// src/app/articles/[id]/edit/page.tsx
 import EditForm from "@/components/ui/EditForm";
 
 const EditPage = async ({ params }: { params: Promise<{ id: string }> }) => {
