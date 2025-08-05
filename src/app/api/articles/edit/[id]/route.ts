@@ -14,7 +14,7 @@ export async function PUT(
     return new NextResponse("Unauthorized", { status: 401 })
   }
 
-  const { title, content } = await req.json()
+  const { title, content, tags } = await req.json()
 
   if (!title || !content) {
     return new NextResponse("Title and content are required", { status: 400 })
@@ -33,6 +33,7 @@ export async function PUT(
     data: {
       title,
       content,
+      tags,
     },
   })
 

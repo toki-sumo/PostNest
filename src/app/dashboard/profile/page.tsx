@@ -66,7 +66,7 @@ const ProfilePage = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700">ユーザー名</label>
           <input
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-100"
+            className="p-2 mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-100"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -75,7 +75,7 @@ const ProfilePage = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700">プロフィール</label>
           <textarea
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-100"
+            className="p-2 mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-100 h-40"
             rows={3}
             value={bio}
             onChange={(e) => setBio(e.target.value)}

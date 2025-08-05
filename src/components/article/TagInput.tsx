@@ -6,10 +6,12 @@ import { useState, useEffect } from "react";
 // 親コンポーネントにタグのリストを渡すためのonTagsChangeプロパティを追加
 type TagInputProps = {
   onTagsChange: (tags: string[]) => void;
+  initialTags: string[];
 };
 
-export default function TagInput({ onTagsChange }: TagInputProps) {
-  const [tags, setTags] = useState<string[]>([]);
+export default function TagInput({ onTagsChange, initialTags }: TagInputProps) {
+  const [tags, setTags] = useState(initialTags);
+  // const [tags, setTags] = useState<string[]>([]);
   const [input, setInput] = useState<string>("");
 
   // tagsの状態が変更されたときに、親コンポーネントに通知する

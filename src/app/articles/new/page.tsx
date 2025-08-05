@@ -60,8 +60,7 @@ const CreateBlogPage = () => {
                 <div className="mb-4">
                     <label className="text-gray-700 text-sm font-bold mb-2">
                         タグ
-                        {/* 新しいTagInputコンポーネントを配置し、タグの変更をハンドルする関数を渡す */}
-                        <TagInput onTagsChange={handleTagsChange} />
+                        <TagInput initialTags={[]} onTagsChange={handleTagsChange} />
                     </label>
                 </div>
 

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Article } from '@/types/article_type';
+import TagInput from '@/components/article/TagInput';
 
 export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
@@ -14,7 +15,10 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-
+  const [tags, setTags] = useState<string[]>([]);
+  const handleTagsChange = (newTags: string[]) => {
+    setTags(newTags);
+  };
   useEffect(() => {
     if (status === 'loading') return;
 
@@ -29,6 +33,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
       setArticle(data);
       setTitle(data.title);
       setContent(data.content);
+      setTags(data.tags);
       setLoading(false);
     };
 
@@ -41,7 +46,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ title, content }),
+      body: JSON.stringify({ title, content, tags }),
     });
 
     if (res.ok) {
@@ -57,16 +62,22 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit Article</h1>
+      タイトル
       <input
-        className="w-full p-2 border mb-2"
+        className="p-2 mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-100"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+      コンテンツ
       <textarea
-        className="w-full p-2 border h-40 mb-2"
+        className="p-2 mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-slate-100 h-40 mb-2"
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
+      タグ
+      {/* <TagInput tags={tags} setTags={setTags} /> */}
+      <TagInput initialTags={tags} onTagsChange={handleTagsChange} />
+
       <button
         onClick={handleUpdate}
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -76,17 +87,3 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
     </div>
   );
 }
-
-
-// import EditForm from "@/components/ui/EditForm";
-
-// const EditPage = async ({ params }: { params: Promise<{ id: string }> }) => {
-//   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${(await params).id}`, {
-//     cache: "no-store",
-//   });
-//   const article = await res.json();
-
-//   return <EditForm id={(await params).id} title={article.title} content={article.content} />;
-// };
-
-// export default EditPage;
