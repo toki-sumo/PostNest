@@ -46,6 +46,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
 
     if (res.ok) {
       router.push(`/articles/${(await params).id}`);
+      router.refresh();
     } else {
       alert('Update failed');
     }
