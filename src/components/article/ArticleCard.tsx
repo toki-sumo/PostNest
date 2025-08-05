@@ -1,4 +1,4 @@
-import { Article } from '../../types/article_type';
+import { Article } from '@/types/article_type';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -21,12 +21,24 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
 
       <div className="flex flex-col justify-between p-4 md:w-2/3 w-full">
         <div>
-          <Link href="#" className="text-blue-700 font-semibold text-sm">
-            Technology
-          </Link>
+          {/* タグ一覧 */}
+          {article.tags && article.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-2">
+              {article.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded-full"
+                >
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          )}
+
           <Link href={`articles/${article.id}`} className="block text-2xl font-bold text-gray-900 hover:text-gray-700 mt-1">
             {article.title}
           </Link>
+
           <p className="text-gray-600 text-sm mt-1">
             {new Date(article.createdAt).toLocaleString('ja-JP', {
               weekday: 'short',
@@ -37,6 +49,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
               minute: '2-digit',
             })}
           </p>
+
           <p className="text-gray-800 mt-2 line-clamp-3">
             {article.content}
           </p>

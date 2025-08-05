@@ -10,7 +10,6 @@ export async function GET(
   try {
     const article = await db.article.findUnique({
       where: { id },
-      // include: { author: true, tags: true },
     });
 
     if (!article) {

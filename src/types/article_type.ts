@@ -4,4 +4,5 @@ export type Article = {
     title: string;
     content: string;
     createdAt: string;
+    tags: string[];
 }

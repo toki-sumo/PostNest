@@ -1,24 +1,37 @@
-// components/article/TagInput.tsx
-import { useState } from 'react';
+"use client";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
-export default function TagInput() {
+// --- TagInput Component ---
+// 親コンポーネントにタグのリストを渡すためのonTagsChangeプロパティを追加
+type TagInputProps = {
+  onTagsChange: (tags: string[]) => void;
+};
+
+export default function TagInput({ onTagsChange }: TagInputProps) {
   const [tags, setTags] = useState<string[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState<string>("");
+
+  // tagsの状態が変更されたときに、親コンポーネントに通知する
+  useEffect(() => {
+    onTagsChange(tags);
+  }, [tags, onTagsChange]);
 
   const addTag = () => {
     const newTag = input.trim();
     if (newTag && !tags.includes(newTag)) {
       setTags([...tags, newTag]);
     }
-    setInput('');
+    setInput("");
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
+    setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' || e.key === 'Tab') {
+  const handleKeyDown = (e: { key: string; preventDefault: () => void; }) => {
+    // TabキーとEnterキーでタグを追加
+    if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
       addTag();
     }
@@ -27,7 +40,7 @@ export default function TagInput() {
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-2">
-        {tags.map(tag => (
+        {tags.map((tag) => (
           <span
             key={tag}
             className="flex items-center bg-gray-200 text-sm px-2 py-1 rounded-full"
@@ -46,9 +59,9 @@ export default function TagInput() {
         type="text"
         className="bg-white border border-gray-300 rounded px-2 py-1 w-full"
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Enter tag and press Tab or Enter"
+        placeholder="タグを入力してEnterを押してください"
       />
     </div>
   );
