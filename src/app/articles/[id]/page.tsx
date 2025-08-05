@@ -14,9 +14,9 @@ const formatDate = (dateString: string): string => {
     });
 };
 
-const Article = async ({ params }: { params: Promise<{ id: string }> }) => {
+export default async function ArticleDetailPage ({ params }: { params: Promise<{ id: string }> }){
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/blog/${(await params).id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/articles/${(await params).id}`,
         {
             next: { revalidate: 10 }, // ISR
         }
@@ -67,5 +67,3 @@ const Article = async ({ params }: { params: Promise<{ id: string }> }) => {
         </main>
     );
 };
-
-export default Article;

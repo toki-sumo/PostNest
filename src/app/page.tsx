@@ -4,11 +4,10 @@ import ArticleList from "@/components/article/ArticleList";
 
 export default async function Home() {
   // const session = await auth();
-  // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog`, {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles`, {
     cache: "no-store",
   });
-  console.log(res);
+  // console.log(res);
   const articles = await res.json();
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen">
