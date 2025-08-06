@@ -1,4 +1,4 @@
-import { Article } from "../types/article_type";
+import { Article } from "../types/model_type";
 import { notFound } from "next/navigation";
 
 export const getAllArticles = async (): Promise<Article[]> => {

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { title, content, tags } = body;
+    const { title, content, tags, imageUrl } = body;
     const authorId = session.user.id;
     console.log("tag : ", tags[0]);
 
@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
         content,
         authorId,
         tags: tags || [],
+        imageUrl,
       },
     });
 

@@ -1,32 +1,36 @@
-import { Article } from '@/types/article_type';
+import { Article } from '@/types/model_type';
 import Image from 'next/image';
 import Link from 'next/link';
+import { formatDate } from '@/lib/utils/formatDate';
 
 type ArticleCardProps = {
   article: Article;
 };
 
 const ArticleCard = ({ article }: ArticleCardProps) => {
+  const imageURL = article.imageURL || `https://picsum.photos/seed/${article.id}/600/400`;
+
   return (
-    <article className="flex flex-col md:flex-row bg-white shadow-md rounded overflow-hidden mb-6">
-      <Link href={`articles/${article.id}`} className="md:w-1/3 w-full">
-        <Image
-          src="https://images.unsplash.com/photo-1544894079-e81a9eb1da8b"
-          alt="Article header image"
-          width={400}
-          height={250}
-          className="w-full h-full object-cover"
+    <article className="flex flex-col md:flex-row bg-white shadow-md rounded-lg overflow-hidden mb-6">
+      {/* サムネイル画像 */}
+      <Link href={`/articles/${article.id}`} className="md:w-1/3 w-full">
+        <img
+          src={imageURL}
+          alt={article.title}
+          className="w-48 h-full object-cover rounded"
         />
       </Link>
 
+      {/* テキスト情報 */}
       <div className="flex flex-col justify-between p-4 md:w-2/3 w-full">
         <div>
+          {/* タグ */}
           {article.tags && article.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-2">
               {article.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="text-xs bg-gray-200 text-gray-800 px-2 py-1 rounded-full"
+                  className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
                 >
                   #{tag}
                 </span>
@@ -34,28 +38,30 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
             </div>
           )}
 
-          <Link href={`articles/${article.id}`} className="block text-2xl font-bold text-gray-900 hover:text-gray-700 mt-1">
-            {article.title}
+          {/* タイトル */}
+          <Link href={`/articles/${article.id}`}>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 hover:text-gray-700 mb-1">
+              {article.title}
+            </h2>
           </Link>
 
-          <p className="text-gray-600 text-sm mt-1">
-            {new Date(article.createdAt).toLocaleString('ja-JP', {
-              weekday: 'short',
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
-          </p>
-
-          <p className="text-gray-800 mt-2 line-clamp-3">
+          {/* 本文の一部（抜粋） */}
+          <p className="text-gray-800 text-sm md:text-base mt-2 line-clamp-3">
             {article.content}
           </p>
         </div>
 
-        <div className="mt-4">
-          <Link href={`articles/${article.id}`} className="text-pink-700 hover:text-black font-semibold">
+        {/* 投稿者・日時・続きを読む */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between mt-4 text-sm text-gray-600">
+          <div>
+            投稿者: <span className="font-medium">{article.author.name}</span><br />
+            投稿日: {formatDate(article.createdAt)}
+          </div>
+
+          <Link
+            href={`/articles/${article.id}`}
+            className="mt-2 md:mt-0 text-pink-700 hover:text-black font-semibold"
+          >
             続きを読む →
           </Link>
         </div>

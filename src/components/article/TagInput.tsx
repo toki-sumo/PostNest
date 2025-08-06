@@ -30,8 +30,7 @@ export default function TagInput({ onTagsChange, initialTags }: TagInputProps) {
   };
 
   const handleKeyDown = (e: { key: string; preventDefault: () => void; }) => {
-    // TabキーとEnterキーでタグを追加
-    if (e.key === "Enter" || e.key === "Tab") {
+    if (e.key === "Enter") {
       e.preventDefault();
       addTag();
     }
@@ -43,7 +42,7 @@ export default function TagInput({ onTagsChange, initialTags }: TagInputProps) {
         {tags.map((tag) => (
           <span
             key={tag}
-            className="flex items-center bg-white text-sm px-2 py-1 rounded-full"
+            className="flex items-center bg-slate-100 text-sm px-2 py-1 rounded-full"
           >
             {tag}
             <button
@@ -57,7 +56,7 @@ export default function TagInput({ onTagsChange, initialTags }: TagInputProps) {
       </div>
       <input
         type="text"
-        className="bg-white border border-gray-300 rounded px-2 py-1 w-full mb-2"
+        className="bg-slate-100 border border-gray-300 rounded px-2 py-1 w-full mb-2"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}

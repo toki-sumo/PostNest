@@ -10,6 +10,7 @@ const CreateBlogPage = () => {
     const [content, setContent] = useState("");
     const [tags, setTags] = useState<string[]>([]); // タグのリストを管理するための新しいstate
     const [loading, setLoading] = useState(false);
+    const [imageURL, setImageURL] = useState("");
 
     // TagInputコンポーネントからタグのリストを受け取るための関数
     const handleTagsChange = (newTags: string[]) => {
@@ -26,7 +27,7 @@ const CreateBlogPage = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ id, title, content, tags }),
+            body: JSON.stringify({ id, title, content, tags, imageURL }),
         });
 
         setLoading(false);
@@ -37,13 +38,13 @@ const CreateBlogPage = () => {
     return (
         <div className="min-h-screen py-8 px-4 md:px-12">
             <h2 className="text-2xl font-bold mb-4">ブログ新規作成</h2>
-            <form className="bg-slate-200 p-6 rounded shadow-lg" onSubmit={handleSubmit}>
+            <form className="bg-slate-300 p-6 rounded shadow-lg" onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label className="text-gray-700 text-sm font-bold mb-2">
                         タイトル
                         <input
                             type="text"
-                            className="bg-white shadow border-gray-300 rounded w-full py-2 px-3 leading-tight text-gray-700 focus:outline-none"
+                            className="bg-slate-100 shadow border-gray-300 rounded w-full py-2 px-3 leading-tight text-gray-700 focus:outline-none"
                             onChange={(e) => setTitle(e.target.value)}
                         />
                     </label>
@@ -52,7 +53,7 @@ const CreateBlogPage = () => {
                     <label className="text-gray-700 text-sm font-bold mb-2">
                         本文
                         <textarea
-                            className="bg-white shadow border-gray-300 rounded w-full py-2 px-3 leading-tight text-gray-700 focus:outline-none"
+                            className="bg-slate-100 shadow border-gray-300 rounded w-full py-2 px-3 leading-tight text-gray-700 focus:outline-none"
                             onChange={(e) => setContent(e.target.value)}
                         />
                     </label>
@@ -63,10 +64,21 @@ const CreateBlogPage = () => {
                         <TagInput initialTags={[]} onTagsChange={handleTagsChange} />
                     </label>
                 </div>
-
+                <div className="mb-4">
+                    <label className="text-gray-700 text-sm font-bold mb-2">
+                        ImageURL
+                        <input
+                            type="text"
+                            placeholder="Image URL"
+                            value={imageURL}
+                            onChange={(e) => setImageURL(e.target.value)}
+                            className="bg-slate-100 shadow border-gray-300 rounded w-full py-2 px-3 leading-tight text-gray-700 focus:outline-none"
+                        />
+                    </label>
+                </div>
                 <button
                     type="submit"
-                    className={`flex items-center justify-center gap-2 py-2 px-4 border rounded-md text-white transition
+                    className={`flex items-center justify-center gap-2 py-2 px-4 border-slate-500 rounded-md text-white transition
             ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-gray-600 hover:bg-gray-800"}`}
                     disabled={loading}
                 >

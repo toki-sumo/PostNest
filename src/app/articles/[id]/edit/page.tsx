@@ -4,7 +4,7 @@ import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import TagInput from '@/components/article/TagInput';
-import { Article } from '@/types/article_type';
+import { Article } from '@/types/model_type';
 
 export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();

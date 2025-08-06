@@ -6,4 +6,12 @@ export type Article = {
     createdAt: string;
     updatedAt: string;
     tags: string[];
+    author: User;
+    imageURL: string;
+}
+
+export type User = {
+    id: string;
+    name: string;
+    // Article: Article[];
 }
