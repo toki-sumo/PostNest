@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 // --- TagInput Component ---
-// 親コンポーネントにタグのリストを渡すためのonTagsChangeプロパティを追加
 type TagInputProps = {
   onTagsChange: (tags: string[]) => void;
   initialTags: string[];
@@ -11,7 +10,6 @@ type TagInputProps = {
 
 export default function TagInput({ onTagsChange, initialTags }: TagInputProps) {
   const [tags, setTags] = useState(initialTags);
-  // const [tags, setTags] = useState<string[]>([]);
   const [input, setInput] = useState<string>("");
 
   // tagsの状態が変更されたときに、親コンポーネントに通知する
@@ -45,7 +43,7 @@ export default function TagInput({ onTagsChange, initialTags }: TagInputProps) {
         {tags.map((tag) => (
           <span
             key={tag}
-            className="flex items-center bg-gray-200 text-sm px-2 py-1 rounded-full"
+            className="flex items-center bg-white text-sm px-2 py-1 rounded-full"
           >
             {tag}
             <button
@@ -59,7 +57,7 @@ export default function TagInput({ onTagsChange, initialTags }: TagInputProps) {
       </div>
       <input
         type="text"
-        className="bg-white border border-gray-300 rounded px-2 py-1 w-full"
+        className="bg-white border border-gray-300 rounded px-2 py-1 w-full mb-2"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
