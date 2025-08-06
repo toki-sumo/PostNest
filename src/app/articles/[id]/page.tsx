@@ -1,23 +1,11 @@
 import DeleteButton from "@/components/ui/DeleteButton";
 import EditButton from "@/components/ui/EditButton";
 import Image from "next/image";
-import { auth } from "@/auth"; // 認証情報取得
+import { auth } from "@/auth";
 import { notFound } from "next/navigation";
+import { formatDate } from "@/lib/utils/formatDate";
 
-const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleString("ja-JP", {
-        weekday: "short",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-    });
-};
-
-export default async function ArticleDetailPage({
-    params,
-}: {
+export default async function ArticleDetailPage({ params, }: {
     params: Promise<{ id: string }>;
 }) {
     const session = await auth();

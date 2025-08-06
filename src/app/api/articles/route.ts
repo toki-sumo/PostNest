@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const articles = await db.article.findMany({
       orderBy: {
-        createdAt: "desc",
+        updatedAt: "desc",
       },
       include: {
         author: {

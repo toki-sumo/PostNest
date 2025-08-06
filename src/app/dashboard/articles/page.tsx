@@ -1,17 +1,17 @@
 'use client'
 
-import DeleteButton from '@/components/ui/DeleteButton'
-import EditButton from '@/components/ui/EditButton'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { formatDate } from "@/lib/utils/formatDate"
 
 type Article = {
   id: number
   title: string
   content?: string
-  // updated?: string
+  updatedAt?: string
+  tags?: string[]
 }
 
 const ArticlesPage = () => {
@@ -50,24 +50,42 @@ const ArticlesPage = () => {
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">投稿記事</h1>
 
-      <p className="text-lg font-semibold text-gray-700 mb-4">
-        {session?.user?.name}さんが投稿した記事
+      <p className="text-lg font-semibold text-gray-700 mb-6">
+        {session?.user?.name} さんが投稿した記事
       </p>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="space-y-4">
         {articles.length > 0 ? (
           articles.map((article) => (
-            <div
+            <Link
               key={article.id}
-              className="w-full p-4 bg-white shadow rounded"
+              href={`/articles/${article.id}`}
+              className="block bg-white shadow hover:shadow-md rounded-lg p-4 transition duration-200"
             >
-              <Link href={`${process.env.NEXT_PUBLIC_API_URL}/articles/${article.id}`} className="md w-full">
-                タイトル：{article.title}
-              </Link>
-            </div>
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                {article.title}
+              </h2>
+
+              <p className="text-sm text-gray-500 mb-2">
+                最終更新日時：{formatDate(article.updatedAt ?? '')}
+              </p>
+
+              {article.tags && article.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {article.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </Link>
           ))
         ) : (
-          <p>まだ記事がありません。</p>
+          <p className="text-gray-600">まだ記事がありません。</p>
         )}
       </div>
     </div>

@@ -15,7 +15,7 @@ export async function GET() {
       authorId: session.user.id,
     },
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
   })
 
