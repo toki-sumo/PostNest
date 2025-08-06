@@ -26,35 +26,6 @@ export async function GET() {
   }
 }
 
-// export async function POST(req: NextRequest) {
-//   const session = await auth();
-  
-//   if (!session?.user) {
-//     return NextResponse.json({ message: "認証が必要です" }, { status: 401 })
-//   }
-//   try {
-//     const body = await req.json();
-//     const { title, content } = body;
-//     const authorId = session?.user.id;
-
-//     if (!title || !content || !authorId) {
-//       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
-//     }
-    
-//     const article = await db.article.create({
-//       data: {
-//         title,
-//         content,
-//         authorId,
-//       },
-//     });
-
-//     return NextResponse.json(article);
-//   } catch (error) {
-//     console.error(error);
-//     return NextResponse.json({ error: 'Failed to create article' }, { status: 500 });
-//   }
-// }
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (!session?.user) {
@@ -71,7 +42,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    // オプション: tags が配列であることを確認
     if (tags && !Array.isArray(tags)) {
       return NextResponse.json({ error: 'Tags must be an array' }, { status: 400 });
     }
@@ -81,7 +51,7 @@ export async function POST(req: NextRequest) {
         title,
         content,
         authorId,
-        tags: tags || [], // 空配列をデフォルトに
+        tags: tags || [],
       },
     });
 

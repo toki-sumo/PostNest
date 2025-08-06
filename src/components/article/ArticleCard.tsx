@@ -21,7 +21,6 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
 
       <div className="flex flex-col justify-between p-4 md:w-2/3 w-full">
         <div>
-          {/* タグ一覧 */}
           {article.tags && article.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-2">
               {article.tags.map((tag, index) => (

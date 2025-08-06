@@ -1,7 +1,8 @@
-// src/app/articles/[id]/page.tsx
 import DeleteButton from "@/components/ui/DeleteButton";
 import EditButton from "@/components/ui/EditButton";
 import Image from "next/image";
+import { auth } from "@/auth"; // 認証情報取得
+import { notFound } from "next/navigation";
 
 const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleString("ja-JP", {
@@ -14,14 +15,25 @@ const formatDate = (dateString: string): string => {
     });
 };
 
-export default async function ArticleDetailPage ({ params }: { params: Promise<{ id: string }> }){
+export default async function ArticleDetailPage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const session = await auth();
+
     const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/articles/${(await params).id}`,
         {
             next: { revalidate: 10 }, // ISR
         }
     );
+
+    if (!res.ok) return notFound();
+
     const detailArticle = await res.json();
+
+    const isAuthor = session?.user?.id === detailArticle.authorId;
 
     return (
         <main className="bg-gray-200 w-full max-w-3xl mx-auto mt-4 mb-4 rounded-lg shadow-lg text-gray-700">
@@ -52,18 +64,23 @@ export default async function ArticleDetailPage ({ params }: { params: Promise<{
                 {detailArticle.tags?.length > 0 && (
                     <div className="flex flex-wrap gap-2 my-3">
                         {detailArticle.tags.map((tag: string) => (
-                            <span key={tag} className="bg-blue-200 text-blue-800 px-2 py-1 rounded text-xs">
+                            <span
+                                key={tag}
+                                className="bg-blue-200 text-blue-800 px-2 py-1 rounded text-xs"
+                            >
                                 #{tag}
                             </span>
                         ))}
                     </div>
                 )}
 
-                <footer className="flex justify-end space-x-2 mt-3">
-                    <EditButton id={detailArticle.id} />
-                    <DeleteButton id={detailArticle.id} />
-                </footer>
+                {isAuthor && (
+                    <footer className="flex justify-end space-x-2 mt-3">
+                        <EditButton id={detailArticle.id} />
+                        <DeleteButton id={detailArticle.id} />
+                    </footer>
+                )}
             </div>
         </main>
     );
-};
+}
