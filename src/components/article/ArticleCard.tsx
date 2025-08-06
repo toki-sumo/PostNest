@@ -12,19 +12,16 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
 
   return (
     <article className="flex flex-col md:flex-row bg-white shadow-md rounded-lg overflow-hidden mb-6">
-      {/* サムネイル画像 */}
       <Link href={`/articles/${article.id}`} className="md:w-1/3 w-full">
         <img
-          src={imageURL}
+          src={imageURL }
           alt={article.title}
           className="w-48 h-full object-cover rounded"
         />
       </Link>
 
-      {/* テキスト情報 */}
       <div className="flex flex-col justify-between p-4 md:w-2/3 w-full">
         <div>
-          {/* タグ */}
           {article.tags && article.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-2">
               {article.tags.map((tag, index) => (
@@ -38,20 +35,17 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
             </div>
           )}
 
-          {/* タイトル */}
           <Link href={`/articles/${article.id}`}>
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 hover:text-gray-700 mb-1">
               {article.title}
             </h2>
           </Link>
 
-          {/* 本文の一部（抜粋） */}
           <p className="text-gray-800 text-sm md:text-base mt-2 line-clamp-3">
             {article.content}
           </p>
         </div>
 
-        {/* 投稿者・日時・続きを読む */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mt-4 text-sm text-gray-600">
           <div>
             投稿者: <span className="font-medium">{article.author.name}</span><br />

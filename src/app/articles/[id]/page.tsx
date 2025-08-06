@@ -22,12 +22,13 @@ export default async function ArticleDetailPage({ params, }: {
     const detailArticle = await res.json();
 
     const isAuthor = session?.user?.id === detailArticle.authorId;
+    const imageURL = detailArticle.imageURL || `https://picsum.photos/seed/${(await params).id}/600/400`;
 
     return (
         <main className="bg-gray-200 w-full max-w-3xl mx-auto mt-4 mb-4 rounded-lg shadow-lg text-gray-700">
             <div>
                 <Image
-                    src="https://images.unsplash.com/photo-1544894079-e81a9eb1da8b"
+                    src={imageURL}
                     alt=""
                     width={1280}
                     height={300}
