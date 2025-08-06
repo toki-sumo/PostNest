@@ -10,7 +10,7 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  const { id } = use(params); // ✅ unwrap here
+  const { id } = use(params);
 
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
