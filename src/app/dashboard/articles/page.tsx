@@ -60,7 +60,7 @@ const ArticlesPage = () => {
             <Link
               key={article.id}
               href={`/articles/${article.id}`}
-              className="block bg-white shadow hover:shadow-md rounded-lg p-4 transition duration-200"
+              className="block bg-slate-100 shadow hover:shadow-md rounded-lg p-4 transition duration-200"
             >
               <h2 className="text-lg font-semibold text-gray-800 mb-2">
                 {article.title}

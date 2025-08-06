@@ -15,23 +15,22 @@ export default async function Home() {
 
       {/* サイドバー（右側） */}
       <aside className="w-full md:w-1/4 p-4 space-y-6">
-        {/* プロフィールカード */}
-        <div className="bg-white shadow-md rounded p-4 text-center">
+        <div className="bg-slate-100 shadow-md rounded p-4 text-center">
           <img
-            src="/profile.jpg"
+            src="/flower.jpeg"
             alt="Profile"
             className="w-20 h-20 rounded-full mx-auto mb-2 object-cover"
           />
           <h3 className="font-bold text-gray-700">管理者：takimoto</h3>
           <p className="text-gray-600 text-sm">Web開発エンジニア / ブロガー</p>
+          <p className="text-gray-600 text-sm text-left">普段は会社員をしており、休日にWeb開発の勉強をしています。趣味はボルダリング、散歩、読書です。</p>
           <div className="flex justify-center mt-2 gap-3">
             <a href="#" aria-label="Twitter" className="text-blue-500">X</a>
             <a href="#" aria-label="GitHub" className="text-gray-800">GH</a>
           </div>
         </div>
 
-        {/* 人気記事 */}
-        <div className="bg-white shadow-md rounded p-4">
+        <div className="bg-slate-100 shadow-md rounded p-4">
           <h3 className="font-bold text-gray-700 mb-2">人気記事</h3>
           <ul className="text-sm text-gray-700 space-y-1">
             <li><a href="/articles/1" className="hover:underline">Reactのパフォーマンス最適化</a></li>
@@ -39,8 +38,7 @@ export default async function Home() {
           </ul>
         </div>
 
-        {/* タグクラウド */}
-        <div className="bg-white shadow-md rounded p-4">
+        <div className="bg-slate-100 shadow-md rounded p-4">
           <h3 className="font-bold text-gray-700 mb-2">タグ</h3>
           <div className="flex flex-wrap gap-2">
             <a href="/tags/react" className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">#React</a>

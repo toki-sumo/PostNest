@@ -11,7 +11,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
   const imageURL = article.imageURL || `https://picsum.photos/seed/${article.id}/600/400`;
 
   return (
-    <article className="flex flex-col md:flex-row bg-white shadow-md rounded-lg overflow-hidden mb-6">
+    <article className="flex flex-col md:flex-row bg-slate-100 shadow-md rounded-lg overflow-hidden mb-6">
       <Link href={`/articles/${article.id}`} className="md:w-1/3 w-full">
         <img
           src={imageURL }
