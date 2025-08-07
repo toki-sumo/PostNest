@@ -36,7 +36,6 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { title, content, tags, imageUrl } = body;
     const authorId = session.user.id;
-    console.log("tag : ", tags[0]);
 
     if (!title || !content || !authorId) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });

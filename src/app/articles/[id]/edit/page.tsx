@@ -17,6 +17,8 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -43,6 +45,27 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
     fetchArticle();
   }, [status, session, id, router]);
 
+  const handleGenerateTags = async () => {
+    if (!title) return;
+
+    setIsGenerating(true);
+
+    try {
+      const res = await fetch('/api/generate-tags', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title }),
+      });
+
+      const data = await res.json();
+      setTags(data.tags);
+    } catch (error) {
+      console.error("タグ生成エラー:", error);
+    } finally {
+      setIsGenerating(false); // 完了後に解除
+    }
+  }
+
   const handleUpdate = async () => {
     const res = await fetch(`/api/articles/edit/${id}`, {
       method: 'PUT',
@@ -63,17 +86,29 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit Article</h1>
-
+      
       <label className="block mb-2">タイトル</label>
       <input className="p-2 w-full mb-4 rounded bg-slate-100" value={title} onChange={e => setTitle(e.target.value)} />
 
       <label className="block mb-2">コンテンツ</label>
       <textarea className="p-2 w-full mb-4 rounded bg-slate-100 h-40" value={content} onChange={e => setContent(e.target.value)} />
 
-      <label className="block mb-2">タグ</label>
-      <TagInput initialTags={tags} onTagsChange={setTags} />
+      <div className="flex items-center justify-between mb-2">
+        <label className="text-sm font-medium">タグ</label>
+        <button
+          type="button"
+          onClick={handleGenerateTags}
+          disabled={isGenerating}
+          className={`px-3 py-1 rounded text-sm text-white ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-800'
+            }`}
+        >
+          {isGenerating ? 'タグを生成中...' : 'タグを自動生成'}
+        </button>
+      </div>
 
-      <button onClick={handleUpdate} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+      <TagInput value={tags} onChange={setTags} disabled={isGenerating} />
+
+      <button onClick={handleUpdate} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mt-4">
         Update
       </button>
     </div>

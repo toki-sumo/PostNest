@@ -1,4 +1,5 @@
 // src/app/page.tsx
+import { GoogleGenAI } from "@google/genai";
 import ArticleList from "@/components/article/ArticleList";
 
 export default async function Home() {
@@ -6,6 +7,22 @@ export default async function Home() {
     cache: "no-store",
   });
   const articles = await res.json();
+
+
+  // The client gets the API key from the environment variable `GEMINI_API_KEY`.
+  const ai = new GoogleGenAI({});
+
+  async function main() {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      // contents: "Explain how AI works in a few words",
+      contents: `Output 3-blog-tag in Japanese from Title. Output only tag divided by comma.(ex: "Money", "Technology", "Economy"). Title : AI is smarter than human`,
+    });
+    console.log(response.text);
+  }
+
+  // main();
+
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen">
       {/* 記事一覧（左側） */}

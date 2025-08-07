@@ -8,9 +8,25 @@ const CreateBlogPage = () => {
     const [id, setId] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [tags, setTags] = useState<string[]>([]); // タグのリストを管理するための新しいstate
+    const [tags, setTags] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [imageURL, setImageURL] = useState("");
+
+    const handleGenerateTags = async () => {
+        console.log("title : ", title);
+        // if (!title) {
+        //     console.log("title is ...");
+        //     return
+        // }
+        // const res = await fetch('/api/generate-tags', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ title }),
+        // })
+
+        // const data = await res.json()
+        // setTags(data.tags) // useStateでタグ管理していればこれでOK
+    }
 
     // TagInputコンポーネントからタグのリストを受け取るための関数
     const handleTagsChange = (newTags: string[]) => {
@@ -21,7 +37,6 @@ const CreateBlogPage = () => {
         e.preventDefault();
         setLoading(true);
 
-        // tagsInputの代わりに、TagInputコンポーネントから受け取ったtagsを使用
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles`, {
             method: "POST",
             headers: {
@@ -36,8 +51,18 @@ const CreateBlogPage = () => {
     };
 
     return (
+
         <div className="min-h-screen py-8 px-4 md:px-12">
             <h2 className="text-2xl font-bold mb-4">ブログ新規作成</h2>
+            <button
+                onClick={() => {
+                    console.log("クリックされました");
+                    handleGenerateTags();
+                }}
+                className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-800"
+            >
+                タグを自動生成
+            </button>
             <form className="bg-slate-300 p-6 rounded shadow-lg" onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label className="text-gray-700 text-sm font-bold mb-2">
@@ -63,7 +88,10 @@ const CreateBlogPage = () => {
                         タグ
                         <TagInput initialTags={[]} onTagsChange={handleTagsChange} />
                     </label>
+
                 </div>
+
+
                 <div className="mb-4">
                     <label className="text-gray-700 text-sm font-bold mb-2">
                         ImageURL
