@@ -4,8 +4,8 @@
 import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button"; // 作成したButtonコンポーネントをimport
-import { Input } from "@/components/ui/input"; // 作成したInputコンポーネントをimport
+import { Button } from "@/components/ui/Button"; // 作成したButtonコンポーネントをimport
+import { Input } from "@/components/ui/Input"; // 作成したInputコンポーネントをimport
 import { useSearchParams } from 'next/navigation';
 import OAuthButton from "@/components/ui/OAuthButton";
 

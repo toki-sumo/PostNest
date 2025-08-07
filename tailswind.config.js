@@ -1,12 +1,17 @@
 // tailwind.config.js
 module.exports = {
   content: [
-    "./src/**/*.{js,ts,jsx,tsx}", // 既にある内容に合わせてOK
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
+      },
+    },
   },
   plugins: [
-    require('@tailwindcss/line-clamp', 'tailwindcss-textshadow'), // ← これを追加
+    require('@tailwindcss/line-clamp', 'tailwindcss-textshadow'),
   ],
 }

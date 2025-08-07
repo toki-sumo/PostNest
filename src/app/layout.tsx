@@ -29,10 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
-      <body
-        className={`min-h-screen flex flex-col bg-slate-200 text-slate-750 pt-24 ${geistSans.variable} ${geistMono.variable}`}
-      >
+    <html lang="ja" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="min-h-screen flex flex-col bg-slate-200 text-slate-750 pt-24">
         <SessionProvider>
           <Header />
           <main className="flex-grow container mx-auto px-4">
@@ -44,4 +42,3 @@ export default function RootLayout({
     </html>
   );
 }
-

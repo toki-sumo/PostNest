@@ -1,29 +1,22 @@
-import { ReactNode } from "react";
+import Spinner from "./Spinner";
 
-// buttonの色を柔軟に指定できるようにvariantを追加
-type ButtonProps = {
-  children: ReactNode;
-  onClick?: () => void;
-  type?: "button" | "submit" | "reset";
-  className?: string;
-  variant?: "primary" | "secondary" | "danger";
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  loading?: boolean;
 };
 
-export function Button({ children, onClick, type = "button", className = "", variant = "primary" }: ButtonProps) {
-  const baseStyle = "w-full py-2 rounded text-white";
-  const variants = {
-    primary: "bg-blue-600 hover:bg-blue-700",
-    secondary: "bg-gray-600 hover:bg-gray-700",
-    danger: "bg-red-600 hover:bg-red-700",
-  };
-
+export const Button = ({ loading, children, disabled, ...props }: ButtonProps) => {
   return (
     <button
-      onClick={onClick}
-      type={type}
-      className={`${baseStyle} ${variants[variant]} ${className}`}
+      className={`px-4 py-2 rounded text-white transition ${disabled || loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+        }`}
+      disabled={disabled || loading}
+      {...props}
     >
-      {children}
+      {loading ? (
+        <Spinner size={4} />
+      ) : (
+        children
+      )}
     </button>
   );
-}
+};

@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import TagInput from './TagInput';
+import Spinner from '../ui/Spinner';
+import { TextInput } from '../ui/TextInput';
 
 type ArticleFormProps = {
   initialTitle?: string;
@@ -66,8 +68,7 @@ export default function ArticleForm({
       </h1>
 
       <label className="block mb-2">タイトル</label>
-      <input
-        className="p-2 w-full mb-4 rounded bg-slate-100"
+      <TextInput
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
@@ -92,37 +93,14 @@ export default function ArticleForm({
           >
             {isGenerating ? 'タグを生成中...' : 'タグを自動生成'}
 
-            {/* スピナー表示 */}
-            {isGenerating && (
-              <svg
-                className="animate-spin h-4 w-4 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 01-8-8z"
-                />
-              </svg>
-            )}
+            {isGenerating && (<Spinner size={4} />)}
           </button>
         </div>
       </div>
       <TagInput value={tags} onChange={setTags} disabled={isGenerating} />
 
       <label className="block mt-4 mb-2">Image URL</label>
-      <input
-        className="p-2 w-full mb-4 rounded bg-slate-100"
+      <TextInput
         value={imageURL}
         onChange={(e) => setImageURL(e.target.value)}
         placeholder="画像URLを入力"
@@ -132,32 +110,13 @@ export default function ArticleForm({
         type="submit"
         disabled={isSubmitting}
         className={`flex items-center justify-center gap-2 px-4 py-2 rounded text-white ${isSubmitting
-            ? 'bg-gray-400 cursor-not-allowed'
-            : 'bg-gray-600 hover:bg-gray-800'
+          ? 'bg-gray-400 cursor-not-allowed'
+          : 'bg-gray-600 hover:bg-gray-800'
           }`}
       >
         {isSubmitting ? (
           <>
-            <svg
-              className="animate-spin h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-              />
-            </svg>
+            <Spinner />
             {isEdit ? '更新中...' : '投稿中...'}
           </>
         ) : isEdit ? '更新' : '投稿'}

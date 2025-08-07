@@ -1,23 +1,43 @@
+'use client'
+
+import { useState } from 'react';
 import { Article } from '@/types/model_type';
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils/formatDate';
+import Spinner from '../ui/Spinner';
 
 type ArticleCardProps = {
   article: Article;
 };
 
+const fallbackImage = '/flower.jpeg'; 
+
 const ArticleCard = ({ article }: ArticleCardProps) => {
-  const imageURL = article.imageURL || `https://picsum.photos/seed/${article.id}/600/400`;
+  const defaultImage = article.imageURL || `https://picsum.photos/seed/${article.id}/600/400`;
+  const [imageSrc, setImageSrc] = useState(defaultImage);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   return (
     <article className="flex flex-col md:flex-row bg-slate-100 shadow-md rounded-lg overflow-hidden mb-6">
-      <Link href={`/articles/${article.id}`} className="md:w-1/3 w-full">
-        <img
-          src={imageURL}
-          alt={article.title}
-          className="w-48 h-full object-cover rounded"
-        />
+      <Link href={`/articles/${article.id}`} className="md:w-1/3 w-full relative aspect-[3/2]">
+        <div className="w-full h-full relative">
+          {isImageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+              <Spinner />
+            </div>
+          )}
+
+          <Image
+            src={imageSrc}
+            alt={article.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className={`object-cover rounded transition-opacity duration-300 ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
+            onLoad={() => setIsImageLoading(false)}
+            onError={() => setImageSrc(fallbackImage)} // 失敗したら差し替え
+          />
+        </div>
       </Link>
 
       <div className="flex flex-col justify-between p-4 md:w-2/3 w-full">
