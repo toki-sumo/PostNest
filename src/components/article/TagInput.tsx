@@ -4,7 +4,7 @@ import { useState } from "react";
 type TagInputProps = {
   value: string[];
   onChange: (tags: string[]) => void;
-  disabled?: boolean; // ← 追加
+  disabled?: boolean;
 };
 
 export default function TagInput({ value, onChange, disabled = false }: TagInputProps) {
@@ -19,7 +19,7 @@ export default function TagInput({ value, onChange, disabled = false }: TagInput
   };
 
   const removeTag = (tagToRemove: string) => {
-    if (disabled) return; // 無効状態では削除も不可
+    if (disabled) return;
     onChange(value.filter((tag) => tag !== tagToRemove));
   };
 
@@ -39,22 +39,19 @@ export default function TagInput({ value, onChange, disabled = false }: TagInput
             className="flex items-center bg-slate-100 text-sm px-2 py-1 rounded-full"
           >
             {tag}
-            {!disabled && (
-              <button
-                onClick={() => removeTag(tag)}
-                className="ml-1 text-gray-500 hover:text-red-500"
-              >
-                ×
-              </button>
-            )}
+            <button
+              onClick={() => removeTag(tag)}
+              disabled={disabled}
+              className={`ml-1 text-gray-500 hover:text-red-500 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+            >
+              ×
+            </button>
           </span>
         ))}
       </div>
       <input
         type="text"
-        className={`bg-slate-100 border border-gray-300 rounded px-2 py-1 w-full mb-2 ${
-          disabled ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
+        className="bg-slate-100 border border-gray-300 rounded px-2 py-1 w-full mb-2 disabled:opacity-50"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}

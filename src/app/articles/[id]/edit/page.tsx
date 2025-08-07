@@ -58,13 +58,16 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
       });
 
       const data = await res.json();
-      setTags(data.tags);
+
+      const mergedTags = Array.from(new Set([...tags, ...data.tags]));
+      setTags(mergedTags);
     } catch (error) {
       console.error("タグ生成エラー:", error);
     } finally {
-      setIsGenerating(false); // 完了後に解除
+      setIsGenerating(false);
     }
-  }
+  };
+  
 
   const handleUpdate = async () => {
     const res = await fetch(`/api/articles/edit/${id}`, {
@@ -93,18 +96,46 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
       <label className="block mb-2">コンテンツ</label>
       <textarea className="p-2 w-full mb-4 rounded bg-slate-100 h-40" value={content} onChange={e => setContent(e.target.value)} />
 
-      <div className="flex items-center justify-between mb-2">
-        <label className="text-sm font-medium">タグ</label>
-        <button
-          type="button"
-          onClick={handleGenerateTags}
-          disabled={isGenerating}
-          className={`px-3 py-1 rounded text-sm text-white ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-800'
-            }`}
-        >
-          {isGenerating ? 'タグを生成中...' : 'タグを自動生成'}
-        </button>
+      <div className="flex items-center mb-2">
+        <label className="text-sm font-medium mr-4">タグ</label>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleGenerateTags}
+            disabled={isGenerating}
+            className={`px-3 py-1 rounded text-sm text-white flex items-center gap-2 ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-800'
+              }`}
+          >
+            {isGenerating ? 'タグを生成中...' : 'タグを自動生成'}
+
+            {/* スピナー表示 */}
+            {isGenerating && (
+              <svg
+                className="animate-spin h-4 w-4 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16 8 8 0 01-8-8z"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
+
 
       <TagInput value={tags} onChange={setTags} disabled={isGenerating} />
 
