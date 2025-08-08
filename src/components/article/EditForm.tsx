@@ -1,4 +1,4 @@
-// components/EditForm.tsx
+// components/article/EditForm.tsx
 "use client";
 
 import { useState } from "react";

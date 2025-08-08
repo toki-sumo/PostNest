@@ -1,4 +1,4 @@
-// src/components/DeleteButton.tsx
+// src/components/ui/DeleteButton.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -9,12 +9,12 @@ const DeleteButton = ({ id }: { id: string }) => {
 
     const handleDeleteConfirmed = async () => {
         setShowModal(false);
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}`, {
             method: 'DELETE',
         });
 
-        router.push("/"); // Redirect to home page after deletion
-        router.refresh(); // Refresh the page to reflect the deletion
+        router.push("/");
+        router.refresh();
     };
 
     return (

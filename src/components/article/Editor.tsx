@@ -19,6 +19,7 @@ export default function Editor({ content = '', onChange }: { content?: string; o
       Bold,
     ],
     content,
+    immediatelyRender: false, // ★ SSRエラー防止
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },

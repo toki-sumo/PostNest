@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TagInput from './TagInput';
 import Spinner from '../ui/Spinner';
 import { TextInput } from '../ui/TextInput';
+import Editor from './Editor';
 
 type ArticleFormProps = {
   initialTitle?: string;
@@ -64,7 +65,7 @@ export default function ArticleForm({
   return (
     <form onSubmit={handleSubmit} className="p-4 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">
-        {isEdit ? '記事を編集' : 'ブログ新規作成'}
+        {isEdit ? '編集' : '新規作成'}
       </h1>
 
       <label className="block mb-2">タイトル</label>
@@ -79,6 +80,12 @@ export default function ArticleForm({
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
+      {/* <div className="mb-4">
+        <Editor
+          content={content} // 初期値
+          onChange={(html) => setContent(html)} // HTMLを取得してstateに保存
+        />
+      </div> */}
 
       <div className="flex items-center mb-2">
         <label className="text-sm font-medium mr-4">タグ</label>

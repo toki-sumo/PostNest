@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import ArticleForm from '@/components/article/ArticleForm';
 
-const EditBlogPage = () => {
+export default function EditBlogPage(){
   const router = useRouter();
-  const params = useParams(); // URLからIDを取得
+  const params = useParams();
   const id = params?.id as string;
 
   const [article, setArticle] = useState<{
@@ -35,11 +35,12 @@ const EditBlogPage = () => {
   }, [id]);
 
   const handleUpdate = async ({ title, content, tags, imageURL }: any) => {
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/edit/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, content, tags, imageURL }),
     });
+    console.log("update!!!!!!!!!!!!");
 
     router.push('/');
     router.refresh();
@@ -61,4 +62,3 @@ const EditBlogPage = () => {
   );
 };
 
-export default EditBlogPage;
