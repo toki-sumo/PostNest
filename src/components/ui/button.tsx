@@ -4,19 +4,26 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
 };
 
-export const Button = ({ loading, children, disabled, ...props }: ButtonProps) => {
+export const Button = ({
+  loading = false,
+  children,
+  disabled,
+  className = "",
+  type = "button",
+  ...props
+}: ButtonProps) => {
   return (
     <button
-      className={`px-4 py-2 rounded text-white transition ${disabled || loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-        }`}
+      type={type}
+      className={`bg-gray-100 hover:bg-gray-500 hover:text-gray-100 text-gray-600 font-medium py-2 px-4 rounded-md transition duration-200 shadow-md 
+        ${loading ? "cursor-wait opacity-70" : "cursor-pointer"} 
+        ${className}`}
       disabled={disabled || loading}
+      aria-busy={loading}
+      aria-disabled={disabled || loading}
       {...props}
     >
-      {loading ? (
-        <Spinner size={4} />
-      ) : (
-        children
-      )}
+      {loading ? <Spinner size={4} /> : children}
     </button>
   );
 };

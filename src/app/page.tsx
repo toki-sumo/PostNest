@@ -1,5 +1,4 @@
 // src/app/page.tsx
-import { GoogleGenAI } from "@google/genai";
 import ArticleList from "@/components/article/ArticleList";
 
 export default async function Home() {
@@ -7,21 +6,6 @@ export default async function Home() {
     cache: "no-store",
   });
   const articles = await res.json();
-
-
-  // The client gets the API key from the environment variable `GEMINI_API_KEY`.
-  const ai = new GoogleGenAI({});
-
-  async function main() {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      // contents: "Explain how AI works in a few words",
-      contents: `Output 3-blog-tag in Japanese from Title. Output only tag divided by comma.(ex: "Money", "Technology", "Economy"). Title : AI is smarter than human`,
-    });
-    console.log(response.text);
-  }
-
-  // main();
 
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen">
@@ -38,7 +22,7 @@ export default async function Home() {
             alt="Profile"
             className="w-20 h-20 rounded-full mx-auto mb-2 object-cover"
           />
-          <h3 className="font-bold text-gray-700">管理者：takimoto</h3>
+          <h3 className="font-bold text-gray-700">管理者：toki</h3>
           <p className="text-gray-600 text-sm">Web開発エンジニア / ブロガー</p>
           <p className="text-gray-600 text-sm text-left">普段は会社員をしており、休日にWeb開発の勉強をしています。趣味はボルダリング、散歩、読書です。</p>
           <div className="flex justify-center mt-2 gap-3">

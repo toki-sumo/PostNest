@@ -13,5 +13,5 @@ export type Article = {
 export type User = {
     id: string;
     name: string;
-    // Article: Article[];
+    Article: Article[];
 }

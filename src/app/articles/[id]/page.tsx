@@ -26,8 +26,6 @@ export default async function ArticleDetailPage({ params, }: {
 
     return (
         <main className="w-full max-w-3xl mx-auto mb-4 rounded-lg text-gray-700 relative">
-
-
             <Image
                 src={imageURL}
                 alt=""
@@ -58,7 +56,6 @@ export default async function ArticleDetailPage({ params, }: {
                 )}
             </div>
 
-
             <div className="px-4 py-4">
                 <div className="mt-6 mb-6">
                     <h1 className="text-center text-3xl font-bold leading-snug">
@@ -68,7 +65,7 @@ export default async function ArticleDetailPage({ params, }: {
                         {formatDate(detailArticle.createdAt)}
                         {" "}
                         <span className="ml-2 text-gray-600">
-                            by {detailArticle.authorName}
+                            by {session?.user.name ?? "ユーザ名が取得できませんでした"}
                             {isAuthor && "（あなた）"}
                         </span>
                     </p>

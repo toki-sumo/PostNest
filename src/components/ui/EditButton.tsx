@@ -1,9 +1,14 @@
-// src/components/EditButton.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { Button } from "./Button";
 
-const EditButton = ({ id }: { id: string }) => {
+type EditButtonProps = {
+    id: string;
+    loading?: boolean;
+};
+
+const EditButton = ({ id, loading = false }: EditButtonProps) => {
     const router = useRouter();
 
     const handleEditClick = () => {
@@ -11,12 +16,13 @@ const EditButton = ({ id }: { id: string }) => {
     };
 
     return (
-        <button
-            className="bg-gray-100 hover:bg-gray-500 hover:text-gray-100 text-gray-600 font-medium py-2 px-4 rounded-md cursor-pointer transition duration-200 shadow-md"
+        <Button
             onClick={handleEditClick}
+            loading={loading}
+            type="button"
         >
             EDIT
-        </button>
+        </Button>
     );
 };
 
