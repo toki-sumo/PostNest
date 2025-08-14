@@ -1,17 +1,24 @@
 // src/lib/prisma.ts
-import { PrismaClient } from '@prisma/client'
+import fs from 'fs';
+import { PrismaClient } from '@prisma/client';
 
 const globalForPrisma = globalThis as unknown as {
-    prisma: PrismaClient | undefined
-}
+    prisma: PrismaClient | undefined;
+};
 
-// グローバルに PrismaClient をキャッシュ（開発環境用）
+// PrismaClient の初期化
 export const prisma =
     globalForPrisma.prisma ??
     new PrismaClient({
-        log: ['query'], // 任意：DBクエリのログ出力（開発中のみ役立つ）
-    })
+        log: ['query'], // 開発中の DB クエリログ
+        datasources: {
+            db: {
+                url: process.env.DATABASE_URL,
+            },
+        },
+    });
 
+// 開発環境ではグローバルキャッシュ
 if (process.env.NODE_ENV !== 'production') {
-    globalForPrisma.prisma = prisma
+    globalForPrisma.prisma = prisma;
 }
