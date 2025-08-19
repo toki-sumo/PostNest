@@ -1,4 +1,5 @@
 // src/app/api/user/route.ts
+
 import { auth } from "@/auth"
 import { db } from "@/lib/db"
 import { NextResponse } from "next/server"

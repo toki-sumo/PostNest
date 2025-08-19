@@ -39,17 +39,11 @@ export default function SignInPage() {
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await signIn("credentials", {
-      redirect: false,
+    await signIn("credentials", {
       email,
       password,
+      callbackUrl: "/dashboard", // ログイン成功後に飛ばす場所
     });
-
-    if (res && res?.error) {
-      setError("メールアドレスかパスワードが違います");
-    } else {
-      router.push("/dashboard");
-    }
   };
 
   return (

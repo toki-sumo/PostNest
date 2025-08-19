@@ -55,7 +55,7 @@ const Header = () => {
               ようこそ、{user.name ?? 'ゲスト'}さん
             </span>
             <button
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: "/" })}
               className="text-xs bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded"
             >
               ログアウト

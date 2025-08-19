@@ -37,6 +37,5 @@ export async function POST(req: Request) {
         .split(/[,\n、]/)
         .map((tag) => tag.trim())
         .filter((tag) => tag.length > 0);
-    console.log("tags : ", tags);
     return NextResponse.json({ tags })
 }

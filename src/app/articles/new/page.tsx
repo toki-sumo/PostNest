@@ -14,7 +14,7 @@ export default function CreateBlogPage() {
         });
 
         router.push('/');
-        router.refresh();
+        // router.refresh();
     };
 
     return <ArticleForm onSubmit={handleCreate} isEdit={false} />;
