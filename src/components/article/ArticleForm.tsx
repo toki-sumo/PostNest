@@ -63,71 +63,93 @@ export default function ArticleForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 max-w-2xl mx-auto pt-20">
-      <h1 className="text-2xl font-bold mb-4">
-        {isEdit ? '編集' : '新規作成'}
-      </h1>
+    <div className="min-h-screen pt-24 bg-slate-50">
+      <div className="max-w-2xl mx-auto p-6">
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
+          <h1 className="text-3xl font-bold mb-6 text-slate-800">
+            {isEdit ? '記事を編集' : '記事を新規作成'}
+          </h1>
 
-      <label className="block mb-2">タイトル</label>
-      <TextInput
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">タイトル</label>
+              <TextInput
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="記事のタイトルを入力してください"
+              />
+            </div>
 
-      <label className="block mb-2">コンテンツ</label>
-      <textarea
-        className="p-2 w-full mb-4 rounded bg-slate-100 h-40"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      {/* <div className="mb-4">
-        <Editor
-          content={content} // 初期値
-          onChange={(html) => setContent(html)} // HTMLを取得してstateに保存
-        />
-      </div> */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">コンテンツ</label>
+              <textarea
+                className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white h-40 focus:ring-2 focus:ring-slate-500 focus:border-transparent resize-none transition-colors duration-200"
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="記事の内容を入力してください"
+              />
+            </div>
+            {/* <div className="mb-4">
+              <Editor
+                content={content} // 初期値
+                onChange={(html) => setContent(html)} // HTMLを取得してstateに保存
+              />
+            </div> */}
 
-      <div className="flex items-center mb-2">
-        <label className="text-sm font-medium mr-4">タグ</label>
+            <div>
+              <div className="flex items-center mb-2">
+                <label className="text-sm font-medium text-slate-700 mr-4">タグ</label>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handleGenerateTags}
-            disabled={isGenerating}
-            className={`px-3 py-1 rounded text-sm text-white flex items-center gap-2 ${isGenerating ? 'bg-gray-400 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-800'
-              }`}
-          >
-            {isGenerating ? 'タグを生成中...' : 'タグを自動生成'}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleGenerateTags}
+                    disabled={isGenerating}
+                    className={`px-3 py-1 rounded-lg text-sm text-white flex items-center gap-2 transition-colors duration-200 ${
+                      isGenerating 
+                        ? 'bg-slate-400 cursor-not-allowed' 
+                        : 'bg-slate-600 hover:bg-slate-700'
+                    }`}
+                  >
+                    {isGenerating ? 'タグを生成中...' : 'タグを自動生成'}
 
-            {isGenerating && (<Spinner size={4} />)}
-          </button>
-        </div>
+                    {isGenerating && (<Spinner size={4} />)}
+                  </button>
+                </div>
+              </div>
+              <TagInput value={tags} onChange={setTags} disabled={isGenerating} />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">画像URL</label>
+              <TextInput
+                value={imageURL}
+                onChange={(e) => setImageURL(e.target.value)}
+                placeholder="画像のURLを入力してください"
+              />
+            </div>
+
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-white font-medium transition-colors duration-200 ${
+                  isSubmitting
+                    ? 'bg-slate-400 cursor-not-allowed'
+                    : 'bg-slate-600 hover:bg-slate-700'
+                }`}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Spinner />
+                    {isEdit ? '更新中...' : '投稿中...'}
+                  </>
+                ) : isEdit ? '更新する' : '投稿する'}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
-      <TagInput value={tags} onChange={setTags} disabled={isGenerating} />
-
-      <label className="block mt-4 mb-2">Image URL</label>
-      <TextInput
-        value={imageURL}
-        onChange={(e) => setImageURL(e.target.value)}
-        placeholder="画像URLを入力"
-      />
-
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className={`flex items-center justify-center gap-2 px-4 py-2 rounded text-white ${isSubmitting
-          ? 'bg-gray-400 cursor-not-allowed'
-          : 'bg-gray-600 hover:bg-gray-800'
-          }`}
-      >
-        {isSubmitting ? (
-          <>
-            <Spinner />
-            {isEdit ? '更新中...' : '投稿中...'}
-          </>
-        ) : isEdit ? '更新' : '投稿'}
-      </button>
-    </form>
+    </div>
   );
 }

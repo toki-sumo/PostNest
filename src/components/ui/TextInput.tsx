@@ -5,13 +5,15 @@ type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 
 export const TextInput = ({ label, error, ...props }: TextInputProps) => {
   return (
-    <label className="block mb-4">
-      {label && <span className="block mb-1 font-medium text-gray-700">{label}</span>}
+    <div className="mb-4">
+      {label && <span className="block mb-2 text-sm font-medium text-slate-700">{label}</span>}
       <input
-        className={`bg-slate-100 w-full rounded px-3 py-2 focus:outline-none focus:ring ${error ? 'border-red-500' : 'border-gray-300'}`}
+        className={`w-full px-3 py-2 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-colors duration-200 ${
+          error ? 'border-red-500 focus:ring-red-500' : ''
+        }`}
         {...props}
       />
       {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
-    </label>
+    </div>
   );
 };

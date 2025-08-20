@@ -36,13 +36,13 @@ export default function TagInput({ value, onChange, disabled = false }: TagInput
         {value.map((tag) => (
           <span
             key={tag}
-            className="flex items-center bg-slate-100 text-sm px-2 py-1 rounded-full"
+            className="flex items-center bg-slate-200 text-slate-700 text-sm px-3 py-1 rounded-full font-medium"
           >
             {tag}
             <button
               onClick={() => removeTag(tag)}
               disabled={disabled}
-              className={`ml-1 text-gray-500 hover:text-red-500 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+              className={`ml-2 text-slate-500 hover:text-red-500 transition-colors duration-200 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
             >
               ×
             </button>
@@ -51,7 +51,7 @@ export default function TagInput({ value, onChange, disabled = false }: TagInput
       </div>
       <input
         type="text"
-        className="bg-slate-100 border border-gray-300 rounded px-2 py-1 w-full mb-2 disabled:opacity-50"
+        className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-colors duration-200 disabled:opacity-50 disabled:bg-slate-100"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}

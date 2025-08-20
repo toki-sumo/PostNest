@@ -25,8 +25,8 @@ export default async function ArticleDetailPage({ params, }: {
     const imageURL = detailArticle.imageURL || `https://picsum.photos/seed/${(await params).id}/600/400`;
 
     return (
-        <div className="min-h-screen pt-20 bg-gray-50">
-            <main className="w-full max-w-3xl mx-auto mb-4 rounded-lg text-gray-700 relative">
+        <div className="min-h-screen pt-20 bg-slate-50">
+            <main className="w-full max-w-3xl mx-auto mb-4 rounded-lg text-slate-700 relative">
                 <Image
                     src={imageURL}
                     alt=""
@@ -41,7 +41,7 @@ export default async function ArticleDetailPage({ params, }: {
                             {detailArticle.tags.map((tag: string) => (
                                 <span
                                     key={tag}
-                                    className="bg-blue-200 text-blue-800 px-2 py-1 rounded text-xs"
+                                    className="bg-slate-200 text-slate-700 px-2 py-1 rounded text-xs"
                                 >
                                     #{tag}
                                 </span>
@@ -59,20 +59,20 @@ export default async function ArticleDetailPage({ params, }: {
 
                 <div className="px-4 py-4">
                     <div className="mt-6 mb-6">
-                        <h1 className="text-center text-3xl font-bold leading-snug">
+                        <h1 className="text-center text-3xl font-bold leading-snug text-slate-800">
                             {detailArticle.title}
                         </h1>
-                        <p className="text-right text-sm text-gray-500">
+                        <p className="text-right text-sm text-slate-500">
                             {formatDate(detailArticle.createdAt)}
                             {" "}
-                            <span className="ml-2 text-gray-600">
+                            <span className="ml-2 text-slate-600">
                                 by {session?.user.name ?? "ユーザ名が取得できませんでした"}
                                 {isAuthor && "（あなた）"}
                             </span>
                         </p>
                     </div>
 
-                    <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    <div className="text-slate-700 leading-relaxed whitespace-pre-line">
                         {detailArticle.content}
                     </div>
                 </div>
