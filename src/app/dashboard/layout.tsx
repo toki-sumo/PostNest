@@ -11,6 +11,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const tabs = [
     { name: 'Articles', href: '/dashboard/articles' },
     { name: 'Profile', href: '/dashboard/profile' },
+    { name: 'Settings', href: '/dashboard/settings' },
   ]
 
   return (

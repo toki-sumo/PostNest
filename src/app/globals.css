@@ -40,10 +40,30 @@
     background: #94a3b8;
   }
 
-  /* フォーカス表示の改善 */
+  /* フォーカス表示の改善 - ボタンクリック後のフォーカス枠を非表示 */
   *:focus {
+    outline: none;
+  }
+
+  /* キーボードナビゲーション用のフォーカス表示（アクセシビリティ維持） */
+  *:focus-visible {
     outline: 2px solid #3b82f6;
     outline-offset: 2px;
+  }
+
+  /* ボタンとリンクのフォーカス状態を改善 */
+  button:focus,
+  a:focus,
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+  }
+
+  /* ボタンクリック後のフォーカス状態をリセット */
+  button:active:focus,
+  button:focus:not(:focus-visible) {
+    outline: none;
   }
 
   /* アニメーションの最適化 */
