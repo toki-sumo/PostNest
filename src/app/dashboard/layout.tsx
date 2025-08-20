@@ -34,8 +34,8 @@ export default async function DashboardLayout({
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
       </div>
 
-      {/* スティッキータブナビゲーション */}
-      <div className="sticky top-24 bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-md border-b border-slate-600/30 shadow-lg z-40">
+      {/* 固定タブナビゲーション */}
+      <div className="fixed top-20 left-0 right-0 bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-md border-b border-slate-600/30 shadow-lg z-40">
         <div className="max-w-7xl mx-auto px-4 lg:px-6">
           <div className="flex space-x-8">
             {tabs.map((tab) => (

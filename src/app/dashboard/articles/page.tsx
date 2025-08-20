@@ -58,7 +58,7 @@ const ArticlesPage = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen pt-40 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* 背景の装飾要素 */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {/* 浮遊する幾何学的図形 */}
