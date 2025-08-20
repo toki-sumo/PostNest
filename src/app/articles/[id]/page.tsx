@@ -4,6 +4,7 @@ import Image from "next/image";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/utils/formatDate";
+import RichTextDisplay from "@/components/article/RichTextDisplay";
 
 export default async function ArticleDetailPage({ params, }: {
     params: Promise<{ id: string }>;
@@ -72,8 +73,8 @@ export default async function ArticleDetailPage({ params, }: {
                         </p>
                     </div>
 
-                    <div className="text-slate-700 leading-relaxed whitespace-pre-line">
-                        {detailArticle.content}
+                    <div className="bg-white rounded-lg p-6 shadow-sm">
+                        <RichTextDisplay content={detailArticle.content} />
                     </div>
                 </div>
             </main>

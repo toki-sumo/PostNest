@@ -61,7 +61,7 @@ export default async function HomePage() {
                       {article.title}
                     </h3>
                     <p className="text-slate-600 mb-4 line-clamp-3">
-                      {article.content}
+                      {article.content.replace(/<[^>]*>/g, '')}
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-slate-500">

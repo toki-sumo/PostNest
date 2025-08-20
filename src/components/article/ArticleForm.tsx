@@ -4,7 +4,7 @@ import { useState } from 'react';
 import TagInput from './TagInput';
 import Spinner from '../ui/Spinner';
 import { TextInput } from '../ui/TextInput';
-import Editor from './Editor';
+import RichTextEditor from './RichTextEditor';
 
 type ArticleFormProps = {
   initialTitle?: string;
@@ -82,19 +82,12 @@ export default function ArticleForm({
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">コンテンツ</label>
-              <textarea
-                className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-white h-40 focus:ring-2 focus:ring-slate-500 focus:border-transparent resize-none transition-colors duration-200"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
+              <RichTextEditor
+                content={content}
+                onChange={setContent}
                 placeholder="記事の内容を入力してください"
               />
             </div>
-            {/* <div className="mb-4">
-              <Editor
-                content={content} // 初期値
-                onChange={(html) => setContent(html)} // HTMLを取得してstateに保存
-              />
-            </div> */}
 
             <div>
               <div className="flex items-center mb-2">
