@@ -6,6 +6,7 @@ type Provider = 'google' | 'github';
 
 interface OAuthButtonProps {
   provider: Provider;
+  className?: string;
 }
 
 const providerConfig = {
@@ -19,13 +20,13 @@ const providerConfig = {
   },
 };
 
-export default function OAuthButton({ provider }: OAuthButtonProps) {
+export default function OAuthButton({ provider, className = '' }: OAuthButtonProps) {
   const config = providerConfig[provider];
 
   return (
     <button
       onClick={() => signIn(provider, { callbackUrl: "/dashboard" })}
-      className="w-full flex items-center justify-center gap-2 border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 rounded-md px-4 py-2"
+      className={`w-full flex items-center justify-center gap-2 border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 rounded-md px-4 py-2 ${className}`}
     >
       <Image
         src={config.logo}
