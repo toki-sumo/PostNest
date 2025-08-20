@@ -7,7 +7,7 @@ export default function Spinner({ fullscreen = false, size = 8 }: SpinnerProps) 
   const sizeClass = `h-${size} w-${size}`;
   const svg = (
     <svg
-      className={`animate-spin ${sizeClass} text-gray-500`}
+      className={`animate-spin ${sizeClass} text-blue-400`}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
@@ -30,7 +30,7 @@ export default function Spinner({ fullscreen = false, size = 8 }: SpinnerProps) 
 
   if (fullscreen) {
     return (
-      <div className="flex items-center justify-center bg-gray-200 w-full h-full fixed inset-0 z-50">
+      <div className="flex items-center justify-center bg-slate-900/80 backdrop-blur-sm w-full h-full fixed inset-0 z-50">
         {svg}
       </div>
     );

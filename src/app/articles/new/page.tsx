@@ -13,7 +13,7 @@ export default function CreateBlogPage() {
             body: JSON.stringify({ title, content, tags, imageURL }),
         });
 
-        router.push('/');
+        router.push('/articles');
         // router.refresh();
     };
 

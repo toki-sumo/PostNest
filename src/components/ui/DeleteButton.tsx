@@ -20,7 +20,7 @@ const DeleteButton = ({ id }: DeleteButtonProps) => {
                 method: "DELETE",
             });
             setShowModal(false);
-            router.push("/");
+            router.push("/articles");
             router.refresh();
         } catch (error) {
             console.error("削除失敗:", error);

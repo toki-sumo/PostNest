@@ -42,7 +42,7 @@ export default function EditBlogPage(){
     });
     console.log("update!!!!!!!!!!!!");
 
-    router.push('/');
+    router.push('/articles');
     router.refresh();
   };
 

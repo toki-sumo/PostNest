@@ -6,7 +6,6 @@ import Heading from '@tiptap/extension-heading';
 import { TextStyle } from '@tiptap/extension-text-style';
 import { Color } from '@tiptap/extension-color';
 import Typography from '@tiptap/extension-typography';
-import { useState } from 'react';
 
 type RichTextEditorProps = {
   content: string;
@@ -15,8 +14,6 @@ type RichTextEditorProps = {
 };
 
 const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps) => {
-  const [showPreview, setShowPreview] = useState(false);
-
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -33,7 +30,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-slate max-w-none focus:outline-none min-h-[200px] p-4',
+        class: 'prose prose-invert prose-slate max-w-none focus:outline-none min-h-[200px] p-4 rich-text-editor',
       },
     },
     immediatelyRender: false,
@@ -86,22 +83,9 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
   return (
     <div className="space-y-4">
       {/* ツールバー */}
-      <div className="border border-slate-200 rounded-lg bg-white">
-        <div className="border-b border-slate-200 p-3 bg-slate-50">
+      <div className="border border-slate-600/30 rounded-lg bg-slate-700/50 backdrop-blur-sm">
+        <div className="border-b border-slate-600/30 p-3 bg-slate-600/30">
           <div className="flex flex-wrap items-center gap-2">
-            {/* プレビュートグル */}
-            <button
-              type="button"
-              onClick={() => setShowPreview(!showPreview)}
-              className={`px-3 py-1 text-sm rounded-lg transition-colors duration-200 ${
-                showPreview
-                  ? 'bg-slate-600 text-white'
-                  : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
-              }`}
-            >
-              {showPreview ? '編集モード' : 'プレビュー'}
-            </button>
-
             {/* 見出し */}
             <div className="flex items-center gap-1">
               <button
@@ -110,7 +94,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`px-2 py-1 text-xs rounded ${
                   editor.isActive('heading', { level: 1 })
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
               >
                 H1
@@ -121,7 +105,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`px-2 py-1 text-xs rounded ${
                   editor.isActive('heading', { level: 2 })
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
               >
                 H2
@@ -132,7 +116,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`px-2 py-1 text-xs rounded ${
                   editor.isActive('heading', { level: 3 })
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
               >
                 H3
@@ -147,7 +131,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`p-2 rounded ${
                   editor.isActive('bold')
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
                 title="太字"
               >
@@ -161,7 +145,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`p-2 rounded ${
                   editor.isActive('italic')
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
                 title="斜体"
               >
@@ -175,7 +159,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`p-2 rounded ${
                   editor.isActive('strike')
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
                 title="取り消し線"
               >
@@ -189,7 +173,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`p-2 rounded ${
                   editor.isActive('code')
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
                 title="インラインコード"
               >
@@ -207,7 +191,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`p-2 rounded ${
                   editor.isActive('bulletList')
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
                 title="箇条書きリスト"
               >
@@ -221,7 +205,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
                 className={`p-2 rounded ${
                   editor.isActive('orderedList')
                     ? 'bg-slate-600 text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
                 } transition-colors duration-200`}
                 title="番号付きリスト"
               >
@@ -238,7 +222,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
               className={`p-2 rounded ${
                 editor.isActive('blockquote')
                   ? 'bg-slate-600 text-white'
-                  : 'bg-white text-slate-700 hover:bg-slate-100'
+                  : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'
               } transition-colors duration-200`}
               title="引用"
             >
@@ -252,25 +236,25 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
               <button
                 type="button"
                 onClick={() => setTextColor('#ef4444')}
-                className="w-6 h-6 rounded border border-slate-200 bg-red-500 hover:scale-110 transition-transform duration-200"
+                className="w-6 h-6 rounded border border-slate-600/30 bg-red-500 hover:scale-110 transition-transform duration-200"
                 title="赤色"
               />
               <button
                 type="button"
                 onClick={() => setTextColor('#3b82f6')}
-                className="w-6 h-6 rounded border border-slate-200 bg-blue-500 hover:scale-110 transition-transform duration-200"
+                className="w-6 h-6 rounded border border-slate-600/30 bg-blue-500 hover:scale-110 transition-transform duration-200"
                 title="青色"
               />
               <button
                 type="button"
                 onClick={() => setTextColor('#10b981')}
-                className="w-6 h-6 rounded border border-slate-200 bg-emerald-500 hover:scale-110 transition-transform duration-200"
+                className="w-6 h-6 rounded border border-slate-600/30 bg-emerald-500 hover:scale-110 transition-transform duration-200"
                 title="緑色"
               />
               <button
                 type="button"
                 onClick={() => setTextColor('#f59e0b')}
-                className="w-6 h-6 rounded border border-slate-200 bg-amber-500 hover:scale-110 transition-transform duration-200"
+                className="w-6 h-6 rounded border border-slate-600/30 bg-amber-500 hover:scale-110 transition-transform duration-200"
                 title="黄色"
               />
             </div>
@@ -279,7 +263,7 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
             <button
               type="button"
               onClick={clearFormatting}
-              className="px-3 py-1 text-xs bg-slate-200 text-slate-700 rounded hover:bg-slate-300 transition-colors duration-200"
+              className="px-3 py-1 text-xs bg-slate-600/50 text-slate-300 rounded hover:bg-slate-600 transition-colors duration-200"
               title="フォーマットをクリア"
             >
               クリア
@@ -290,25 +274,10 @@ const RichTextEditor = ({ content, onChange, placeholder }: RichTextEditorProps)
         {/* エディター本体 */}
         <EditorContent 
           editor={editor} 
-          className="min-h-[200px] focus:outline-none rich-text-editor"
-          placeholder={placeholder}
+          className="min-h-[200px] focus:outline-none rich-text-editor prose prose-invert prose-slate max-w-none p-4"
+          placeholder={placeholder || "ここに記事の内容を入力してください。H1、H2、H3ボタンで見出しを設定できます。"}
         />
       </div>
-
-      {/* プレビュー */}
-      {showPreview && (
-        <div className="border border-slate-200 rounded-lg bg-white">
-          <div className="border-b border-slate-200 p-3 bg-slate-50">
-            <h3 className="text-sm font-medium text-slate-700">プレビュー</h3>
-          </div>
-          <div className="p-4">
-            <div 
-              className="prose prose-slate max-w-none rich-text-editor"
-              dangerouslySetInnerHTML={{ __html: editor.getHTML() }}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

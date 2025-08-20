@@ -103,9 +103,10 @@ export default async function ArticleDetailPage({ params, }: {
 
                     {/* 記事本文 */}
                     <div className="p-6">
-                        <div className="prose prose-invert prose-slate max-w-none prose-headings:text-white prose-p:text-slate-300 prose-strong:text-white prose-em:text-slate-200 prose-code:text-blue-300 prose-pre:bg-slate-800 prose-pre:border prose-pre:border-slate-600 prose-blockquote:border-slate-600 prose-blockquote:text-slate-300 prose-li:text-slate-300 prose-a:text-blue-400 prose-a:hover:text-blue-300 [&>*]:text-slate-300 [&_p]:text-slate-300 [&_div]:text-slate-300 [&_span]:text-slate-300 [&_strong]:text-white [&_em]:text-slate-200 [&_code]:text-blue-300 [&_pre]:text-slate-300 [&_blockquote]:text-slate-300 [&_li]:text-slate-300 [&_a]:text-blue-400 [&_a:hover]:text-blue-300">
-                            <RichTextDisplay content={detailArticle.content} className="text-slate-300 [&>*]:text-slate-300 [&_p]:text-slate-300 [&_div]:text-slate-300 [&_span]:text-slate-300 [&_strong]:text-white [&_em]:text-slate-200 [&_code]:text-blue-300 [&_pre]:text-slate-300 [&_blockquote]:text-slate-300 [&_li]:text-slate-300 [&_a]:text-blue-400 [&_a:hover]:text-blue-300" />
-                        </div>
+                        <RichTextDisplay 
+                            content={detailArticle.content} 
+                            className="text-slate-300" 
+                        />
                     </div>
                 </div>
 

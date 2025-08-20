@@ -94,3 +94,245 @@
 @media (prefers-color-scheme: dark) {
   /* ダークモードのスタイルをここに追加 */
 }
+
+/* リッチテキストエディターの見出しスタイル改善 */
+.rich-text-editor h1 {
+  font-size: 2.25rem !important; /* text-4xl */
+  font-weight: 700 !important; /* font-bold */
+  line-height: 2.5rem !important; /* leading-10 */
+  margin-top: 1.5rem !important; /* mt-6 */
+  margin-bottom: 1rem !important; /* mb-4 */
+  color: #f8fafc !important; /* text-slate-50 */
+  border-bottom: 2px solid #475569 !important; /* border-b-2 border-slate-600 */
+  padding-bottom: 0.5rem !important; /* pb-2 */
+}
+
+.rich-text-editor h2 {
+  font-size: 1.875rem !important; /* text-3xl */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 2.25rem !important; /* leading-9 */
+  margin-top: 1.25rem !important; /* mt-5 */
+  margin-bottom: 0.75rem !important; /* mb-3 */
+  color: #e2e8f0 !important; /* text-slate-200 */
+  border-bottom: 1px solid #64748b !important; /* border-b border-slate-500 */
+  padding-bottom: 0.25rem !important; /* pb-1 */
+}
+
+.rich-text-editor h3 {
+  font-size: 1.5rem !important; /* text-2xl */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 2rem !important; /* leading-8 */
+  margin-top: 1rem !important; /* mt-4 */
+  margin-bottom: 0.5rem !important; /* mb-2 */
+  color: #cbd5e1 !important; /* text-slate-300 */
+}
+
+.rich-text-editor h4 {
+  font-size: 1.25rem !important; /* text-xl */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 1.75rem !important; /* leading-7 */
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.5rem !important; /* mb-2 */
+  color: #94a3b8 !important; /* text-slate-400 */
+}
+
+.rich-text-editor h5 {
+  font-size: 1.125rem !important; /* text-lg */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 1.75rem !important; /* leading-7 */
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.5rem !important; /* mb-2 */
+  color: #94a3b8 !important; /* text-slate-400 */
+}
+
+.rich-text-editor h6 {
+  font-size: 1rem !important; /* text-base */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 1.5rem !important; /* leading-6 */
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.5rem !important; /* mb-2 */
+  color: #94a3b8 !important; /* text-slate-400 */
+}
+
+/* エディター内の段落スタイル */
+.rich-text-editor p {
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.75rem !important; /* mb-3 */
+  color: #e2e8f0 !important; /* text-slate-200 */
+  line-height: 1.75rem !important; /* leading-7 */
+}
+
+/* エディター内のリストスタイル */
+.rich-text-editor ul,
+.rich-text-editor ol {
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.75rem !important; /* mb-3 */
+  padding-left: 1.5rem !important; /* pl-6 */
+  color: #e2e8f0 !important; /* text-slate-200 */
+}
+
+.rich-text-editor li {
+  margin-top: 0.25rem !important; /* mt-1 */
+  margin-bottom: 0.25rem !important; /* mb-1 */
+}
+
+/* エディター内の引用スタイル */
+.rich-text-editor blockquote {
+  border-left: 4px solid #3b82f6 !important; /* border-l-4 border-blue-500 */
+  padding-left: 1rem !important; /* pl-4 */
+  margin-top: 1rem !important; /* mt-4 */
+  margin-bottom: 1rem !important; /* mb-4 */
+  font-style: italic !important;
+  color: #94a3b8 !important; /* text-slate-400 */
+  background-color: rgba(59, 130, 246, 0.1) !important; /* bg-blue-500/10 */
+  padding: 1rem !important; /* p-4 */
+  border-radius: 0.5rem !important; /* rounded-lg */
+}
+
+/* エディター内のコードスタイル */
+.rich-text-editor code {
+  background-color: #475569 !important; /* bg-slate-600 */
+  color: #f1f5f9 !important; /* text-slate-100 */
+  padding: 0.125rem 0.25rem !important; /* px-1 py-0.5 */
+  border-radius: 0.25rem !important; /* rounded */
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 0.875rem !important; /* text-sm */
+}
+
+/* エディター内の太字・斜体スタイル */
+.rich-text-editor strong {
+  font-weight: 700 !important; /* font-bold */
+  color: #f8fafc !important; /* text-slate-50 */
+}
+
+.rich-text-editor em {
+  font-style: italic !important;
+  color: #cbd5e1 !important; /* text-slate-300 */
+}
+
+/* エディター内の取り消し線スタイル */
+.rich-text-editor s {
+  text-decoration: line-through !important;
+  color: #94a3b8 !important; /* text-slate-400 */
+}
+
+/* 記事詳細画面の表示スタイル */
+.rich-text-display h1 {
+  font-size: 2.25rem !important; /* text-4xl */
+  font-weight: 700 !important; /* font-bold */
+  line-height: 2.5rem !important; /* leading-10 */
+  margin-top: 1.5rem !important; /* mt-6 */
+  margin-bottom: 1rem !important; /* mb-4 */
+  color: #f8fafc !important; /* text-slate-50 */
+  border-bottom: 2px solid #475569 !important; /* border-b-2 border-slate-600 */
+  padding-bottom: 0.5rem !important; /* pb-2 */
+}
+
+.rich-text-display h2 {
+  font-size: 1.875rem !important; /* text-3xl */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 2.25rem !important; /* leading-9 */
+  margin-top: 1.25rem !important; /* mt-5 */
+  margin-bottom: 0.75rem !important; /* mb-3 */
+  color: #e2e8f0 !important; /* text-slate-200 */
+  border-bottom: 1px solid #64748b !important; /* border-b border-slate-500 */
+  padding-bottom: 0.25rem !important; /* pb-1 */
+}
+
+.rich-text-display h3 {
+  font-size: 1.5rem !important; /* text-2xl */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 2rem !important; /* leading-8 */
+  margin-top: 1rem !important; /* mt-4 */
+  margin-bottom: 0.5rem !important; /* mb-2 */
+  color: #cbd5e1 !important; /* text-slate-300 */
+}
+
+.rich-text-display h4 {
+  font-size: 1.25rem !important; /* text-xl */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 1.75rem !important; /* leading-7 */
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.5rem !important; /* mb-2 */
+  color: #94a3b8 !important; /* text-slate-400 */
+}
+
+.rich-text-display h5 {
+  font-size: 1.125rem !important; /* text-lg */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 1.75rem !important; /* leading-7 */
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.5rem !important; /* mb-2 */
+  color: #94a3b8 !important; /* text-slate-400 */
+}
+
+.rich-text-display h6 {
+  font-size: 1rem !important; /* text-base */
+  font-weight: 600 !important; /* font-semibold */
+  line-height: 1.5rem !important; /* leading-6 */
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.5rem !important; /* mb-2 */
+  color: #94a3b8 !important; /* text-slate-400 */
+}
+
+/* 記事詳細画面の段落スタイル */
+.rich-text-display p {
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.75rem !important; /* mb-3 */
+  color: #e2e8f0 !important; /* text-slate-200 */
+  line-height: 1.75rem !important; /* leading-7 */
+}
+
+/* 記事詳細画面のリストスタイル */
+.rich-text-display ul,
+.rich-text-display ol {
+  margin-top: 0.75rem !important; /* mt-3 */
+  margin-bottom: 0.75rem !important; /* mb-3 */
+  padding-left: 1.5rem !important; /* pl-6 */
+  color: #e2e8f0 !important; /* text-slate-200 */
+}
+
+.rich-text-display li {
+  margin-top: 0.25rem !important; /* mt-1 */
+  margin-bottom: 0.25rem !important; /* mb-1 */
+}
+
+/* 記事詳細画面の引用スタイル */
+.rich-text-display blockquote {
+  border-left: 4px solid #3b82f6 !important; /* border-l-4 border-blue-500 */
+  padding-left: 1rem !important; /* pl-4 */
+  margin-top: 1rem !important; /* mt-4 */
+  margin-bottom: 1rem !important; /* mb-4 */
+  font-style: italic !important;
+  color: #94a3b8 !important; /* text-slate-400 */
+  background-color: rgba(59, 130, 246, 0.1) !important; /* bg-blue-500/10 */
+  padding: 1rem !important; /* p-4 */
+  border-radius: 0.5rem !important; /* rounded-lg */
+}
+
+/* 記事詳細画面のコードスタイル */
+.rich-text-display code {
+  background-color: #475569 !important; /* bg-slate-600 */
+  color: #f1f5f9 !important; /* text-slate-100 */
+  padding: 0.125rem 0.25rem !important; /* px-1 py-0.5 */
+  border-radius: 0.25rem !important; /* rounded */
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 0.875rem !important; /* text-sm */
+}
+
+/* 記事詳細画面の太字・斜体スタイル */
+.rich-text-display strong {
+  font-weight: 700 !important; /* font-bold */
+  color: #f8fafc !important; /* text-slate-50 */
+}
+
+.rich-text-display em {
+  font-style: italic !important;
+  color: #cbd5e1 !important; /* text-slate-300 */
+}
+
+/* 記事詳細画面の取り消し線スタイル */
+.rich-text-display s {
+  text-decoration: line-through !important;
+  color: #94a3b8 !important; /* text-slate-400 */
+}

@@ -30,9 +30,9 @@ export default function Editor({ content = '', onChange }: { content?: string; o
   }
 
   return (
-    <div className="border rounded p-4" >
+    <div className="border border-slate-600/30 rounded-lg bg-slate-700/50 backdrop-blur-sm p-4" >
       <MenuBar editor={editor} />
-      < EditorContent editor={editor} className="prose max-w-none mt-2" />
+      < EditorContent editor={editor} className="prose prose-invert prose-slate max-w-none mt-2" />
     </div>
   );
 }
@@ -42,36 +42,35 @@ function MenuBar({ editor }: { editor: any }) {
     <div className="flex gap-2 mb-2" >
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
-        className={`px-2 py-1 border rounded ${editor.isActive('bold') ? 'bg-gray-300' : ''}`
-        }
+        className={`px-2 py-1 border border-slate-600/30 rounded ${editor.isActive('bold') ? 'bg-slate-600 text-white' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'}`}
         type="button"
       >
         Bold
       </button>
       < button
         onClick={() => editor.chain().focus().setParagraph().run()}
-        className={`px-2 py-1 border rounded ${editor.isActive('paragraph') ? 'bg-gray-300' : ''}`}
+        className={`px-2 py-1 border border-slate-600/30 rounded ${editor.isActive('paragraph') ? 'bg-slate-600 text-white' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'}`}
         type="button"
       >
         Paragraph
       </button>
       < button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={`px-2 py-1 border rounded ${editor.isActive('heading', { level: 1 }) ? 'bg-gray-300' : ''}`}
+        className={`px-2 py-1 border border-slate-600/30 rounded ${editor.isActive('heading', { level: 1 }) ? 'bg-slate-600 text-white' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'}`}
         type="button"
       >
         H1
       </button>
       < button
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={`px-2 py-1 border rounded ${editor.isActive('heading', { level: 2 }) ? 'bg-gray-300' : ''}`}
+        className={`px-2 py-1 border border-slate-600/30 rounded ${editor.isActive('heading', { level: 2 }) ? 'bg-slate-600 text-white' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'}`}
         type="button"
       >
         H2
       </button>
       < button
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        className={`px-2 py-1 border rounded ${editor.isActive('heading', { level: 3 }) ? 'bg-gray-300' : ''}`}
+        className={`px-2 py-1 border border-slate-600/30 rounded ${editor.isActive('heading', { level: 3 }) ? 'bg-slate-600 text-white' : 'bg-slate-700/50 text-slate-300 hover:bg-slate-600/50'}`}
         type="button"
       >
         H3
