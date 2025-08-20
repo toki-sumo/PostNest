@@ -14,24 +14,33 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ]
 
   return (
-    <div className="p-4">
-      <div className="flex space-x-4 border-b mb-4">
-        {tabs.map((tab) => (
-          <Link
-            key={tab.name}
-            href={tab.href}
-            className={clsx(
-              'pb-2 text-sm font-medium',
-              pathname === tab.href
-                ? 'border-b-2 border-blue-500 text-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
-            )}
-          >
-            {tab.name}
-          </Link>
-        ))}
+    <div className="pt-4">
+      {/* 固定タブナビゲーション */}
+      <div className="sticky top-20 bg-white border-b border-slate-200 shadow-sm z-40">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6">
+          <div className="flex space-x-8">
+            {tabs.map((tab) => (
+              <Link
+                key={tab.name}
+                href={tab.href}
+                className={clsx(
+                  'py-4 text-sm font-medium border-b-2 transition-colors duration-200',
+                  pathname === tab.href
+                    ? 'border-slate-600 text-slate-800'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                )}
+              >
+                {tab.name}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
-      <div>{children}</div>
+      
+      {/* メインコンテンツ */}
+      <div className="px-4 lg:px-6 py-6">
+        {children}
+      </div>
     </div>
   )
 }
