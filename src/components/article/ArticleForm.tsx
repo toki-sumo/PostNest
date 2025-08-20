@@ -63,7 +63,7 @@ export default function ArticleForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 max-w-2xl mx-auto">
+    <form onSubmit={handleSubmit} className="p-4 max-w-2xl mx-auto pt-20">
       <h1 className="text-2xl font-bold mb-4">
         {isEdit ? '編集' : '新規作成'}
       </h1>

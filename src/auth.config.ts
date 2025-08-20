@@ -39,27 +39,46 @@ export const authConfig = {
           typeof credentials.email !== "string" ||
           typeof credentials.password !== "string"
         ) {
-          return null;
+          throw new Error("InvalidCredentials");
         }
 
-        const user = await db.user.findUnique({
-          where: { email: credentials.email },
-        });
-        if (!user || !user.password) return null;
+        try {
+          const user = await db.user.findUnique({
+            where: { email: credentials.email },
+          });
 
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) return null;
+          if (!user) {
+            throw new Error("UserNotFound");
+          }
 
-        const { password, ...userWithoutPassword } = user;
-        return {
-          ...userWithoutPassword,
-          name: user.name ?? undefined,
-          email: user.email ?? undefined,
-          emailVerified: user.emailVerified ?? undefined,
-          image: user.image ?? undefined,
-          role: user.role ?? undefined,
-          bio: user.bio ?? undefined,
-        };
+          if (!user.password) {
+            throw new Error("NoPassword");
+          }
+
+          const isValid = await bcrypt.compare(credentials.password, user.password);
+          if (!isValid) {
+            throw new Error("InvalidPassword");
+          }
+
+          // アカウントが無効化されているかチェック
+          if (user.role === "DISABLED") {
+            throw new Error("AccountDisabled");
+          }
+
+          const { password, ...userWithoutPassword } = user;
+          return {
+            ...userWithoutPassword,
+            name: user.name ?? undefined,
+            email: user.email ?? undefined,
+            emailVerified: user.emailVerified ?? undefined,
+            image: user.image ?? undefined,
+            role: user.role ?? undefined,
+            bio: user.bio ?? undefined,
+          };
+        } catch (error) {
+          console.error("Authorization error:", error);
+          throw error;
+        }
       },
     }),
   ],
@@ -89,11 +108,38 @@ export const authConfig = {
       }
       return session;
     },
+    async signIn({ user, account, profile }) {
+      // OAuthログイン時の追加チェック
+      if (account?.provider !== "credentials") {
+        // 既存ユーザーのメールアドレスとOAuthアカウントのリンク確認
+        if (user.email) {
+          const existingUser = await db.user.findUnique({
+            where: { email: user.email },
+          });
+
+          if (existingUser && existingUser.password) {
+            // パスワード認証で既に存在するユーザーの場合
+            throw new Error("OAuthAccountNotLinked");
+          }
+        }
+      }
+      return true;
+    },
   },
 
   pages: {
     signIn: "/signin",
     error: "/auth/error",
+    signUp: "/signup",
+  },
+
+  events: {
+    async signIn({ user, account, profile, isNewUser }) {
+      console.log(`User signed in: ${user.email} via ${account?.provider}`);
+    },
+    async signOut({ session, token }) {
+      console.log("User signed out");
+    },
   },
 
 } satisfies NextAuthConfig;

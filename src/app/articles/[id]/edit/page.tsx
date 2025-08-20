@@ -47,7 +47,16 @@ export default function EditBlogPage(){
   };
 
   if (loading || !article) {
-    return <p className="p-4">読み込み中...</p>;
+    return (
+      <div className="pt-20 p-4">
+        <div className="flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">読み込み中...</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (

@@ -30,10 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="min-h-screen flex flex-col bg-slate-200 text-slate-750 pt-24">
+      <body className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
         <SessionProvider>
           <Header />
-          <main className="flex-grow container mx-auto px-4">
+          <main className="flex-grow">
             <Suspense fallback={<Loading />}>{children}</Suspense>
           </main>
           <Footer />
