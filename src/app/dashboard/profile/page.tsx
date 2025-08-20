@@ -50,12 +50,12 @@ const ProfilePage = () => {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen pt-20 bg-slate-50">
+      <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <div className="max-w-4xl mx-auto p-4 lg:p-6">
           <div className="flex items-center justify-center py-20">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-600 mx-auto mb-4"></div>
-              <p className="text-slate-600">読み込み中...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
+              <p className="text-slate-300">読み込み中...</p>
             </div>
           </div>
         </div>
@@ -64,43 +64,62 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-slate-50">
-      <div className="max-w-4xl mx-auto p-4 lg:p-6">
+    <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* 背景の装飾要素 */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {/* 浮遊する幾何学的図形 */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-40 left-20 w-40 h-40 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
+        
+        {/* グリッドパターン */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+      </div>
+
+      <div className="max-w-4xl mx-auto p-4 lg:p-6 relative z-10">
         {/* ヘッダーセクション */}
-        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-6">
-          <h1 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-3">プロフィール編集</h1>
-          <p className="text-base lg:text-lg font-semibold text-slate-700">
+        <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-600/30 p-6 mb-8">
+          <h1 className="text-3xl lg:text-4xl font-bold text-white mb-4">プロフィール編集</h1>
+          <p className="text-lg lg:text-xl text-slate-300">
             {session?.user?.name} さんのプロフィール情報
           </p>
         </div>
 
         {/* プロフィール編集フォーム */}
-        <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-          <div className="space-y-6">
+        <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-600/30 p-8">
+          <div className="space-y-8">
             {/* 現在のユーザー情報表示 */}
-            <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-              <p className="text-slate-600 text-sm font-medium mb-2">現在の情報</p>
-              <div className="space-y-2">
-                <p className="text-slate-800 font-semibold">
-                  ユーザー名: {session?.user?.name || '未設定'}
-                </p>
-                <p className="text-slate-600 text-sm">
-                  メールアドレス: {session?.user?.email}
-                </p>
-                <p className="text-slate-600 text-sm">
-                  プロフィール: {session?.user?.bio || '未設定'}
-                </p>
+            <div className="bg-gradient-to-r from-slate-700/50 to-slate-600/50 rounded-2xl p-6 border border-slate-600/30">
+              <p className="text-slate-300 text-sm font-medium mb-4 flex items-center">
+                <svg className="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                現在の情報
+              </p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-400 font-medium">ユーザー名:</span>
+                  <span className="text-white font-semibold">{session?.user?.name || '未設定'}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-400 font-medium">メールアドレス:</span>
+                  <span className="text-slate-300">{session?.user?.email}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-slate-400 font-medium">プロフィール:</span>
+                  <span className="text-slate-300">{session?.user?.bio || '未設定'}</span>
+                </div>
               </div>
             </div>
 
             {/* 編集フォーム */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-3">
                   ユーザー名
                 </label>
                 <input
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors duration-200"
+                  className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="ユーザー名を入力してください"
@@ -108,17 +127,20 @@ const ProfilePage = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-slate-300 mb-3">
                   プロフィール
                 </label>
                 <textarea
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500 transition-colors duration-200 resize-vertical"
+                  className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 resize-vertical"
                   rows={4}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   placeholder="自己紹介やプロフィールを入力してください"
                 />
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-400 mt-2 flex items-center">
+                  <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                   あなたの興味や専門分野について書いてみましょう
                 </p>
               </div>
@@ -128,16 +150,16 @@ const ProfilePage = () => {
                 <button
                   onClick={handleSave}
                   disabled={loading}
-                  className="inline-flex items-center px-4 py-2 bg-slate-600 text-white font-medium rounded-md hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 shadow-sm"
+                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
                 >
                   {loading ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
                       保存中...
                     </>
                   ) : (
                     <>
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       保存
@@ -148,12 +170,23 @@ const ProfilePage = () => {
 
               {/* メッセージ表示 */}
               {message && (
-                <div className={`p-3 rounded-md ${
+                <div className={`p-4 rounded-xl ${
                   message.includes('エラー') 
-                    ? 'bg-red-50 border border-red-200 text-red-700' 
-                    : 'bg-green-50 border border-green-200 text-green-700'
+                    ? 'bg-red-500/20 border border-red-500/30 text-red-300' 
+                    : 'bg-green-500/20 border border-green-500/30 text-green-300'
                 }`}>
-                  <p className="text-sm font-medium">{message}</p>
+                  <p className="text-sm font-medium flex items-center">
+                    {message.includes('エラー') ? (
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                    {message}
+                  </p>
                 </div>
               )}
             </div>

@@ -15,7 +15,7 @@ export const Button = ({
   return (
     <button
       type={type}
-      className={`bg-gray-100 hover:bg-gray-500 hover:text-gray-100 text-gray-600 font-medium py-2 px-4 rounded-md transition duration-200 shadow-md 
+      className={`bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25 transform hover:scale-105 border border-slate-600/30 hover:border-slate-500/50
         ${loading ? "cursor-wait opacity-70" : "cursor-pointer"} 
         ${className}`}
       disabled={disabled || loading}
