@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import { Suspense } from "react";
 import Loading from "./loading";
 import { SessionProvider } from "next-auth/react";
+import ThemeProvider from "@/components/theme/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,13 +54,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+      <body className="min-h-screen flex flex-col">
         <SessionProvider>
-          <Header />
-          <main className="flex-grow">
-            <Suspense fallback={<Loading />}>{children}</Suspense>
-          </main>
-          <Footer />
+          <ThemeProvider>
+            <Header />
+            <main className="flex-grow">
+              <Suspense fallback={<Loading />}>{children}</Suspense>
+            </main>
+            <Footer />
+          </ThemeProvider>
         </SessionProvider>
       </body>
     </html>

@@ -36,13 +36,13 @@ export default function TagInput({ value, onChange, disabled = false }: TagInput
         {value.map((tag) => (
           <span
             key={tag}
-            className="flex items-center bg-gradient-to-r from-slate-700/50 to-slate-600/50 text-slate-300 text-sm px-3 py-1.5 rounded-full font-medium border border-slate-600/30 shadow-sm hover:border-slate-500/50 transition-all duration-300"
+            className="flex items-center text-sm px-3 py-1.5 rounded-full font-medium border shadow-sm transition-all duration-300 bg-[var(--card)] text-[var(--text)] border-[var(--border)] hover:border-[var(--card-hover-border)]"
           >
             {tag}
             <button
               onClick={() => removeTag(tag)}
               disabled={disabled}
-              className={`ml-2 text-slate-400 hover:text-red-400 transition-colors duration-300 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
+              className={`ml-2 text-[var(--muted)] hover:text-red-400 transition-colors duration-300 ${disabled ? "cursor-not-allowed opacity-50" : ""}`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -53,7 +53,7 @@ export default function TagInput({ value, onChange, disabled = false }: TagInput
       </div>
       <input
         type="text"
-        className="w-full px-4 py-3 rounded-xl border border-slate-600/30 bg-slate-700/50 text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 disabled:opacity-50 disabled:bg-slate-800/50 disabled:cursor-not-allowed"
+        className="w-full px-4 py-3 rounded-xl border transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-[var(--card)] text-[var(--text)] border-[var(--border)] placeholder-[color:var(--muted)] focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKeyDown}

@@ -9,20 +9,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen">
       <BackgroundDecoration />
 
       <div className="relative z-10">
         {/* タブナビゲーション */}
-        <div className="sticky top-20 left-0 right-0 z-30 bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-md border-b border-slate-600/30">
+        <div className="sticky top-20 left-0 right-0 z-30 backdrop-blur-md border-b bg-[var(--card)]/80 border-[var(--border)]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <nav className="flex space-x-8">
               <Link
                 href="/dashboard"
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
                   pathname === '/dashboard'
-                    ? 'border-blue-500 text-blue-400'
-                    : 'border-transparent text-slate-300 hover:text-slate-200 hover:border-slate-400'
+                    ? 'border-[var(--primary)] text-[var(--primary)]'
+                    : 'border-transparent text-[var(--text)]/85 hover:text-[var(--text)] hover:border-[var(--card-hover-border)]'
                 }`}
               >
                 <div className="flex items-center space-x-2">
@@ -37,8 +37,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 href="/dashboard/articles"
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
                   pathname === '/dashboard/articles'
-                    ? 'border-green-500 text-green-400'
-                    : 'border-transparent text-slate-300 hover:text-slate-200 hover:border-slate-400'
+                    ? 'border-green-500 text-green-600'
+                    : 'border-transparent text-[var(--text)]/85 hover:text-[var(--text)] hover:border-[var(--card-hover-border)]'
                 }`}
               >
                 <div className="flex items-center space-x-2">
@@ -53,8 +53,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 href="/dashboard/subscriptions"
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
                   pathname === '/dashboard/subscriptions'
-                    ? 'border-purple-500 text-purple-400'
-                    : 'border-transparent text-slate-300 hover:text-slate-200 hover:border-slate-400'
+                    ? 'border-purple-500 text-purple-600'
+                    : 'border-transparent text-[var(--text)]/85 hover:text-[var(--text)] hover:border-[var(--card-hover-border)]'
                 }`}
               >
                 <div className="flex items-center space-x-2">
@@ -69,8 +69,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 href="/dashboard/profile"
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
                   pathname === '/dashboard/profile'
-                    ? 'border-blue-500 text-blue-400'
-                    : 'border-transparent text-slate-300 hover:text-slate-200 hover:border-slate-400'
+                    ? 'border-[var(--primary)] text-[var(--primary)]'
+                    : 'border-transparent text-[var(--text)]/85 hover:text-[var(--text)] hover:border-[var(--card-hover-border)]'
                 }`}
               >
                 <div className="flex items-center space-x-2">
@@ -85,8 +85,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 href="/dashboard/settings"
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-all duration-300 ${
                   pathname === '/dashboard/settings'
-                    ? 'border-purple-500 text-purple-400'
-                    : 'border-transparent text-slate-300 hover:text-slate-200 hover:border-slate-400'
+                    ? 'border-purple-500 text-purple-600'
+                    : 'border-transparent text-[var(--text)]/85 hover:text-[var(--text)] hover:border-[var(--card-hover-border)]'
                 }`}
               >
                 <div className="flex items-center space-x-2">

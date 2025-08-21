@@ -52,14 +52,14 @@ export default function EditBlogPage(){
 
   if (loading || !article) {
     return (
-      <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="min-h-screen pt-20">
         <BackgroundDecoration />
         <div className="max-w-4xl mx-auto p-6 relative z-10">
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-600/30 p-12">
+          <div className="backdrop-blur-sm rounded-2xl shadow-2xl border p-12 bg-[var(--card)] border-[var(--border)]">
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-                <p className="text-slate-300 text-lg">記事を読み込み中...</p>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary)] mx-auto mb-4"></div>
+                <p className="text-[var(--text)]/85 text-lg">記事を読み込み中...</p>
               </div>
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function EditBlogPage(){
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen pt-20">
       <BackgroundDecoration />
       <div className="relative z-10">
         <ArticleForm

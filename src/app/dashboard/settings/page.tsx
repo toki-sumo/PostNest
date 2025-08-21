@@ -56,23 +56,23 @@ const SettingsPage = () => {
       {/* 設定項目 */}
       <div className="space-y-6">
         {/* 通知設定 */}
-        <GlassCard className="p-6 hover:border-slate-500/50 transition-all duration-300">
+        <GlassCard className="p-6 hover:border-[var(--card-hover-border)] transition-all duration-300">
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0">
-                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.19 4.19A2 2 0 004 6v10a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-1.41.59z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-medium text-white">通知設定</h3>
-                <p className="text-slate-300 mt-1">
+                <h3 className="text-lg font-medium text-[var(--text)]">通知設定</h3>
+                <p className="text-[var(--text)]/85 mt-1">
                   メール通知やプッシュ通知の設定を行います
                 </p>
               </div>
             </div>
             <div className="pt-2">
-              <button className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-600 to-slate-700 text-white font-medium rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25 transform hover:scale-105">
+              <button className="inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -84,23 +84,23 @@ const SettingsPage = () => {
         </GlassCard>
 
         {/* プライバシー設定 */}
-        <GlassCard className="p-6 hover:border-slate-500/50 transition-all duration-300">
+        <GlassCard className="p-6 hover:border-[var(--card-hover-border)] transition-all duration-300">
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0">
-                <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-medium text-white">プライバシー設定</h3>
-                <p className="text-slate-300 mt-1">
+                <h3 className="text-lg font-medium text-[var(--text)]">プライバシー設定</h3>
+                <p className="text-[var(--text)]/85 mt-1">
                   プロフィールの公開範囲やデータの表示設定を行います
                 </p>
               </div>
             </div>
             <div className="pt-2">
-              <button className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-slate-600 to-slate-700 text-white font-medium rounded-lg hover:from-slate-700 hover:to-slate-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25 transform hover:scale-105">
+              <button className="inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -112,7 +112,7 @@ const SettingsPage = () => {
         </GlassCard>
 
         {/* アカウント退会セクション */}
-        <GlassCard className="p-6 border-red-600/30 hover:border-red-500/50 transition-all duration-300 bg-gradient-to-br from-red-900/20 to-red-800/20">
+        <GlassCard className="p-6 border-red-600/30 hover:border-red-500/50 transition-all duration-300">
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0">
@@ -121,8 +121,8 @@ const SettingsPage = () => {
                 </svg>
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-medium text-red-300">アカウント退会</h3>
-                <p className="text-red-200 mt-1">
+                <h3 className="text-lg font-medium text-red-600">アカウント退会</h3>
+                <p className="text-red-700 mt-1">
                   この操作は取り消すことができません。アカウントを削除すると、すべてのデータが完全に削除されます。
                 </p>
               </div>
@@ -131,7 +131,7 @@ const SettingsPage = () => {
             <div className="pt-2">
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-red-500/25 transform hover:scale-105"
+                className="inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-red-600 text-white"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -144,8 +144,8 @@ const SettingsPage = () => {
       </div>
       {/* 削除確認モーダル */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-700 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-600/30 max-w-md w-full p-8">
+        <div className="fixed inset-0 bg-[color:var(--bg)]/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="backdrop-blur-sm rounded-2xl shadow-2xl border max-w-md w-full p-8 bg-[var(--card)] border-[var(--border)]">
             <div className="flex items-start space-x-3 mb-6">
               <div className="flex-shrink-0">
                 <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,8 +153,8 @@ const SettingsPage = () => {
                 </svg>
               </div>
               <div>
-                <h3 className="text-xl font-medium text-white">アカウント削除の確認</h3>
-                <p className="text-slate-300 mt-2">
+                <h3 className="text-xl font-medium text-[var(--text)]">アカウント削除の確認</h3>
+                <p className="text-[var(--text)]/85 mt-2">
                   本当にアカウントを削除しますか？この操作は取り消すことができません。
                 </p>
               </div>
@@ -163,14 +163,14 @@ const SettingsPage = () => {
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 px-4 py-2 border border-slate-600/30 text-slate-300 font-medium rounded-lg hover:bg-slate-700/50 transition-all duration-300"
+                className="flex-1 px-4 py-2 border font-medium rounded-lg transition-all duration-300 bg-[var(--card)] text-[var(--text)] border-[var(--border)] hover:border-[var(--card-hover-border)]"
               >
                 キャンセル
               </button>
               <button
                 onClick={handleDeleteAccount}
                 disabled={deleteLoading}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium rounded-lg hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                className="flex-1 px-4 py-2 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed bg-red-600 text-white"
               >
                 {deleteLoading ? (
                   <>

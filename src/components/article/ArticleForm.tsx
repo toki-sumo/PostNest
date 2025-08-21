@@ -84,20 +84,20 @@ export default function ArticleForm({
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <form onSubmit={handleSubmit} className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-600/30 p-8">
+      <form onSubmit={handleSubmit} className="backdrop-blur-sm rounded-2xl shadow-2xl border p-8 bg-[var(--card)] border-[var(--border)]">
         <div className="text-center mb-8">
-          <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+          <h1 className="text-4xl lg:text-5xl font-bold text-[var(--text)] mb-4">
             {isEdit ? '記事を編集' : '記事を新規作成'}
           </h1>
-          <p className="text-lg text-slate-300">
+          <p className="text-lg text-[var(--text)]/85">
             {isEdit ? '既存の記事を編集しましょう' : '新しい記事を作成しましょう'}
           </p>
         </div>
 
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-3 flex items-center">
-              <svg className="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <label className="block text-sm font-medium text-[var(--text)] mb-3 flex items-center">
+              <svg className="w-5 h-5 text-[var(--primary)] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
               </svg>
               タイトル
@@ -106,11 +106,11 @@ export default function ArticleForm({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="記事のタイトルを入力してください"
-              className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+              className="w-full px-4 py-3 rounded-xl shadow-sm transition-all duration-300"
             />
           </div>
 
-          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl p-6">
+          <div className="rounded-xl p-6 border border-[var(--border)] bg-[var(--card)]">
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <input
@@ -118,10 +118,10 @@ export default function ArticleForm({
                   id="isPremium"
                   checked={isPremium}
                   onChange={(e) => handlePremiumToggle(e.target.checked)}
-                  className="w-5 h-5 text-yellow-500 bg-slate-700/50 border-slate-600/30 rounded focus:ring-yellow-500 focus:ring-2"
+                  className="w-5 h-5 text-[var(--primary)] bg-[var(--card)] border-[var(--border)] rounded focus:ring-[var(--primary)] focus:ring-2"
                 />
-                <label htmlFor="isPremium" className="text-lg font-semibold text-yellow-400 flex items-center">
-                  <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <label htmlFor="isPremium" className="text-lg font-semibold text-[var(--text)] flex items-center">
+                  <svg className="w-6 h-6 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                   </svg>
                   有料記事にする
@@ -129,29 +129,29 @@ export default function ArticleForm({
               </div>
               {isPremium && (
                 <div className="space-y-3 pl-8">
-                  <p className="text-slate-300 text-sm">
+                  <p className="text-[var(--text)]/85 text-sm">
                     有料記事に設定すると、読者は記事の内容を読むために購読が必要になります。
                   </p>
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center">
+                    <label className="block text-sm font-medium text-[var(--text)] mb-2 flex items-center">
                       <svg className="w-4 h-4 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                       </svg>
                       価格（円）
                     </label>
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">¥</span>
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--muted)]">¥</span>
                       <input
                         type="number"
                         min="50"
                         max="99999"
                         value={price}
                         onChange={(e) => setPrice(Number(e.target.value))}
-                        className="w-full pl-8 pr-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-300"
+                        className="w-full pl-8 pr-4 py-3 border rounded-xl shadow-sm transition-all duration-300 bg-[var(--card)] text-[var(--text)] border-[var(--border)] placeholder-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
                         placeholder="100"
                       />
                     </div>
-                    <p className="text-xs text-slate-400 mt-1">
+                    <p className="text-xs text-[var(--muted)] mt-1">
                       50円以上、99,999円以下で設定してください
                     </p>
                   </div>
@@ -161,8 +161,8 @@ export default function ArticleForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-3 flex items-center">
-              <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <label className="block text-sm font-medium text-[var(--text)] mb-3 flex items-center">
+              <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               コンテンツ
@@ -172,8 +172,8 @@ export default function ArticleForm({
 
           <div>
             <div className="flex items-center mb-3">
-              <label className="text-sm font-medium text-slate-300 mr-4 flex items-center">
-                <svg className="w-5 h-5 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <label className="text-sm font-medium text-[var(--text)] mr-4 flex items-center">
+                <svg className="w-5 h-5 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                 </svg>
                 タグ
@@ -183,7 +183,7 @@ export default function ArticleForm({
                   type="button"
                   onClick={handleGenerateTags}
                   disabled={isGenerating}
-                  className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
+                  className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]"
                 >
                   {isGenerating ? (
                     <>
@@ -205,8 +205,8 @@ export default function ArticleForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-3 flex items-center">
-              <svg className="w-5 h-5 text-pink-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <label className="block text-sm font-medium text-[var(--text)] mb-3 flex items-center">
+              <svg className="w-5 h-5 text-pink-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 2 0 002 2z" />
               </svg>
               画像URL（オプション）
@@ -215,7 +215,7 @@ export default function ArticleForm({
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="画像のURLを入力してください"
-              className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+              className="w-full px-4 py-3 rounded-xl shadow-sm transition-all duration-300"
             />
           </div>
 
@@ -223,7 +223,7 @@ export default function ArticleForm({
             <button
               type="submit"
               disabled={isSubmitting || !title || !content || (isPremium && price < 50)}
-              className="w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-bold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
+              className="w-full inline-flex items-center justify-center px-8 py-4 text-lg font-bold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]"
             >
               {isSubmitting ? (
                 <>

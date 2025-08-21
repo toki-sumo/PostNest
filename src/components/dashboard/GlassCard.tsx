@@ -12,7 +12,8 @@ type Props = {
 export default function GlassCard({ children, className, onClick }: Props) {
   return (
     <div onClick={onClick} className={clsx(
-      'bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-600/30',
+      'backdrop-blur-sm rounded-2xl shadow-lg border',
+      'bg-[var(--card)] border-[var(--border)]',
       className,
     )}>
       {children}

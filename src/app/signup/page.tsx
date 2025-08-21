@@ -122,29 +122,29 @@ const SignupPage = () => {
     }
 
     return (
-        <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="min-h-screen pt-20">
             <BackgroundDecoration />
             
             <div className="relative z-10 flex items-center justify-center min-h-screen">
                 <div className="w-full max-w-md mx-auto p-6">
                     {/* サインアップフォーム */}
-                    <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-600/30 p-8">
+                    <div className="backdrop-blur-sm rounded-2xl shadow-2xl border p-8 bg-[var(--card)] border-[var(--border)]">
                         {/* ヘッダー */}
                         <div className="text-center mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 bg-[color:var(--muted)]/15">
+                                <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                                 </svg>
                             </div>
-                            <h1 className="text-3xl font-bold text-white mb-2">新規登録</h1>
-                            <p className="text-slate-300">PostNestアカウントを作成</p>
+                            <h1 className="text-3xl font-bold text-[var(--text)] mb-2">新規登録</h1>
+                            <p className="text-[var(--text)]/85">PostNestアカウントを作成</p>
                         </div>
 
                         {/* エラーメッセージ */}
                         {error && (
-                            <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300 text-sm">
+                            <div className="mb-6 p-4 bg-red-500/15 border border-red-500/30 rounded-xl text-red-600 text-sm">
                                 <div className="flex items-center">
-                                    <svg className="w-5 h-5 mr-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                     </svg>
                                     {error}
@@ -156,8 +156,8 @@ const SignupPage = () => {
                         <form onSubmit={handleSignup} className="space-y-6">
                             {/* メールアドレス */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center">
-                                    <svg className="w-4 h-4 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <label className="block text-sm font-medium text-[var(--text)] mb-2 flex items-center">
+                                    <svg className="w-4 h-4 text-[var(--primary)] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                                     </svg>
                                     メールアドレス
@@ -167,10 +167,10 @@ const SignupPage = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="example@example.com"
-                                    className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                                    className="w-full px-4 py-3"
                                 />
                                 {validationErrors.email && (
-                                    <p className="mt-2 text-sm text-red-400 flex items-center">
+                                    <p className="mt-2 text-sm text-red-600 flex items-center">
                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                         </svg>
@@ -181,8 +181,8 @@ const SignupPage = () => {
 
                             {/* パスワード */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center">
-                                    <svg className="w-4 h-4 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <label className="block text-sm font-medium text-[var(--text)] mb-2 flex items-center">
+                                    <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
                                     パスワード
@@ -192,10 +192,10 @@ const SignupPage = () => {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="パスワードを入力"
-                                    className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                                    className="w-full px-4 py-3"
                                 />
                                 {validationErrors.password && (
-                                    <p className="mt-2 text-sm text-red-400 flex items-center">
+                                    <p className="mt-2 text-sm text-red-600 flex items-center">
                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                         </svg>
@@ -206,8 +206,8 @@ const SignupPage = () => {
 
                             {/* パスワード確認 */}
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center">
-                                    <svg className="w-4 h-4 text-purple-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <label className="block text-sm font-medium text-[var(--text)] mb-2 flex items-center">
+                                    <svg className="w-4 h-4 text-purple-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     パスワード確認
@@ -217,10 +217,10 @@ const SignupPage = () => {
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     placeholder="パスワードを再入力"
-                                    className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                                    className="w-full px-4 py-3"
                                 />
                                 {validationErrors.confirmPassword && (
-                                    <p className="mt-2 text-sm text-red-400 flex items-center">
+                                    <p className="mt-2 text-sm text-red-600 flex items-center">
                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                                         </svg>
@@ -233,7 +233,7 @@ const SignupPage = () => {
                             <Button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-green-500/25 transform hover:scale-105"
+                                className="w-full"
                             >
                                 {isLoading ? (
                                     <div className="flex items-center justify-center">
@@ -255,33 +255,27 @@ const SignupPage = () => {
                         <div className="my-6">
                             <div className="relative">
                                 <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-slate-600/30"></div>
+                                    <div className="w-full border-t border-[var(--border)]"></div>
                                 </div>
                                 <div className="relative flex justify-center text-sm">
-                                    <span className="px-2 bg-slate-800/50 text-slate-400">または</span>
+                                    <span className="px-2 bg-[var(--card)] text-[var(--muted)]">または</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* OAuthボタン */}
                         <div className="space-y-3">
-                            <OAuthButton
-                                provider="google"
-                                className="w-full bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25 transform hover:scale-105"
-                            />
-                            <OAuthButton
-                                provider="github"
-                                className="w-full bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25 transform hover:scale-105"
-                            />
+                            <OAuthButton provider="google" />
+                            <OAuthButton provider="github" />
                         </div>
 
                         {/* ログインリンク */}
                         <div className="mt-8 text-center">
-                            <p className="text-slate-400 text-sm">
+                            <p className="text-[var(--muted)] text-sm">
                                 既にアカウントをお持ちの方は
                                 <a
                                     href="/signin"
-                                    className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-300 ml-1"
+                                    className="text-[var(--primary)] hover:opacity-80 font-medium transition-colors duration-300 ml-1"
                                 >
                                     ログイン
                                 </a>

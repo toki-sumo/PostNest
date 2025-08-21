@@ -18,7 +18,7 @@ export default function CreateBlogPage() {
     };
 
     return (
-        <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="min-h-screen pt-20">
             <BackgroundDecoration />
             <div className="relative z-10">
                 <ArticleForm

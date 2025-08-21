@@ -77,11 +77,7 @@ export default function SignInPage() {
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // フォームバリデーション
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsLoading(true);
     clearErrors();
@@ -90,11 +86,10 @@ export default function SignInPage() {
       const result = await signIn("credentials", {
         email: email.trim(),
         password,
-        redirect: false, // リダイレクトを無効にして結果を確認
+        redirect: false,
       });
 
       if (result?.error) {
-        // ログイン失敗時のエラーハンドリング
         switch (result.error) {
           case 'CredentialsSignin':
             setError('メールアドレスまたはパスワードが正しくありません。');
@@ -113,7 +108,6 @@ export default function SignInPage() {
             break;
         }
       } else if (result?.ok) {
-        // ログイン成功時の処理
         router.push('/dashboard');
         router.refresh();
       }
@@ -125,29 +119,29 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen pt-20">
       <BackgroundDecoration />
        
       <div className="relative z-10 flex items-center justify-center min-h-screen">
         <div className="w-full max-w-md mx-auto p-6">
           {/* ログインフォーム */}
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-600/30 p-8">
+          <div className="backdrop-blur-sm rounded-2xl shadow-2xl border p-8 bg-[var(--card)] border-[var(--border)]">
             {/* ヘッダー */}
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-20 h-20 bg-[color:var(--muted)]/15 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <h1 className="text-3xl font-bold text-white mb-2">ログイン</h1>
-              <p className="text-slate-300">PostNestにようこそ</p>
+              <h1 className="text-3xl font-bold text-[var(--text)] mb-2">ログイン</h1>
+              <p className="text-[var(--text)]/85">PostNestにようこそ</p>
             </div>
 
             {/* エラーメッセージ */}
             {error && (
-              <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300 text-sm">
+              <div className="mb-6 p-4 bg-red-500/15 border border-red-500/30 rounded-xl text-red-600 text-sm">
                 <div className="flex items-center">
-                  <svg className="w-5 h-5 mr-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                   </svg>
                   {error}
@@ -159,8 +153,8 @@ export default function SignInPage() {
             <form onSubmit={handleSignin} className="space-y-6">
               {/* メールアドレス */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center">
-                  <svg className="w-4 h-4 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <label className="block text-sm font-medium text-[var(--text)] mb-2 flex items-center">
+                  <svg className="w-4 h-4 text-[var(--primary)] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                   </svg>
                   メールアドレス
@@ -170,10 +164,10 @@ export default function SignInPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@example.com"
-                  className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                  className="w-full px-4 py-3"
                 />
                 {validationErrors.email && (
-                  <p className="mt-2 text-sm text-red-400 flex items-center">
+                  <p className="mt-2 text-sm text-red-600 flex items-center">
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                     </svg>
@@ -184,8 +178,8 @@ export default function SignInPage() {
 
               {/* パスワード */}
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center">
-                  <svg className="w-4 h-4 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <label className="block text-sm font-medium text-[var(--text)] mb-2 flex items-center">
+                  <svg className="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   パスワード
@@ -195,10 +189,10 @@ export default function SignInPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="パスワードを入力"
-                  className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                  className="w-full px-4 py-3"
                 />
                 {validationErrors.password && (
-                  <p className="mt-2 text-sm text-red-400 flex items-center">
+                  <p className="mt-2 text-sm text-red-600 flex items-center">
                     <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
                     </svg>
@@ -211,7 +205,7 @@ export default function SignInPage() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
+                className="w-full"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
@@ -233,33 +227,27 @@ export default function SignInPage() {
             <div className="my-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-600/30"></div>
+                  <div className="w-full border-t border-[var(--border)]"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-slate-800/50 text-slate-400">または</span>
+                  <span className="px-2 bg-[var(--card)] text-[var(--muted)]">または</span>
                 </div>
               </div>
             </div>
 
             {/* OAuthボタン */}
             <div className="space-y-3">
-              <OAuthButton
-                provider="google"
-                className="w-full bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25 transform hover:scale-105"
-              />
-              <OAuthButton
-                provider="github"
-                className="w-full bg-gradient-to-r from-slate-700 to-slate-600 hover:from-slate-600 hover:to-slate-500 text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25 transform hover:scale-105"
-              />
+              <OAuthButton provider="google" />
+              <OAuthButton provider="github" />
             </div>
 
             {/* サインアップリンク */}
             <div className="mt-8 text-center">
-              <p className="text-slate-400 text-sm">
+              <p className="text-[var(--muted)] text-sm">
                 アカウントをお持ちでない方は
                 <a
                   href="/signup"
-                  className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-300 ml-1"
+                  className="text-[var(--primary)] hover:opacity-80 font-medium transition-colors duration-300 ml-1"
                 >
                   新規登録
                 </a>

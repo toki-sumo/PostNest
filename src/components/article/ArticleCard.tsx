@@ -31,7 +31,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
   };
 
   return (
-    <article className="group bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm shadow-lg rounded-2xl overflow-hidden border border-slate-600/30 hover:border-slate-500/50 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 transform hover:scale-[1.02] h-80">
+    <article className="group backdrop-blur-sm shadow-lg rounded-2xl overflow-hidden border hover:shadow-2xl transition-all duration-500 transform hover:scale-[1.02] h-80 bg-[var(--card)] border-[var(--border)] hover:border-[var(--card-hover-border)]">
       {/* モバイル: 縦並び、デスクトップ: 横並び */}
       <div className="flex flex-col lg:flex-row h-full">
         {/* 画像セクション */}
@@ -100,32 +100,32 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
             )}
 
             <Link href={`/articles/${article.id}`}>
-              <h2 className="text-sm lg:text-xl xl:text-2xl font-bold text-white hover:text-blue-300 transition-colors duration-300 line-clamp-1 lg:line-clamp-2 group-hover:text-blue-200">
+              <h2 className="text-sm lg:text-xl xl:text-2xl font-bold text-[var(--text)] hover:text-[var(--primary)] transition-colors duration-300 line-clamp-1 lg:line-clamp-2">
                 {article.title}
               </h2>
             </Link>
 
-            <p className="text-slate-300 text-xs lg:text-base line-clamp-2 lg:line-clamp-3 leading-relaxed">
+            <p className="text-[var(--text)]/80 text-xs lg:text-base line-clamp-2 lg:line-clamp-3 leading-relaxed">
               {article.content.replace(/<[^>]*>/g, '')}
             </p>
           </div>
 
-          <div className="mt-2 lg:mt-4 pt-2 lg:pt-4 border-t border-slate-600/30 flex-shrink-0 min-h-[80px] lg:min-h-0">
+          <div className="mt-2 lg:mt-4 pt-2 lg:pt-4 border-t flex-shrink-0 min-h-[80px] lg:min-h-0 border-[var(--border)]">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 lg:gap-3">
-              <div className="text-xs lg:text-sm text-slate-400 space-y-0.5 lg:space-y-1">
+              <div className="text-xs lg:text-sm text-[var(--muted)] space-y-0.5 lg:space-y-1">
                 <div className="flex items-center gap-1 lg:gap-2">
-                  <span className="font-medium text-slate-300">投稿者:</span>
-                  <span className="font-medium text-blue-300">{article.author.name}</span>
+                  <span className="font-medium text-[var(--text)]/80">投稿者:</span>
+                  <span className="font-medium text-[var(--primary)]">{article.author.name}</span>
                 </div>
                 <div className="flex items-center gap-1 lg:gap-2">
-                  <span className="font-medium text-slate-300">投稿日:</span>
-                  <span className="text-slate-400">{formatDate(article.createdAt)}</span>
+                  <span className="font-medium text-[var(--text)]/80">投稿日:</span>
+                  <span className="text-[var(--muted)]">{formatDate(article.createdAt)}</span>
                 </div>
               </div>
 
               <Link
                 href={`/articles/${article.id}`}
-                className="group/btn inline-flex items-center justify-center px-3 py-1.5 lg:px-4 lg:py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs lg:text-sm font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
+                className="group/btn inline-flex items-center justify-center px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]"
               >
                 続きを読む
                 <svg 

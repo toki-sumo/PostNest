@@ -70,24 +70,24 @@ const ProfilePage = () => {
         <div className="space-y-8">
           {/* 現在のユーザー情報表示 */}
           <GlassCard className="p-6">
-            <p className="text-slate-300 text-sm font-medium mb-4 flex items-center">
-              <svg className="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <p className="text-[var(--text)]/85 text-sm font-medium mb-4 flex items-center">
+              <svg className="w-5 h-5 text-[var(--primary)] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
               現在の情報
             </p>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <span className="text-slate-400 font-medium">ユーザー名:</span>
-                <span className="text-white font-semibold">{session?.user?.name || '未設定'}</span>
+                <span className="text-[var(--muted)] font-medium">ユーザー名:</span>
+                <span className="text-[var(--text)] font-semibold">{session?.user?.name || '未設定'}</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-slate-400 font-medium">メールアドレス:</span>
-                <span className="text-slate-300">{session?.user?.email}</span>
+                <span className="text-[var(--muted)] font-medium">メールアドレス:</span>
+                <span className="text-[var(--text)]/85">{session?.user?.email}</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className="text-slate-400 font-medium">プロフィール:</span>
-                <span className="text-slate-300">{session?.user?.bio || '未設定'}</span>
+                <span className="text-[var(--muted)] font-medium">プロフィール:</span>
+                <span className="text-[var(--text)]/85">{session?.user?.bio || '未設定'}</span>
               </div>
             </div>
           </GlassCard>
@@ -95,9 +95,9 @@ const ProfilePage = () => {
           {/* 編集フォーム */}
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-3">ユーザー名</label>
+              <label className="block text-sm font-medium text-[var(--text)] mb-3">ユーザー名</label>
               <input
-                className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                className="w-full px-4 py-3 rounded-xl shadow-sm transition-all duration-300 bg-[var(--card)] text-[var(--text)] border border-[var(--border)] placeholder-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="ユーザー名を入力してください"
@@ -105,15 +105,15 @@ const ProfilePage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-3">プロフィール</label>
+              <label className="block text-sm font-medium text-[var(--text)] mb-3">プロフィール</label>
               <textarea
-                className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 resize-vertical"
+                className="w-full px-4 py-3 rounded-xl shadow-sm transition-all duration-300 resize-vertical bg-[var(--card)] text-[var(--text)] border border-[var(--border)] placeholder-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
                 rows={4}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="自己紹介やプロフィールを入力してください"
               />
-              <p className="text-xs text-slate-400 mt-2 flex items-center">
+              <p className="text-xs text-[var(--muted)] mt-2 flex items-center">
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -126,7 +126,7 @@ const ProfilePage = () => {
               <button
                 onClick={handleSave}
                 disabled={loading}
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
+                className="inline-flex items-center px-6 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]"
               >
                 {loading ? (
                   <>
@@ -148,8 +148,8 @@ const ProfilePage = () => {
             {message && (
               <div className={`p-4 rounded-xl ${
                 message.includes('エラー')
-                  ? 'bg-red-500/20 border border-red-500/30 text-red-300'
-                  : 'bg-green-500/20 border border-green-500/30 text-green-300'
+                  ? 'bg-red-500/15 border border-red-500/30 text-red-600'
+                  : 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-600'
               }`}>
                 <p className="text-sm font-medium flex items-center">
                   {message.includes('エラー') ? (

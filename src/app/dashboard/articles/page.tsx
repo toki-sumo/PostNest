@@ -68,8 +68,8 @@ const ArticlesPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-            <p className="text-slate-300">読み込み中...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary)] mx-auto mb-4"></div>
+            <p className="text-[var(--text)]/85">読み込み中...</p>
           </div>
         </div>
       </div>
@@ -86,28 +86,28 @@ const ArticlesPage = () => {
           displayed.map((article) => (
             <GlassCard
               key={article.id}
-              className="group p-6 transition-all duration-500 hover:border-slate-500/50 hover:shadow-2xl hover:shadow-blue-500/10 cursor-pointer transform hover:scale-[1.02]"
+              className="group p-6 transition-all duration-500 cursor-pointer transform hover:scale-[1.02] hover:border-[var(--card-hover-border)] hover:shadow-2xl"
               onClick={() => router.push(`/articles/${article.id}`)}
             >
               <div className="space-y-4">
                 {/* タイトル */}
-                <h2 className="text-xl lg:text-2xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300 line-clamp-2">
+                <h2 className="text-xl lg:text-2xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors duration-300 line-clamp-2">
                   {article.title}
                 </h2>
 
                 {/* 内容 */}
                 {article.content && (
-                  <p className="text-slate-300 text-base lg:text-lg line-clamp-2 leading-relaxed">
+                  <p className="text-[var(--text)]/85 text-base lg:text-lg line-clamp-2 leading-relaxed">
                     {article.content.replace(/<[^>]*>/g, '')}
                   </p>
                 )}
 
                 {/* メタ情報 */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-slate-600/30">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-4 border-t border-[var(--border)]">
                   <div className="space-y-2">
                     {/* 更新日時 */}
-                    <div className="flex items-center gap-2 text-sm text-slate-400">
-                      <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 text-sm text-[var(--muted)]">
+                      <svg className="w-4 h-4 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                       最終更新: {formatDate(article.updatedAt ?? '')}
@@ -119,7 +119,7 @@ const ArticlesPage = () => {
                         {article.tags.map((tag, idx) => (
                           <span
                             key={`${article.id}-${tag}-${idx}`}
-                            className="bg-slate-700/50 text-slate-300 text-xs font-medium px-2 py-1 rounded-full border border-slate-600/30"
+                            className="text-[var(--text)]/85 text-xs font-medium px-2 py-1 rounded-full border bg-[var(--card)] border-[var(--border)]"
                           >
                             #{tag}
                           </span>
@@ -132,7 +132,7 @@ const ArticlesPage = () => {
                   <div className="flex gap-3">
                     <Link
                       href={`/articles/${article.id}/edit`}
-                      className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
+                      className="inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,16 +147,16 @@ const ArticlesPage = () => {
           ))
         ) : (
           <GlassCard className="p-12 text-center">
-            <div className="w-24 h-24 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-[color:var(--muted)]/10">
+              <svg className="w-12 h-12 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">まだ記事がありません</h3>
-            <p className="text-slate-300 mb-8 text-lg">最初の記事を投稿してみましょう！</p>
+            <h3 className="text-2xl font-bold text-[var(--text)] mb-4">まだ記事がありません</h3>
+            <p className="text-[var(--text)]/85 mb-8 text-lg">最初の記事を投稿してみましょう！</p>
             <Link
               href="/articles/new"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25"
+              className="inline-flex items-center px-6 py-3 text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-sm bg-[var(--primary)] text-[var(--primary-contrast)] hover:opacity-90"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -171,7 +171,7 @@ const ArticlesPage = () => {
         <div className="mt-8 flex justify-center">
           <button
             onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-slate-700 to-slate-600 text-white font-medium rounded-xl hover:from-slate-600 hover:to-slate-500 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25"
+            className="inline-flex items-center px-6 py-3 font-medium rounded-xl transition-all duration-300 shadow-sm bg-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--card-hover-border)]"
           >
             もっと見る
           </button>

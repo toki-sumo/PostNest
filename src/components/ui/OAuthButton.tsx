@@ -26,7 +26,7 @@ export default function OAuthButton({ provider, className = '' }: OAuthButtonPro
   return (
     <button
       onClick={() => signIn(provider, { callbackUrl: "/dashboard" })}
-      className={`w-full flex items-center justify-center gap-2 border border-slate-600/30 bg-slate-700/50 text-slate-300 hover:bg-slate-600/50 hover:text-white rounded-lg px-4 py-2 transition-all duration-300 ${className}`}
+      className={`w-full flex items-center justify-center gap-2 rounded-lg px-4 py-2 transition-all duration-300 border bg-[var(--card)] border-[var(--border)] text-[var(--text)] hover:border-[var(--card-hover-border)] ${className}`}
     >
       <Image
         src={config.logo}

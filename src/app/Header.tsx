@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { useTheme } from '@/components/theme/ThemeProvider'
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from "next/navigation";
 
@@ -9,6 +10,7 @@ const Header = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const isLoading = status === 'loading';
   const user = session?.user;
 
@@ -21,16 +23,16 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-slate-900 border-b border-slate-700 text-white z-50 shadow-lg">
+    <header className="fixed top-0 left-0 w-full border-b z-50 shadow-lg bg-[var(--card)] border-[var(--border)] text-[var(--text)]">
       {/* メインヘッダー */}
       <div className="px-4 py-4 lg:px-8 lg:py-5">
         <div className="flex justify-between items-center">
           {/* ロゴ */}
-          <h1 className="text-xl lg:text-2xl font-bold text-white">
+          <h1 className="text-xl lg:text-2xl font-bold text-[var(--text)]">
             <Link 
               href="/" 
               onClick={closeMenu}
-              className="hover:text-slate-300 transition-colors duration-200"
+              className="hover:text-[var(--muted)] transition-colors duration-200"
             >
               PostNest
             </Link>
@@ -41,7 +43,7 @@ const Header = () => {
             {/* 記事一覧リンク */}
             <Link
               href="/articles"
-              className="text-slate-300 hover:text-slate-200 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-slate-800"
+              className="text-[var(--text)]/85 hover:text-[var(--text)] font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[var(--card)]"
             >
               記事一覧
             </Link>
@@ -50,7 +52,7 @@ const Header = () => {
             {user && (
               <Link
                 href="/articles/new"
-                className="bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                className="py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md bg-[var(--primary)] text-[var(--primary-contrast)]"
               >
                 記事を書く
               </Link>
@@ -60,7 +62,7 @@ const Header = () => {
             {user && (
               <Link
                 href="/dashboard"
-                className="text-slate-300 hover:text-slate-200 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-slate-800"
+                className="text-[var(--text)]/85 hover:text-[var(--text)] font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[var(--card)]"
               >
                 ダッシュボード
               </Link>
@@ -70,26 +72,36 @@ const Header = () => {
             {user?.role === 'Admin' && (
               <Link
                 href="/admin"
-                className="text-slate-300 hover:text-red-400 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-slate-800"
+                className="text-[var(--text)]/85 hover:text-red-500 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[var(--card)]"
               >
                 管理者
               </Link>
             )}
 
+            {/* テーマトグル */}
+            <button
+              onClick={toggleTheme}
+              className="py-2 px-3 rounded-md border transition-colors duration-200 border-[var(--border)] text-[var(--text)] hover:bg-[var(--card)]"
+              aria-label="テーマ切り替え"
+              title="テーマ切り替え"
+            >
+              {theme === 'dark' ? 'Light' : 'Dark'}
+            </button>
+
             {/* ログイン状態の表示 */}
             {isLoading ? (
               <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
-                <span className="text-slate-400 text-sm">読み込み中...</span>
+                <div className="w-4 h-4 border-2 border-[var(--muted)] border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-[var(--muted)] text-sm">読み込み中...</span>
               </div>
             ) : user ? (
               <div className="flex items-center space-x-3">
-                <span className="text-slate-300 text-sm font-medium">
+                <span className="text-[var(--text)]/85 text-sm font-medium">
                   {user.name ?? 'ゲスト'}さん
                 </span>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium py-2 px-3 rounded-lg transition-colors duration-200"
+                  className="font-medium py-2 px-3 rounded-lg transition-colors duration-200 bg-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--card-hover-border)]"
                 >
                   ログアウト
                 </button>
@@ -98,13 +110,13 @@ const Header = () => {
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => router.push("/signin")}
-                  className="bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                  className="font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md bg-[var(--primary)] text-[var(--primary-contrast)]"
                 >
                   ログイン
                 </button>
                 <Link
                   href="/signup"
-                  className="bg-slate-600 hover:bg-slate-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md"
+                  className="font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md bg-[var(--primary)] text-[var(--primary-contrast)]"
                 >
                   新規登録
                 </Link>
@@ -115,7 +127,7 @@ const Header = () => {
           {/* ハンバーガーメニューボタン */}
           <button
             onClick={toggleMenu}
-            className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-slate-200 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-900 transition-colors duration-200"
+            className="lg:hidden p-2 rounded-lg text-[var(--text)]/85 hover:text-[var(--text)] hover:bg-[var(--card)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors duration-200"
             aria-label="メニューを開く"
           >
             <svg
@@ -138,12 +150,12 @@ const Header = () => {
       <div className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
         isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
       }`}>
-        <div className="bg-slate-800 border-t border-slate-700 px-4 py-4 space-y-3 shadow-lg">
+        <div className="bg-[var(--card)] border-t border-[var(--border)] px-4 py-4 space-y-3 shadow-lg">
           {/* 記事一覧リンク */}
           <Link
             href="/articles"
             onClick={closeMenu}
-            className="block w-full text-slate-300 hover:text-slate-200 py-3 px-4 rounded-lg text-center font-medium hover:bg-slate-700 transition-colors duration-200"
+            className="block w-full text-[var(--text)]/85 hover:text-[var(--text)] py-3 px-4 rounded-lg text-center font-medium hover:bg-[var(--card)] transition-colors duration-200"
           >
             記事一覧
           </Link>
@@ -153,7 +165,7 @@ const Header = () => {
             <Link
               href="/articles/new"
               onClick={closeMenu}
-              className="block w-full bg-slate-600 hover:bg-slate-700 text-white font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm"
+              className="block w-full py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm bg-[var(--primary)] text-[var(--primary-contrast)]"
             >
               記事を書く
             </Link>
@@ -164,7 +176,7 @@ const Header = () => {
             <Link
               href="/dashboard"
               onClick={closeMenu}
-              className="block w-full text-slate-300 hover:text-slate-200 py-3 px-4 rounded-lg text-center font-medium hover:bg-slate-700 transition-colors duration-200"
+              className="block w-full text-[var(--text)]/85 hover:text-[var(--text)] py-3 px-4 rounded-lg text-center font-medium hover:bg-[var(--card)] transition-colors duration-200"
             >
               ダッシュボード
             </Link>
@@ -175,7 +187,7 @@ const Header = () => {
             <Link
               href="/admin"
               onClick={closeMenu}
-              className="block w-full text-slate-300 hover:text-red-400 py-3 px-4 rounded-lg text-center font-medium hover:bg-slate-700 transition-colors duration-200"
+              className="block w-full text-[var(--text)]/85 hover:text-red-500 py-3 px-4 rounded-lg text-center font-medium hover:bg-[var(--card)] transition-colors duration-200"
             >
               管理者ページ
             </Link>
@@ -183,13 +195,13 @@ const Header = () => {
 
           {/* ログイン状態の表示 */}
           {isLoading ? (
-            <div className="flex items-center justify-center space-x-2 py-4 text-slate-400">
+            <div className="flex items-center justify-center space-x-2 py-4 text-[var(--muted)]">
               <div className="w-5 h-5 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div>
               <span className="text-sm">読み込み中...</span>
             </div>
           ) : user ? (
-            <div className="space-y-3 pt-2 border-t border-slate-700">
-              <div className="text-center py-3 text-slate-300 font-medium bg-slate-700 rounded-lg">
+            <div className="space-y-3 pt-2 border-t border-[var(--border)]">
+              <div className="text-center py-3 text-[var(--text)]/85 font-medium bg-[var(--card)] rounded-lg">
                 ようこそ、{user.name ?? 'ゲスト'}さん
               </div>
               <button
@@ -197,26 +209,26 @@ const Header = () => {
                   closeMenu();
                   signOut({ callbackUrl: "/" });
                 }}
-                className="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200"
+                className="w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 bg-[var(--card)] text-[var(--text)] hover:border-[var(--card-hover-border)] border border-[var(--border)]"
               >
                 ログアウト
               </button>
             </div>
           ) : (
-            <div className="space-y-3 pt-2 border-t border-slate-700">
+            <div className="space-y-3 pt-2 border-t border-[var(--border)]">
               <button
                 onClick={() => {
                   closeMenu();
                   router.push("/signin");
                 }}
-                className="w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm"
+                className="w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm bg-[var(--primary)] text-[var(--primary-contrast)]"
               >
                 ログイン
               </button>
               <Link
                 href="/signup"
                 onClick={closeMenu}
-                className="block w-full bg-slate-600 hover:bg-slate-700 text-white font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm"
+                className="block w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm bg-[var(--primary)] text-[var(--primary-contrast)]"
               >
                 新規登録
               </Link>

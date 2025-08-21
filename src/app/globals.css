@@ -22,20 +22,66 @@
     }
   }
 
-  /* カスタムスクロールバー - ダークテーマ対応 */
+  /* テーマ背景 */
+  html[data-theme='dark'] body {
+    background-image: linear-gradient(to bottom right, #0f172a, #1f2937, #0f172a);
+    color: #fff;
+  }
+  html[data-theme='light'] body {
+    background-image: linear-gradient(to bottom right, #ffffff, #eef2ff, #ffffff);
+    color: #0f172a;
+  }
+
+  /* デザイントークン */
+  html[data-theme='dark'] {
+    --bg: #0f172a; /* slate-900 */
+    --text: #e2e8f0; /* slate-200 */
+    --muted: #94a3b8; /* slate-400 */
+    --card: rgba(51, 65, 85, 0.5); /* slate-700/50 */
+    --border: rgba(71, 85, 105, 0.3); /* slate-600/30 */
+    --card-hover-border: rgba(100, 116, 139, 0.5); /* slate-500/50 */
+    --primary: #fbbf24; /* amber-400 */
+    --primary-contrast: #0b1220;
+    --accent: #fb923c; /* orange-400 */
+  }
+  html[data-theme='light'] {
+    --bg: #ffffff;
+    --text: #0f172a; /* slate-900 */
+    --muted: #475569; /* slate-600 */
+    --card: rgba(255,255,255,0.9);
+    --border: #e5e7eb; /* gray-200 */
+    --card-hover-border: #d1d5db; /* gray-300 */
+    --primary: #f59e0b; /* amber-500 */
+    --primary-contrast: #ffffff;
+    --accent: #f97316; /* orange-500 */
+  }
+
+  /* ヘッダー/フッターのテーマ反映（簡易） */
+  html[data-theme='light'] header {
+    background-color: rgba(255,255,255,0.9);
+    color: #0f172a;
+    border-color: #e5e7eb;
+  }
+  html[data-theme='light'] footer {
+    background-color: rgba(255,255,255,0.9);
+    color: #0f172a;
+    border-color: #e5e7eb;
+  }
+
+  /* カスタムスクロールバー - ダーク/ライト対応 */
   ::-webkit-scrollbar {
     width: 12px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #0f172a; /* slate-900 */
+    background: var(--scrollbar-track, #0f172a); /* slate-900 */
     border-radius: 6px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #475569, #64748b); /* slate-600 to slate-500 */
+    background: var(--scrollbar-thumb, linear-gradient(to bottom, #475569, #64748b));
     border-radius: 6px;
-    border: 2px solid #0f172a; /* slate-900 */
+    border: 2px solid var(--scrollbar-track, #0f172a);
   }
 
   ::-webkit-scrollbar-thumb:hover {
@@ -47,10 +93,9 @@
   }
 
   /* Firefox用スクロールバー */
-  html {
-    scrollbar-width: thin;
-    scrollbar-color: #475569 #0f172a; /* thumb track */
-  }
+  html { scrollbar-width: thin; }
+  html[data-theme='dark'] { scrollbar-color: #475569 #0f172a; }
+  html[data-theme='light'] { scrollbar-color: #94a3b8 #e5e7eb; }
 
   /* フォーカス表示の改善 - ボタンクリック後のフォーカス枠を非表示 */
   *:focus {
@@ -95,15 +140,15 @@
   /* ダークモードのスタイルをここに追加 */
 }
 
-/* リッチテキストエディターの見出しスタイル改善 */
+/* リッチテキストエディターの見出しスタイル（トークン対応） */
 .rich-text-editor h1 {
   font-size: 2.25rem !important; /* text-4xl */
   font-weight: 700 !important; /* font-bold */
   line-height: 2.5rem !important; /* leading-10 */
   margin-top: 1.5rem !important; /* mt-6 */
   margin-bottom: 1rem !important; /* mb-4 */
-  color: #f8fafc !important; /* text-slate-50 */
-  border-bottom: 2px solid #475569 !important; /* border-b-2 border-slate-600 */
+  color: var(--text) !important;
+  border-bottom: 2px solid var(--border) !important;
   padding-bottom: 0.5rem !important; /* pb-2 */
 }
 
@@ -113,8 +158,8 @@
   line-height: 2.25rem !important; /* leading-9 */
   margin-top: 1.25rem !important; /* mt-5 */
   margin-bottom: 0.75rem !important; /* mb-3 */
-  color: #e2e8f0 !important; /* text-slate-200 */
-  border-bottom: 1px solid #64748b !important; /* border-b border-slate-500 */
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
   padding-bottom: 0.25rem !important; /* pb-1 */
 }
 
@@ -124,7 +169,7 @@
   line-height: 2rem !important; /* leading-8 */
   margin-top: 1rem !important; /* mt-4 */
   margin-bottom: 0.5rem !important; /* mb-2 */
-  color: #cbd5e1 !important; /* text-slate-300 */
+  color: var(--text) !important;
 }
 
 .rich-text-editor h4 {
@@ -133,7 +178,7 @@
   line-height: 1.75rem !important; /* leading-7 */
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.5rem !important; /* mb-2 */
-  color: #94a3b8 !important; /* text-slate-400 */
+  color: var(--text) !important;
 }
 
 .rich-text-editor h5 {
@@ -142,7 +187,7 @@
   line-height: 1.75rem !important; /* leading-7 */
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.5rem !important; /* mb-2 */
-  color: #94a3b8 !important; /* text-slate-400 */
+  color: var(--text) !important;
 }
 
 .rich-text-editor h6 {
@@ -151,14 +196,14 @@
   line-height: 1.5rem !important; /* leading-6 */
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.5rem !important; /* mb-2 */
-  color: #94a3b8 !important; /* text-slate-400 */
+  color: var(--text) !important;
 }
 
 /* エディター内の段落スタイル */
 .rich-text-editor p {
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.75rem !important; /* mb-3 */
-  color: #e2e8f0 !important; /* text-slate-200 */
+  color: color-mix(in oklab, var(--text) 85%, transparent) !important;
   line-height: 1.75rem !important; /* leading-7 */
 }
 
@@ -168,7 +213,7 @@
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.75rem !important; /* mb-3 */
   padding-left: 1.5rem !important; /* pl-6 */
-  color: #e2e8f0 !important; /* text-slate-200 */
+  color: var(--text) !important;
 }
 
 .rich-text-editor li {
@@ -178,21 +223,21 @@
 
 /* エディター内の引用スタイル */
 .rich-text-editor blockquote {
-  border-left: 4px solid #3b82f6 !important; /* border-l-4 border-blue-500 */
+  border-left: 4px solid var(--primary) !important;
   padding-left: 1rem !important; /* pl-4 */
   margin-top: 1rem !important; /* mt-4 */
   margin-bottom: 1rem !important; /* mb-4 */
   font-style: italic !important;
-  color: #94a3b8 !important; /* text-slate-400 */
-  background-color: rgba(59, 130, 246, 0.1) !important; /* bg-blue-500/10 */
+  color: color-mix(in oklab, var(--text) 70%, transparent) !important;
+  background-color: color-mix(in oklab, var(--primary) 10%, transparent) !important;
   padding: 1rem !important; /* p-4 */
   border-radius: 0.5rem !important; /* rounded-lg */
 }
 
 /* エディター内のコードスタイル */
 .rich-text-editor code {
-  background-color: #475569 !important; /* bg-slate-600 */
-  color: #f1f5f9 !important; /* text-slate-100 */
+  background-color: color-mix(in oklab, var(--bg) 85%, #64748b) !important;
+  color: var(--text) !important;
   padding: 0.125rem 0.25rem !important; /* px-1 py-0.5 */
   border-radius: 0.25rem !important; /* rounded */
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace !important;
@@ -202,29 +247,29 @@
 /* エディター内の太字・斜体スタイル */
 .rich-text-editor strong {
   font-weight: 700 !important; /* font-bold */
-  color: #f8fafc !important; /* text-slate-50 */
+  color: var(--text) !important;
 }
 
 .rich-text-editor em {
   font-style: italic !important;
-  color: #cbd5e1 !important; /* text-slate-300 */
+  color: color-mix(in oklab, var(--text) 75%, transparent) !important;
 }
 
 /* エディター内の取り消し線スタイル */
 .rich-text-editor s {
   text-decoration: line-through !important;
-  color: #94a3b8 !important; /* text-slate-400 */
+  color: color-mix(in oklab, var(--text) 60%, transparent) !important;
 }
 
-/* 記事詳細画面の表示スタイル */
+/* 記事詳細画面の表示スタイル（トークン対応） */
 .rich-text-display h1 {
   font-size: 2.25rem !important; /* text-4xl */
   font-weight: 700 !important; /* font-bold */
   line-height: 2.5rem !important; /* leading-10 */
   margin-top: 1.5rem !important; /* mt-6 */
   margin-bottom: 1rem !important; /* mb-4 */
-  color: #f8fafc !important; /* text-slate-50 */
-  border-bottom: 2px solid #475569 !important; /* border-b-2 border-slate-600 */
+  color: var(--text) !important;
+  border-bottom: 2px solid var(--border) !important;
   padding-bottom: 0.5rem !important; /* pb-2 */
 }
 
@@ -234,8 +279,8 @@
   line-height: 2.25rem !important; /* leading-9 */
   margin-top: 1.25rem !important; /* mt-5 */
   margin-bottom: 0.75rem !important; /* mb-3 */
-  color: #e2e8f0 !important; /* text-slate-200 */
-  border-bottom: 1px solid #64748b !important; /* border-b border-slate-500 */
+  color: var(--text) !important;
+  border-bottom: 1px solid var(--border) !important;
   padding-bottom: 0.25rem !important; /* pb-1 */
 }
 
@@ -245,7 +290,7 @@
   line-height: 2rem !important; /* leading-8 */
   margin-top: 1rem !important; /* mt-4 */
   margin-bottom: 0.5rem !important; /* mb-2 */
-  color: #cbd5e1 !important; /* text-slate-300 */
+  color: var(--text) !important;
 }
 
 .rich-text-display h4 {
@@ -254,7 +299,7 @@
   line-height: 1.75rem !important; /* leading-7 */
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.5rem !important; /* mb-2 */
-  color: #94a3b8 !important; /* text-slate-400 */
+  color: var(--text) !important;
 }
 
 .rich-text-display h5 {
@@ -263,7 +308,7 @@
   line-height: 1.75rem !important; /* leading-7 */
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.5rem !important; /* mb-2 */
-  color: #94a3b8 !important; /* text-slate-400 */
+  color: var(--text) !important;
 }
 
 .rich-text-display h6 {
@@ -272,14 +317,14 @@
   line-height: 1.5rem !important; /* leading-6 */
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.5rem !important; /* mb-2 */
-  color: #94a3b8 !important; /* text-slate-400 */
+  color: var(--text) !important;
 }
 
 /* 記事詳細画面の段落スタイル */
 .rich-text-display p {
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.75rem !important; /* mb-3 */
-  color: #e2e8f0 !important; /* text-slate-200 */
+  color: color-mix(in oklab, var(--text) 85%, transparent) !important;
   line-height: 1.75rem !important; /* leading-7 */
 }
 
@@ -289,7 +334,7 @@
   margin-top: 0.75rem !important; /* mt-3 */
   margin-bottom: 0.75rem !important; /* mb-3 */
   padding-left: 1.5rem !important; /* pl-6 */
-  color: #e2e8f0 !important; /* text-slate-200 */
+  color: var(--text) !important;
 }
 
 .rich-text-display li {
@@ -299,21 +344,21 @@
 
 /* 記事詳細画面の引用スタイル */
 .rich-text-display blockquote {
-  border-left: 4px solid #3b82f6 !important; /* border-l-4 border-blue-500 */
+  border-left: 4px solid var(--primary) !important; /* border-l-4 */
   padding-left: 1rem !important; /* pl-4 */
   margin-top: 1rem !important; /* mt-4 */
   margin-bottom: 1rem !important; /* mb-4 */
   font-style: italic !important;
-  color: #94a3b8 !important; /* text-slate-400 */
-  background-color: rgba(59, 130, 246, 0.1) !important; /* bg-blue-500/10 */
+  color: color-mix(in oklab, var(--text) 70%, transparent) !important;
+  background-color: color-mix(in oklab, var(--primary) 10%, transparent) !important;
   padding: 1rem !important; /* p-4 */
   border-radius: 0.5rem !important; /* rounded-lg */
 }
 
 /* 記事詳細画面のコードスタイル */
 .rich-text-display code {
-  background-color: #475569 !important; /* bg-slate-600 */
-  color: #f1f5f9 !important; /* text-slate-100 */
+  background-color: color-mix(in oklab, var(--bg) 85%, #64748b) !important;
+  color: var(--text) !important;
   padding: 0.125rem 0.25rem !important; /* px-1 py-0.5 */
   border-radius: 0.25rem !important; /* rounded */
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace !important;
@@ -323,16 +368,16 @@
 /* 記事詳細画面の太字・斜体スタイル */
 .rich-text-display strong {
   font-weight: 700 !important; /* font-bold */
-  color: #f8fafc !important; /* text-slate-50 */
+  color: var(--text) !important;
 }
 
 .rich-text-display em {
   font-style: italic !important;
-  color: #cbd5e1 !important; /* text-slate-300 */
+  color: color-mix(in oklab, var(--text) 75%, transparent) !important;
 }
 
 /* 記事詳細画面の取り消し線スタイル */
 .rich-text-display s {
   text-decoration: line-through !important;
-  color: #94a3b8 !important; /* text-slate-400 */
+  color: color-mix(in oklab, var(--text) 60%, transparent) !important;
 }
