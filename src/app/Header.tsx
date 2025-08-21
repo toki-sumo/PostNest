@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useTheme } from '@/components/theme/ThemeProvider'
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from "next/navigation";
 import LinkButton from '@/components/ui/LinkButton';
 

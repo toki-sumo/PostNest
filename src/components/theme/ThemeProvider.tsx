@@ -44,13 +44,9 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   }, [])
 
   const toggleTheme = useCallback(() => {
-    setTheme(prev => {
-      const next = prev === 'dark' ? 'light' : 'dark'
-      if (typeof window !== 'undefined') localStorage.setItem('theme', next)
-      document.documentElement.setAttribute('data-theme', next)
-      return next
-    })
-  }, [])
+    const next: Theme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(next)
+  }, [theme, setTheme])
 
   const value = useMemo(() => ({ theme, toggleTheme, setTheme }), [theme, toggleTheme, setTheme])
 
