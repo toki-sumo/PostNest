@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { formatDate } from "@/lib/utils/formatDate"
-import DashboardHeader from "../_components/DashboardHeader"
-import GlassCard from "../_components/GlassCard"
+import DashboardHeader from "../../../components/dashboard/DashboardHeader"
+import GlassCard from "../../../components/dashboard/GlassCard"
 
 // 型の整合（idはcuidのstring）
 type Article = {

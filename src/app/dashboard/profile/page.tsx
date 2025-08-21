@@ -4,8 +4,8 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import DashboardHeader from '../_components/DashboardHeader'
-import GlassCard from '../_components/GlassCard'
+import DashboardHeader from '../../../components/dashboard/DashboardHeader'
+import GlassCard from '../../../components/dashboard/GlassCard'
 
 const ProfilePage = () => {
   const { data: session, status, update } = useSession()

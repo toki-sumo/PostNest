@@ -6,8 +6,8 @@ import { formatDate } from '@/lib/utils/formatDate';
 import Link from 'next/link';
 import Image from 'next/image';
 import Spinner from '@/components/ui/Spinner';
-import DashboardHeader from '../_components/DashboardHeader';
-import GlassCard from '../_components/GlassCard';
+import DashboardHeader from '../../../components/dashboard/DashboardHeader';
+import GlassCard from '../../../components/dashboard/GlassCard';
 
 type SubscriptionData = {
   subscriptions: SubscriptionWithArticle[];
