@@ -1,19 +1,27 @@
 // src/app/page.tsx
 import Link from "next/link";
+import { db } from "@/lib/db";
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 // ArticleListは使用しない（最新3件カードはこのファイル内で描画）
 // import BackgroundDecoration from "@/components/common/BackgroundDecoration";
 
 export default async function Home() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    process.env.NEXTAUTH_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-  const res = await fetch(`${baseUrl}/api/articles`, {
-    cache: "no-store",
-  });
-  const allArticles: Array<{ id: string; title: string; content: string; createdAt: string }>
-    = await res.json();
-  const latestArticles = allArticles.slice(0, 3); // 最新3件
+  let latestArticles: Array<{ id: string; title: string; content: string; createdAt: string }> = []
+  try {
+    const rows = await db.article.findMany({
+      orderBy: { updatedAt: 'desc' },
+      select: { id: true, title: true, content: true, createdAt: true },
+    })
+    latestArticles = rows.slice(0, 3).map(r => ({
+      id: r.id,
+      title: r.title,
+      content: r.content,
+      createdAt: (r.createdAt instanceof Date ? r.createdAt.toISOString() : String(r.createdAt)),
+    }))
+  } catch (error) {
+    console.error('Failed to query articles from DB on Home:', error)
+  }
 
   return (
     <div className="min-h-screen overflow-hidden">
@@ -129,11 +137,11 @@ export default async function Home() {
                       {article.title}
                     </h3>
                     <p className="text-[var(--text)]/85 mb-6 line-clamp-3 leading-relaxed">
-                      {article.content.replace(/<[^>]*>/g, '')}
+                      {String(article.content || '').replace(/<[^>]*>/g, '')}
                     </p>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-[var(--muted)]">
-                        {new Date(article.createdAt).toLocaleDateString('ja-JP')}
+                        {new Date(article.createdAt || Date.now()).toLocaleDateString('ja-JP')}
                       </span>
                       <Link
                         href={`/articles/${article.id}`}

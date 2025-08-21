@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
-  const session = await auth();
   const { pathname } = req.nextUrl;
 
   const publicPaths = ["/", "/signin", "/signup", "/favicon.ico"];
@@ -15,6 +14,13 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.endsWith(".svg");
+
+  // 公開パスは認証確認をスキップ（UntrustedHost を避ける）
+  if (isPublicPath) {
+    return NextResponse.next();
+  }
+
+  const session = await auth();
 
   if (!isPublicPath && !session) {
     const loginUrl = req.nextUrl.clone();
