@@ -133,9 +133,9 @@ export default function SubscriptionsPage() {
                   {/* 記事画像 */}
                   <div className="flex-shrink-0">
                     <div className="w-20 h-20 rounded-lg overflow-hidden bg-slate-600">
-                      {subscription.article.imageURL ? (
+                      {subscription.article.imageUrl ? (
                         <Image
-                          src={subscription.article.imageURL}
+                          src={subscription.article.imageUrl}
                           alt={subscription.article.title}
                           width={80}
                           height={80}

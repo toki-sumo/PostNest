@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { title, content, tags, imageURL, isPremium, price } = body;
+    const { title, content, tags, imageUrl, isPremium, price } = body;
     const authorId = session.user.id;
 
     if (!title || !content || !authorId) {
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
         content,
         authorId,
         tags: tags || [],
-        imageUrl: imageURL, // imageURLをimageUrlとして保存
+        imageUrl,
         isPremium: isPremium || false,
         price: isPremium ? price : null,
       },

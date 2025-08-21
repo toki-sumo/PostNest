@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { auth } from '@/auth';
 
 export async function GET(
   req: NextRequest,
@@ -35,7 +36,34 @@ export async function GET(
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
-    return NextResponse.json(article);
+    // デフォルトはロック解除
+    let locked = false;
+    let maskedContent = article.content;
+
+    if (article.isPremium) {
+      const session = await auth();
+      const isAuthor = !!session?.user?.id && session.user.id === article.authorId;
+
+      if (!isAuthor) {
+        // 著者でなければ購読状況を確認
+        let isSubscribed = false;
+        if (session?.user?.id) {
+          const sub = await db.subscription.findUnique({
+            where: { userId_articleId: { userId: session.user.id, articleId: id } },
+            select: { status: true },
+          });
+          isSubscribed = sub?.status === 'completed';
+        }
+
+        if (!isSubscribed) {
+          locked = true;
+          // 本文を返さない（APIガード）
+          maskedContent = '';
+        }
+      }
+    }
+
+    return NextResponse.json({ ...article, content: maskedContent, locked });
   } catch (error) {
     console.error('Error fetching article:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

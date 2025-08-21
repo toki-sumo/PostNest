@@ -17,7 +17,9 @@ const EditForm = ({ id, title: initialTitle, content: initialContent }: Props) =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/blog/edit/${id}`, {
+    // NOTE: このコンポーネントは未使用の可能性があります。使用時はAPIエンドポイントを最新に合わせてください。
+    // 旧: `${process.env.NEXT_PUBLIC_API_URL}/api/blog/edit/${id}` → 新: `/api/articles/edit/${id}`
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/edit/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title, content }),

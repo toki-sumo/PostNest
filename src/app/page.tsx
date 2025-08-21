@@ -1,10 +1,15 @@
 // src/app/page.tsx
 import Link from "next/link";
-import ArticleList from "@/components/article/ArticleList";
+import ArticleList from "./articles/page";
+import BackgroundDecoration from "@/components/common/BackgroundDecoration";
+import { headers } from "next/headers";
 
-export default async function HomePage() {
-  // 最新記事を3件取得
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles`, {
+export default async function Home() {
+  const hdrs = await headers();
+  const host = hdrs.get("host");
+  const proto = hdrs.get("x-forwarded-proto") ?? "http";
+  const baseUrl = `${proto}://${host}`;
+  const res = await fetch(`${baseUrl}/api/articles`, {
     cache: "no-store",
   });
   const allArticles = await res.json();

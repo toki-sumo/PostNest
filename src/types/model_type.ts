@@ -7,7 +7,7 @@ export type Article = {
     updatedAt: string;
     tags: string[];
     author: User;
-    imageURL: string;
+    imageUrl: string;
     isPremium: boolean;
     price: number | null;
 }

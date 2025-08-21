@@ -17,11 +17,14 @@ type Article = {
   tags?: string[]
 }
 
+const PAGE_SIZE = 6
+
 const ArticlesPage = () => {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [articles, setArticles] = useState<Article[]>([])
   const [loading, setLoading] = useState(true)
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -34,7 +37,6 @@ const ArticlesPage = () => {
       const fetchArticles = async () => {
         try {
           setLoading(true)
-          // 相対パスでCookieを自動送信
           const res = await fetch('/api/articles/user', { signal: controller.signal })
           if (!res.ok) throw new Error('Failed to fetch')
           const data = await res.json()
@@ -53,9 +55,12 @@ const ArticlesPage = () => {
     }
   }, [status, router])
 
+  const displayed = articles.slice(0, visibleCount)
+  const hasMore = visibleCount < articles.length
+
   if (status === 'loading' || loading) {
     return (
-      <div className="max-w-4xl mx-auto p-4 lg:p-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
@@ -72,8 +77,8 @@ const ArticlesPage = () => {
 
       {/* 記事一覧 */}
       <div className="space-y-6">
-        {articles.length > 0 ? (
-          articles.map((article) => (
+        {displayed.length > 0 ? (
+          displayed.map((article) => (
             <GlassCard
               key={article.id}
               className="group p-6 transition-all duration-500 hover:border-slate-500/50 hover:shadow-2xl hover:shadow-blue-500/10 cursor-pointer transform hover:scale-[1.02]"
@@ -156,6 +161,17 @@ const ArticlesPage = () => {
           </GlassCard>
         )}
       </div>
+
+      {hasMore && (
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-slate-700 to-slate-600 text-white font-medium rounded-xl hover:from-slate-600 hover:to-slate-500 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-slate-500/25"
+          >
+            もっと見る
+          </button>
+        </div>
+      )}
     </div>
   )
 }

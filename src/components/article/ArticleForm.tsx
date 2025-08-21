@@ -10,14 +10,14 @@ type ArticleFormProps = {
   initialTitle?: string;
   initialContent?: string;
   initialTags?: string[];
-  initialImageURL?: string;
+  initialImageUrl?: string;
   initialIsPremium?: boolean;
   initialPrice?: number;
   onSubmit: (data: {
     title: string;
     content: string;
     tags: string[];
-    imageURL: string;
+    imageUrl: string;
     isPremium: boolean;
     price: number | null;
   }) => Promise<void>;
@@ -28,7 +28,7 @@ export default function ArticleForm({
   initialTitle = '',
   initialContent = '',
   initialTags = [],
-  initialImageURL = '',
+  initialImageUrl = '',
   initialIsPremium = false,
   initialPrice = 0,
   onSubmit,
@@ -37,7 +37,7 @@ export default function ArticleForm({
   const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState(initialContent);
   const [tags, setTags] = useState<string[]>(initialTags);
-  const [imageURL, setImageURL] = useState(initialImageURL);
+  const [imageUrl, setImageUrl] = useState(initialImageUrl);
   const [isPremium, setIsPremium] = useState(initialIsPremium);
   const [price, setPrice] = useState(initialPrice);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -66,28 +66,25 @@ export default function ArticleForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await onSubmit({ 
-      title, 
-      content, 
-      tags, 
-      imageURL, 
-      isPremium, 
-      price: isPremium ? price : null 
+    await onSubmit({
+      title,
+      content,
+      tags,
+      imageUrl,
+      isPremium,
+      price: isPremium ? price : null,
     });
     setIsSubmitting(false);
   };
 
   const handlePremiumToggle = (checked: boolean) => {
     setIsPremium(checked);
-    if (!checked) {
-      setPrice(0);
-    }
+    if (!checked) setPrice(0);
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
       <form onSubmit={handleSubmit} className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl shadow-2xl border border-slate-600/30 p-8">
-        {/* ヘッダーセクション */}
         <div className="text-center mb-8">
           <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
             {isEdit ? '記事を編集' : '記事を新規作成'}
@@ -98,7 +95,6 @@ export default function ArticleForm({
         </div>
 
         <div className="space-y-6">
-          {/* タイトル入力 */}
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-3 flex items-center">
               <svg className="w-5 h-5 text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +110,6 @@ export default function ArticleForm({
             />
           </div>
 
-          {/* 有料記事設定 */}
           <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl p-6">
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
@@ -132,13 +127,11 @@ export default function ArticleForm({
                   有料記事にする
                 </label>
               </div>
-              
               {isPremium && (
                 <div className="space-y-3 pl-8">
                   <p className="text-slate-300 text-sm">
                     有料記事に設定すると、読者は記事の内容を読むために購読が必要になります。
                   </p>
-                  
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center">
                       <svg className="w-4 h-4 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -150,7 +143,7 @@ export default function ArticleForm({
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">¥</span>
                       <input
                         type="number"
-                        min="0"
+                        min="50"
                         max="99999"
                         value={price}
                         onChange={(e) => setPrice(Number(e.target.value))}
@@ -159,7 +152,7 @@ export default function ArticleForm({
                       />
                     </div>
                     <p className="text-xs text-slate-400 mt-1">
-                      0円以上、99,999円以下で設定してください
+                      50円以上、99,999円以下で設定してください
                     </p>
                   </div>
                 </div>
@@ -167,7 +160,6 @@ export default function ArticleForm({
             </div>
           </div>
 
-          {/* コンテンツ入力 */}
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-3 flex items-center">
               <svg className="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,14 +167,9 @@ export default function ArticleForm({
               </svg>
               コンテンツ
             </label>
-            <RichTextEditor
-              content={content}
-              onChange={setContent}
-              placeholder="記事の内容を入力してください"
-            />
+            <RichTextEditor content={content} onChange={setContent} placeholder="ここに記事の内容を入力してください。H1、H2、H3ボタンで見出しを設定できます。" />
           </div>
 
-          {/* タグ入力 */}
           <div>
             <div className="flex items-center mb-3">
               <label className="text-sm font-medium text-slate-300 mr-4 flex items-center">
@@ -191,7 +178,6 @@ export default function ArticleForm({
                 </svg>
                 タグ
               </label>
-
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -215,35 +201,28 @@ export default function ArticleForm({
                 </button>
               </div>
             </div>
-
-            <TagInput
-              value={tags}
-              onChange={setTags}
-              disabled={isGenerating}
-            />
+            <TagInput value={tags} onChange={setTags} disabled={isGenerating} />
           </div>
 
-          {/* 画像URL入力 */}
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-3 flex items-center">
               <svg className="w-5 h-5 text-pink-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 2 0 002 2z" />
               </svg>
               画像URL（オプション）
             </label>
             <TextInput
-              value={imageURL}
-              onChange={(e) => setImageURL(e.target.value)}
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
               placeholder="画像のURLを入力してください"
               className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
             />
           </div>
 
-          {/* 送信ボタン */}
           <div className="pt-6">
             <button
               type="submit"
-              disabled={isSubmitting || !title || !content || (isPremium && price <= 0)}
+              disabled={isSubmitting || !title || !content || (isPremium && price < 50)}
               className="w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-bold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
             >
               {isSubmitting ? (

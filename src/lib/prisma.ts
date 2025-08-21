@@ -10,7 +10,8 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
     globalForPrisma.prisma ??
     new PrismaClient({
-        log: ['query'], // 開発中の DB クエリログ
+        // クエリログはデフォルト無効。必要時のみ PRISMA_LOG_QUERIES=true で有効化
+        log: process.env.PRISMA_LOG_QUERIES === 'true' ? ['query'] : [],
         datasources: {
             db: {
                 url: process.env.DATABASE_URL,

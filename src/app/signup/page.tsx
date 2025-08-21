@@ -6,6 +6,7 @@ import OAuthButton from '@/components/ui/OAuthButton'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import Spinner from '@/components/ui/Spinner'
+import BackgroundDecoration from '@/components/common/BackgroundDecoration'
 
 const SignupPage = () => {
     const router = useRouter()
@@ -122,17 +123,8 @@ const SignupPage = () => {
 
     return (
         <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-            {/* 背景の装飾要素 */}
-            <div className="fixed inset-0 overflow-hidden pointer-events-none">
-                {/* 浮遊する幾何学的図形 */}
-                <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-                <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
-                <div className="absolute bottom-40 left-20 w-40 h-40 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl animate-pulse delay-2000"></div>
-                
-                {/* グリッドパターン */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-            </div>
-
+            <BackgroundDecoration />
+            
             <div className="relative z-10 flex items-center justify-center min-h-screen">
                 <div className="w-full max-w-md mx-auto p-6">
                     {/* サインアップフォーム */}

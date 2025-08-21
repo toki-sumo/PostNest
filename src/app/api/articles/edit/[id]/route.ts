@@ -15,7 +15,7 @@ export async function PUT(
   }
 
   try {
-    const { title, content, tags, imageURL, isPremium, price } = await req.json()
+    const { title, content, tags, imageUrl, isPremium, price } = await req.json()
 
     if (!title || !content) {
       return new NextResponse("Title and content are required", { status: 400 })
@@ -42,7 +42,7 @@ export async function PUT(
         title,
         content,
         tags,
-        imageUrl: imageURL, // imageURLをimageUrlとして保存
+        imageUrl,
         isPremium: isPremium || false,
         price: isPremium ? price : null,
       },

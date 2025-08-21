@@ -26,6 +26,7 @@
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.1",
+    "isomorphic-dompurify": "^2.26.0",
     "next": "15.4.2",
     "next-auth": "^5.0.0-beta.29",
     "openai": "^5.10.2",
