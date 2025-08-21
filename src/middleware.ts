@@ -11,6 +11,7 @@ export async function middleware(req: NextRequest) {
 
   const isPublicPath =
     publicPaths.includes(pathname) ||
+    pathname.startsWith("/articles") ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
     pathname.endsWith(".svg");

@@ -1,18 +1,18 @@
 // src/app/page.tsx
 import Link from "next/link";
 // ArticleListは使用しない（最新3件カードはこのファイル内で描画）
-import BackgroundDecoration from "@/components/common/BackgroundDecoration";
-import { headers } from "next/headers";
+// import BackgroundDecoration from "@/components/common/BackgroundDecoration";
 
 export default async function Home() {
-  const hdrs = await headers();
-  const host = hdrs.get("host");
-  const proto = hdrs.get("x-forwarded-proto") ?? "http";
-  const baseUrl = `${proto}://${host}`;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.NEXTAUTH_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
   const res = await fetch(`${baseUrl}/api/articles`, {
     cache: "no-store",
   });
-  const allArticles = await res.json();
+  const allArticles: Array<{ id: string; title: string; content: string; createdAt: string }>
+    = await res.json();
   const latestArticles = allArticles.slice(0, 3); // 最新3件
 
   return (
@@ -118,7 +118,7 @@ export default async function Home() {
           
           {latestArticles.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              {latestArticles.map((article: any, index: number) => (
+              {latestArticles.map((article: { id: string; title: string; content: string; createdAt: string }, index: number) => (
                 <div 
                   key={article.id} 
                   className="group relative bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl border border-slate-600/30 overflow-hidden hover:border-slate-500/50 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/10"

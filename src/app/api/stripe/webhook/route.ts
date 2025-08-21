@@ -14,24 +14,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
   }
 
-  let event
+  let event: unknown
   try {
     const rawBody = await req.text()
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret)
-  } catch (err: any) {
-    console.error('Webhook signature verification failed.', err.message)
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 })
+  } catch (err) {
+    const message = (err as Error)?.message ?? 'Unknown error'
+    console.error('Webhook signature verification failed.', message)
+    return NextResponse.json({ error: `Webhook Error: ${message}` }, { status: 400 })
   }
 
   try {
-    switch (event.type) {
+    const typedEvent = event as { type: string; data: { object: unknown } }
+    switch (typedEvent.type) {
       case 'checkout.session.completed': {
-        const session = event.data.object as any
+        const session = typedEvent.data.object as {
+          metadata?: { articleId?: string; userId?: string }
+          amount_total?: number
+          id?: string
+          payment_intent?: string
+        }
         const articleId: string | undefined = session.metadata?.articleId
         const userId: string | undefined = session.metadata?.userId
         const amountTotal: number | undefined = session.amount_total
         const stripeSessionId: string | undefined = session.id
-        const stripePaymentIntentId: string | undefined = session.payment_intent as string | undefined
+        const stripePaymentIntentId: string | undefined = session.payment_intent
 
         if (!articleId || !userId || !amountTotal) break
 

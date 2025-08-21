@@ -51,8 +51,9 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                 select: { status: true }
             });
             isSubscribed = subscription?.status === 'completed';
-        } catch (error: any) {
-            console.error('購読状態の確認に失敗:', error?.message || error);
+        } catch (error: unknown) {
+            const message = (error as Error)?.message ?? String(error);
+            console.error('購読状態の確認に失敗:', message);
         }
     }
 

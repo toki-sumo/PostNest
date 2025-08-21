@@ -1,13 +1,13 @@
 // src/app/articles/page.tsx
 import ArticleList from "@/components/article/ArticleList";
 import BackgroundDecoration from "@/components/common/BackgroundDecoration";
-import { headers } from "next/headers";
+import Link from "next/link";
 
 export default async function ArticlesPage() {
-  const hdrs = await headers();
-  const host = hdrs.get('host');
-  const proto = hdrs.get('x-forwarded-proto') ?? 'http';
-  const baseUrl = `${proto}://${host}`;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.NEXTAUTH_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
   const res = await fetch(`${baseUrl}/api/articles`, {
     cache: "no-store",
@@ -88,20 +88,20 @@ export default async function ArticlesPage() {
               </h3>
               <ul className="text-sm text-slate-300 space-y-3">
                 <li>
-                  <a 
+                  <Link 
                     href="/articles/1" 
                     className="hover:text-blue-300 hover:underline transition-all duration-200 block py-2 px-3 rounded-lg hover:bg-slate-700/30"
                   >
                     Reactのパフォーマンス最適化
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a 
+                  <Link 
                     href="/articles/2" 
                     className="hover:text-blue-300 hover:underline transition-all duration-200 block py-2 px-3 rounded-lg hover:bg-slate-700/30"
                   >
                     Next.jsの新機能まとめ
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

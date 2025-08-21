@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import TagInput from './TagInput';
 import Spinner from '../ui/Spinner';
-import { TextInput } from '../ui/TextInput';
+import { Input } from '../ui/Input';
 import RichTextEditor from './RichTextEditor';
 
 type ArticleFormProps = {
@@ -102,7 +102,7 @@ export default function ArticleForm({
               </svg>
               タイトル
             </label>
-            <TextInput
+            <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="記事のタイトルを入力してください"
@@ -211,7 +211,7 @@ export default function ArticleForm({
               </svg>
               画像URL（オプション）
             </label>
-            <TextInput
+            <Input
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="画像のURLを入力してください"

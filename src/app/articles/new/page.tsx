@@ -7,7 +7,7 @@ import BackgroundDecoration from '@/components/common/BackgroundDecoration';
 export default function CreateBlogPage() {
     const router = useRouter();
 
-    const handleCreate = async ({ title, content, tags, imageUrl, isPremium, price }: any) => {
+    const handleCreate = async ({ title, content, tags, imageUrl, isPremium, price }: { title: string; content: string; tags: string[]; imageUrl: string; isPremium: boolean; price: number }) => {
         await fetch('/api/articles', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -21,7 +21,19 @@ export default function CreateBlogPage() {
         <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
             <BackgroundDecoration />
             <div className="relative z-10">
-                <ArticleForm onSubmit={handleCreate} isEdit={false} />
+                <ArticleForm
+                  onSubmit={async (data) => {
+                    await handleCreate({
+                      title: data.title,
+                      content: data.content,
+                      tags: data.tags,
+                      imageUrl: data.imageUrl,
+                      isPremium: data.isPremium,
+                      price: data.price ?? 0,
+                    })
+                  }}
+                  isEdit={false}
+                />
             </div>
         </div>
     );

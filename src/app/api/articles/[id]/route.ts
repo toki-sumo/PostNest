@@ -85,9 +85,10 @@ export async function DELETE(
       { message: 'Article deleted successfully', deletedArticle },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Prisma の delete は存在しないIDの場合エラーを投げるので、その場合のハンドリング
-    if (error.code === 'P2025') {
+    const err = error as { code?: string };
+    if (err.code === 'P2025') {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 

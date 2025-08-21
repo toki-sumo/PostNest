@@ -39,10 +39,15 @@ const ArticlesPage = () => {
           setLoading(true)
           const res = await fetch('/api/articles/user', { signal: controller.signal })
           if (!res.ok) throw new Error('Failed to fetch')
-          const data = await res.json()
-          setArticles(Array.isArray(data) ? data : [])
+          const data: unknown = await res.json()
+          if (!Array.isArray(data)) {
+            setArticles([])
+            return
+          }
+          setArticles(data as Article[])
         } catch (error) {
-          if ((error as any)?.name !== 'AbortError') {
+          const err = error as { name?: string }
+          if (err?.name !== 'AbortError') {
             console.error('記事の取得に失敗しました', error)
           }
         } finally {

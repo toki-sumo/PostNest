@@ -22,8 +22,9 @@ export default function PurchaseButton({ articleId, disabled }: { articleId: str
       } else {
         throw new Error('チェックアウトURLが取得できませんでした')
       }
-    } catch (e: any) {
-      setError(e?.message || 'チェックアウトの作成に失敗しました')
+    } catch (e: unknown) {
+      const message = (e as Error)?.message ?? 'チェックアウトの作成に失敗しました'
+      setError(message)
       console.error(e)
     } finally {
       setLoading(false)

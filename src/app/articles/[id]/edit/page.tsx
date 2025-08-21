@@ -39,7 +39,7 @@ export default function EditBlogPage(){
     if (id) fetchArticle();
   }, [id]);
 
-  const handleUpdate = async ({ title, content, tags, imageUrl, isPremium, price }: any) => {
+  const handleUpdate = async ({ title, content, tags, imageUrl, isPremium, price }: { title: string; content: string; tags: string[]; imageUrl: string; isPremium: boolean; price: number }) => {
     await fetch(`/api/articles/edit/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -79,7 +79,16 @@ export default function EditBlogPage(){
           initialImageUrl={article.imageUrl}
           initialIsPremium={article.isPremium}
           initialPrice={article.price}
-          onSubmit={handleUpdate}
+          onSubmit={async (data) => {
+            await handleUpdate({
+              title: data.title,
+              content: data.content,
+              tags: data.tags,
+              imageUrl: data.imageUrl,
+              isPremium: data.isPremium,
+              price: data.price ?? 0,
+            })
+          }}
           isEdit={true}
         />
       </div>
