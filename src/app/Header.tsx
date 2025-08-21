@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useTheme } from '@/components/theme/ThemeProvider'
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from "next/navigation";
+import LinkButton from '@/components/ui/LinkButton';
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -43,26 +44,21 @@ const Header = () => {
             {/* 記事一覧リンク */}
             <Link
               href="/articles"
-              className="text-[var(--text)]/85 hover:text-[var(--text)] font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[var(--card)]"
+              className="text-[var(--text)]/85 hover:text-[var(--text)] font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[color:var(--muted)]/10"
             >
               記事一覧
             </Link>
             
             {/* 記事投稿リンク（ログイン時のみ表示） */}
             {user && (
-              <Link
-                href="/articles/new"
-                className="py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
-              >
-                記事を書く
-              </Link>
+              <LinkButton href="/articles/new">記事を書く</LinkButton>
             )}
             
             {/* ダッシュボードリンク（ログイン時のみ表示） */}
             {user && (
               <Link
                 href="/dashboard"
-                className="text-[var(--text)]/85 hover:text-[var(--text)] font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[var(--card)]"
+                className="text-[var(--text)]/85 hover:text-[var(--text)] font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[color:var(--muted)]/10"
               >
                 ダッシュボード
               </Link>
@@ -72,7 +68,7 @@ const Header = () => {
             {user?.role === 'Admin' && (
               <Link
                 href="/admin"
-                className="text-[var(--text)]/85 hover:text-red-500 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[var(--card)]"
+                className="text-[var(--text)]/85 hover:text-red-500 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[color:var(--muted)]/10"
               >
                 管理者
               </Link>
@@ -114,12 +110,7 @@ const Header = () => {
                 >
                   ログイン
                 </button>
-                <Link
-                  href="/signup"
-                  className="font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
-                >
-                  新規登録
-                </Link>
+                <LinkButton href="/signup">新規登録</LinkButton>
               </div>
             )}
           </nav>
@@ -127,7 +118,7 @@ const Header = () => {
           {/* ハンバーガーメニューボタン */}
           <button
             onClick={toggleMenu}
-            className="lg:hidden p-2 rounded-lg text-[var(--text)]/85 hover:text-[var(--text)] hover:bg-[var(--card)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors duration-200"
+            className="lg:hidden p-2 rounded-lg text-[var(--text)]/85 hover:text-[var(--text)] hover:bg-[color:var(--muted)]/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors duration-200"
             aria-label="メニューを開く"
           >
             <svg
@@ -155,20 +146,14 @@ const Header = () => {
           <Link
             href="/articles"
             onClick={closeMenu}
-            className="block w-full text-[var(--text)]/85 hover:text-[var(--text)] py-3 px-4 rounded-lg text-center font-medium hover:bg-[var(--card)] transition-colors duration-200"
+            className="block w-full text-[var(--text)]/85 hover:text-[var(--text)] py-3 px-4 rounded-lg text-center font-medium hover:bg-[color:var(--muted)]/10 transition-colors duration-200"
           >
             記事一覧
           </Link>
           
           {/* 記事投稿リンク（ログイン時のみ表示） */}
           {user && (
-            <Link
-              href="/articles/new"
-              onClick={closeMenu}
-              className="block w-full py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
-            >
-              記事を書く
-            </Link>
+            <LinkButton href="/articles/new">記事を書く</LinkButton>
           )}
           
           {/* ダッシュボードリンク（ログイン時のみ表示） */}
@@ -176,7 +161,7 @@ const Header = () => {
             <Link
               href="/dashboard"
               onClick={closeMenu}
-              className="block w-full text-[var(--text)]/85 hover:text-[var(--text)] py-3 px-4 rounded-lg text-center font-medium hover:bg-[var(--card)] transition-colors duration-200"
+              className="block w-full text-[var(--text)]/85 hover:text-[var(--text)] py-3 px-4 rounded-lg text-center font-medium hover:bg-[color:var(--muted)]/10 transition-colors duration-200"
             >
               ダッシュボード
             </Link>
@@ -187,7 +172,7 @@ const Header = () => {
             <Link
               href="/admin"
               onClick={closeMenu}
-              className="block w-full text-[var(--text)]/85 hover:text-red-500 py-3 px-4 rounded-lg text-center font-medium hover:bg-[var(--card)] transition-colors duration-200"
+              className="block w-full text-[var(--text)]/85 hover:text-red-500 py-3 px-4 rounded-lg text-center font-medium hover:bg-[color:var(--muted)]/10 transition-colors duration-200"
             >
               管理者ページ
             </Link>
@@ -225,13 +210,7 @@ const Header = () => {
               >
                 ログイン
               </button>
-              <Link
-                href="/signup"
-                onClick={closeMenu}
-                className="block w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
-              >
-                新規登録
-              </Link>
+              <LinkButton href="/signup">新規登録</LinkButton>
             </div>
           )}
         </div>

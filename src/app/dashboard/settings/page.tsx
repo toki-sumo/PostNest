@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import DashboardHeader from '../../../components/dashboard/DashboardHeader'
 import GlassCard from '../../../components/dashboard/GlassCard'
+import Section from '../../../components/ui/Section'
+import Notice from '../../../components/ui/Notice'
 
 const SettingsPage = () => {
   const { data: session, status } = useSession()
@@ -56,60 +58,22 @@ const SettingsPage = () => {
       {/* 設定項目 */}
       <div className="space-y-6">
         {/* 通知設定 */}
-        <GlassCard className="p-6 hover:border-[var(--card-hover-border)] transition-all duration-300">
-          <div className="space-y-4">
-            <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0">
-                <svg className="w-6 h-6 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4.19 4.19A2 2 0 004 6v10a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-1.41.59z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-medium text-[var(--text)]">通知設定</h3>
-                <p className="text-[var(--text)]/85 mt-1">
-                  メール通知やプッシュ通知の設定を行います
-                </p>
-              </div>
-            </div>
-            <div className="pt-2">
-              <button className="inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                通知設定を開く
-              </button>
-            </div>
-          </div>
-        </GlassCard>
+        <Section title="通知設定" subtitle="メール通知やプッシュ通知の設定を行います" actions={(
+          <button className="inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 shadow-sm hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]">
+            開く
+          </button>
+        )}>
+          <Notice>通知チャネルごとの詳細設定は近日追加予定です。</Notice>
+        </Section>
 
         {/* プライバシー設定 */}
-        <GlassCard className="p-6 hover:border-[var(--card-hover-border)] transition-all duration-300">
-          <div className="space-y-4">
-            <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0">
-                <svg className="w-6 h-6 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-medium text-[var(--text)]">プライバシー設定</h3>
-                <p className="text-[var(--text)]/85 mt-1">
-                  プロフィールの公開範囲やデータの表示設定を行います
-                </p>
-              </div>
-            </div>
-            <div className="pt-2">
-              <button className="inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]">
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                プライバシー設定を開く
-              </button>
-            </div>
-          </div>
-        </GlassCard>
+        <Section title="プライバシー設定" subtitle="プロフィールの公開範囲やデータの表示設定を行います" actions={(
+          <button className="inline-flex items-center px-4 py-2 rounded-lg transition-all duration-300 shadow-sm hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]">
+            開く
+          </button>
+        )}>
+          <Notice>各項目の詳細設定は順次拡充していきます。</Notice>
+        </Section>
 
         {/* アカウント退会セクション */}
         <GlassCard className="p-6 border-red-600/30 hover:border-red-500/50 transition-all duration-300">

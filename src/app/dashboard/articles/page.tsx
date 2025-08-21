@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { formatDate } from "@/lib/utils/formatDate"
 import DashboardHeader from "../../../components/dashboard/DashboardHeader"
 import GlassCard from "../../../components/dashboard/GlassCard"
+import EmptyState from "../../../components/ui/EmptyState"
 
 // 型の整合（idはcuidのstring）
 type Article = {
@@ -146,24 +147,16 @@ const ArticlesPage = () => {
             </GlassCard>
           ))
         ) : (
-          <GlassCard className="p-12 text-center">
-            <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-[color:var(--muted)]/10">
+          <EmptyState
+            title="まだ記事がありません"
+            description="最初の記事を投稿してみましょう！"
+            icon={(
               <svg className="w-12 h-12 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-            </div>
-            <h3 className="text-2xl font-bold text-[var(--text)] mb-4">まだ記事がありません</h3>
-            <p className="text-[var(--text)]/85 mb-8 text-lg">最初の記事を投稿してみましょう！</p>
-            <Link
-              href="/articles/new"
-              className="inline-flex items-center px-6 py-3 text-lg font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-sm bg-[var(--primary)] text-[var(--primary-contrast)] hover:opacity-90"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              記事を書く
-            </Link>
-          </GlassCard>
+            )}
+            action={{ href: "/articles/new", label: "記事を書く" }}
+          />
         )}
       </div>
 

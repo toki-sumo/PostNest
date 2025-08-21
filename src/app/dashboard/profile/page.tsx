@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import DashboardHeader from '../../../components/dashboard/DashboardHeader'
 import GlassCard from '../../../components/dashboard/GlassCard'
+import Section from '../../../components/ui/Section'
+import Notice from '../../../components/ui/Notice'
 
 const ProfilePage = () => {
   const { data: session, status, update } = useSession()
@@ -66,33 +68,26 @@ const ProfilePage = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <DashboardHeader title="プロフィール編集" subtitle={`${session?.user?.name ?? ''} さんのプロフィール情報`} />
 
-      <GlassCard className="p-8">
-        <div className="space-y-8">
-          {/* 現在のユーザー情報表示 */}
-          <GlassCard className="p-6">
-            <p className="text-[var(--text)]/85 text-sm font-medium mb-4 flex items-center">
-              <svg className="w-5 h-5 text-[var(--primary)] mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              現在の情報
-            </p>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <span className="text-[var(--muted)] font-medium">ユーザー名:</span>
-                <span className="text-[var(--text)] font-semibold">{session?.user?.name || '未設定'}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-[var(--muted)] font-medium">メールアドレス:</span>
-                <span className="text-[var(--text)]/85">{session?.user?.email}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-[var(--muted)] font-medium">プロフィール:</span>
-                <span className="text-[var(--text)]/85">{session?.user?.bio || '未設定'}</span>
-              </div>
+      <div className="space-y-8">
+        <Section title="現在の情報">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <span className="text-[var(--muted)] font-medium">ユーザー名:</span>
+              <span className="text-[var(--text)] font-semibold">{session?.user?.name || '未設定'}</span>
             </div>
-          </GlassCard>
+            <div className="flex items-center gap-3">
+              <span className="text-[var(--muted)] font-medium">メールアドレス:</span>
+              <span className="text-[var(--text)]/85">{session?.user?.email}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[var(--muted)] font-medium">プロフィール:</span>
+              <span className="text-[var(--text)]/85">{session?.user?.bio || '未設定'}</span>
+            </div>
+          </div>
+        </Section>
 
-          {/* 編集フォーム */}
+        {/* 編集フォーム */}
+        <Section title="プロフィールを編集">
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-[var(--text)] mb-3">ユーザー名</label>
@@ -122,7 +117,7 @@ const ProfilePage = () => {
             </div>
 
             {/* 保存ボタン */}
-            <div className="pt-4">
+            <div className="pt-2">
               <button
                 onClick={handleSave}
                 disabled={loading}
@@ -146,28 +141,11 @@ const ProfilePage = () => {
 
             {/* メッセージ表示 */}
             {message && (
-              <div className={`p-4 rounded-xl ${
-                message.includes('エラー')
-                  ? 'bg-red-500/15 border border-red-500/30 text-red-600'
-                  : 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-600'
-              }`}>
-                <p className="text-sm font-medium flex items-center">
-                  {message.includes('エラー') ? (
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  )}
-                  {message}
-                </p>
-              </div>
+              <Notice variant={message.includes('エラー') ? 'danger' : 'success'}>{message}</Notice>
             )}
           </div>
-        </div>
-      </GlassCard>
+        </Section>
+      </div>
     </div>
   )
 }

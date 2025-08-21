@@ -6,6 +6,7 @@ import { Article } from '@/types/model_type';
 import Image from 'next/image';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils/formatDate';
+import Badge from '../ui/Badge';
 import Spinner from '../ui/Spinner';
 
 type ArticleCardProps = {
@@ -81,23 +82,21 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
         <div className="flex flex-col justify-between p-4 lg:p-6 lg:w-3/5 w-full lg:rounded-r-2xl rounded-b-2xl lg:rounded-b-none h-full">
          {/* 有料バッジ */}
             {article.isPremium && (
-              <div className="absolute top-4 right-4 z-30 flex items-center gap-1 px-2 py-1 rounded-full text-[var(--primary)] bg-[color:var(--primary)]/15 border border-[color:var(--primary)]/30 backdrop-blur-sm">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
-                <span className="hidden sm:inline text-xs font-semibold">有料</span>
+              <div className="absolute top-4 right-4 z-30">
+                <Badge variant="primary" size="sm" leadingIcon={(
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                  </svg>
+                )}>
+                  <span className="hidden sm:inline">有料</span>
+                </Badge>
               </div>
             )}
           <div className="space-y-1 lg:space-y-3">
             {article.tags && article.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 lg:gap-2 overflow-hidden">
                 {article.tags.slice(0, 3).map((tag, index) => (
-                  <span
-                    key={index}
-                    className="text-xs px-2 py-1 lg:px-3 lg:py-1.5 rounded-full font-medium border transition-all duration-200 bg-[var(--card)] text-[var(--text)] border-[var(--border)] hover:border-[var(--card-hover-border)]"
-                  >
-                    #{tag}
-                  </span>
+                  <Badge key={index} variant="neutral" size="sm">#{tag}</Badge>
                 ))}
                 {article.tags.length > 3 && (
                   <span className="text-xs text-[var(--muted)] px-2 py-1 lg:px-3 lg:py-1.5">

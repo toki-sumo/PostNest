@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Spinner from '@/components/ui/Spinner';
 import DashboardHeader from '../../../components/dashboard/DashboardHeader';
 import GlassCard from '../../../components/dashboard/GlassCard';
+import EmptyState from '../../../components/ui/EmptyState';
 
 type SubscriptionData = {
   subscriptions: SubscriptionWithArticle[];
@@ -183,26 +184,16 @@ export default function SubscriptionsPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-[color:var(--muted)]/10">
+          <EmptyState
+            title="まだ購読した記事がありません"
+            description="有料記事を購読すると、ここに履歴が表示されます"
+            icon={(
               <svg className="w-12 h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
-            </div>
-            <h3 className="text-xl font-bold text-[var(--text)] mb-4">まだ購読した記事がありません</h3>
-            <p className="text-[var(--text)]/85 mb-6">
-              有料記事を購読すると、ここに履歴が表示されます
-            </p>
-            <Link
-              href="/articles"
-              className="inline-flex items-center px-6 py-3 font-bold rounded-xl transition-all duration-300 shadow-sm hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]"
-            >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              記事を探す
-            </Link>
-          </div>
+            )}
+            action={{ href: "/articles", label: "記事を探す" }}
+          />
         )}
       </GlassCard>
     </div>
