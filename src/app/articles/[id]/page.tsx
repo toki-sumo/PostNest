@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/utils/formatDate";
 import RichTextDisplay from "@/components/article/RichTextDisplay";
+import PurchaseButton from "@/components/article/PurchaseButton";
 
 export default async function ArticleDetailPage({ params, }: {
     params: Promise<{ id: string }>;
@@ -23,7 +24,7 @@ export default async function ArticleDetailPage({ params, }: {
     const detailArticle = await res.json();
 
     const isAuthor = session?.user?.id === detailArticle.authorId;
-    const imageURL = detailArticle.imageURL || `https://picsum.photos/seed/${(await params).id}/600/400`;
+    const imageURL = detailArticle.imageUrl || `https://picsum.photos/seed/${(await params).id}/600/400`;
 
     // 購読状態を確認（ログインしている場合のみ）
     let isSubscribed = false;
@@ -98,12 +99,7 @@ export default async function ArticleDetailPage({ params, }: {
                             <div className="text-4xl font-bold text-yellow-400 mb-6">
                                 {`¥${(detailArticle.price ?? 0).toLocaleString()}`}
                             </div>
-                            <button className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold px-8 py-3 rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-yellow-500/25 transform hover:scale-105">
-                                <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                </svg>
-                                購読する
-                            </button>
+                            <PurchaseButton articleId={detailArticle.id} />
                         </div>
                     </div>
                 )}

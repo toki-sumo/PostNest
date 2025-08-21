@@ -55,9 +55,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Tags must be an array' }, { status: 400 });
     }
 
-    // 有料記事の場合は価格のバリデーション
-    if (isPremium && (!price || price <= 0)) {
-      return NextResponse.json({ error: '有料記事の場合は価格を設定してください' }, { status: 400 });
+    // 有料記事の場合は価格のバリデーション（Stripeの最小金額: 50円）
+    if (isPremium) {
+      if (!price || price < 50) {
+        return NextResponse.json({ error: '有料記事の最低価格は50円です' }, { status: 400 });
+      }
     }
 
     const article = await db.article.create({

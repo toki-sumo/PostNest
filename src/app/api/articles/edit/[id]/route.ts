@@ -21,9 +21,11 @@ export async function PUT(
       return new NextResponse("Title and content are required", { status: 400 })
     }
 
-    // 有料記事の場合は価格のバリデーション
-    if (isPremium && (!price || price <= 0)) {
-      return new NextResponse("有料記事の場合は価格を設定してください", { status: 400 })
+    // 有料記事の場合は価格のバリデーション（Stripeの最小金額: 50円）
+    if (isPremium) {
+      if (!price || price < 50) {
+        return new NextResponse("有料記事の最低価格は50円です", { status: 400 })
+      }
     }
 
     const article = await db.article.findUnique({
