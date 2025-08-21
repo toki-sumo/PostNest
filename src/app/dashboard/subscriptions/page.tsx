@@ -6,6 +6,8 @@ import { formatDate } from '@/lib/utils/formatDate';
 import Link from 'next/link';
 import Image from 'next/image';
 import Spinner from '@/components/ui/Spinner';
+import DashboardHeader from '../_components/DashboardHeader';
+import GlassCard from '../_components/GlassCard';
 
 type SubscriptionData = {
   subscriptions: SubscriptionWithArticle[];
@@ -54,7 +56,7 @@ export default function SubscriptionsPage() {
 
   if (error) {
     return (
-      <div className="text-center py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-red-500/20 border border-red-500/30 rounded-2xl p-6 max-w-md mx-auto">
           <svg className="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -67,24 +69,13 @@ export default function SubscriptionsPage() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* ヘッダーセクション */}
-      <div className="text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          購読
-          <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            履歴
-          </span>
-        </h1>
-        <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-          あなたが購読した有料記事の履歴と統計情報を確認できます
-        </p>
-      </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <DashboardHeader title="購読履歴" subtitle="あなたが購読した有料記事の履歴と統計情報を確認できます" />
 
       {/* 統計情報 */}
       {subscriptionData && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-blue-500/30 rounded-2xl p-6 text-center">
+          <GlassCard className="p-6 text-center">
             <div className="w-16 h-16 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -94,9 +85,9 @@ export default function SubscriptionsPage() {
               {subscriptionData.statistics.totalSubscriptions}
             </h3>
             <p className="text-blue-300 text-sm">購読記事数</p>
-          </div>
+          </GlassCard>
 
-          <div className="bg-gradient-to-br from-green-500/20 to-blue-500/20 border border-green-500/30 rounded-2xl p-6 text-center">
+          <GlassCard className="p-6 text-center">
             <div className="w-16 h-16 bg-gradient-to-r from-green-500/30 to-blue-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
@@ -106,24 +97,24 @@ export default function SubscriptionsPage() {
               ¥{subscriptionData.statistics.totalSpent.toLocaleString()}
             </h3>
             <p className="text-green-300 text-sm">総支払額</p>
-          </div>
+          </GlassCard>
 
-          <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-2xl p-6 text-center">
+          <GlassCard className="p-6 text-center">
             <div className="w-16 h-16 bg-gradient-to-r from-yellow-500/30 to-orange-500/30 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2m0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <h3 className="text-2xl font-bold text-yellow-400 mb-2">
               ¥{subscriptionData.statistics.averageSpent.toLocaleString()}
             </h3>
             <p className="text-yellow-300 text-sm">平均購読額</p>
-          </div>
+          </GlassCard>
         </div>
       )}
 
       {/* 購読記事一覧 */}
-      <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl border border-slate-600/30 p-6">
+      <GlassCard className="p-6">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
           <svg className="w-6 h-6 text-purple-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -134,9 +125,9 @@ export default function SubscriptionsPage() {
         {subscriptionData?.subscriptions && subscriptionData.subscriptions.length > 0 ? (
           <div className="space-y-4">
             {subscriptionData.subscriptions.map((subscription) => (
-              <div
+              <GlassCard
                 key={subscription.id}
-                className="bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/30 rounded-xl p-4 hover:border-slate-500/50 transition-all duration-300"
+                className="p-4 hover:border-slate-500/50 transition-all duration-300"
               >
                 <div className="flex items-start space-x-4">
                   {/* 記事画像 */}
@@ -188,7 +179,7 @@ export default function SubscriptionsPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </GlassCard>
             ))}
           </div>
         ) : (
@@ -213,7 +204,7 @@ export default function SubscriptionsPage() {
             </Link>
           </div>
         )}
-      </div>
+      </GlassCard>
     </div>
   );
 }
