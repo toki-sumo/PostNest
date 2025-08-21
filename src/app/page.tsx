@@ -1,6 +1,6 @@
 // src/app/page.tsx
 import Link from "next/link";
-import ArticleList from "./articles/page";
+// ArticleListは使用しない（最新3件カードはこのファイル内で描画）
 import BackgroundDecoration from "@/components/common/BackgroundDecoration";
 import { headers } from "next/headers";
 

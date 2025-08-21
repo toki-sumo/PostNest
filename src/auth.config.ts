@@ -130,14 +130,13 @@ export const authConfig = {
   pages: {
     signIn: "/signin",
     error: "/auth/error",
-    signUp: "/signup",
   },
 
   events: {
     async signIn({ user, account, profile, isNewUser }) {
       console.log(`User signed in: ${user.email} via ${account?.provider}`);
     },
-    async signOut({ session, token }) {
+    async signOut() {
       console.log("User signed out");
     },
   },

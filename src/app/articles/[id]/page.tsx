@@ -15,15 +15,24 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
 
     const { id } = await params;
 
-    const baseUrl =
-        process.env.NEXT_PUBLIC_BASE_URL
-        || process.env.NEXTAUTH_URL
-        || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-    const res = await fetch(`${baseUrl}/api/articles/${id}`, { next: { revalidate: 10 } });
+    // API経由だと有料ガードでcontentが空になるため、サーバー側ではDBから直接取得
+    const detailArticle = await db.article.findUnique({
+        where: { id },
+        select: {
+            id: true,
+            title: true,
+            content: true,
+            createdAt: true,
+            updatedAt: true,
+            tags: true,
+            imageUrl: true,
+            isPremium: true,
+            price: true,
+            authorId: true,
+        },
+    });
 
-    if (!res.ok) return notFound();
-
-    const detailArticle = await res.json();
+    if (!detailArticle) return notFound();
 
     const isAuthor = session?.user?.id === detailArticle.authorId;
     const imageURL = detailArticle.imageUrl || `https://picsum.photos/seed/${id}/600/400`;
@@ -63,7 +72,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                             <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <span className="text-sm">{formatDate(detailArticle.createdAt)}</span>
+                            <span className="text-sm">{formatDate(detailArticle.createdAt.toISOString())}</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
