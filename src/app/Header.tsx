@@ -52,7 +52,7 @@ const Header = () => {
             {user && (
               <Link
                 href="/articles/new"
-                className="py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md bg-[var(--primary)] text-[var(--primary-contrast)]"
+                className="py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
               >
                 記事を書く
               </Link>
@@ -81,7 +81,7 @@ const Header = () => {
             {/* テーマトグル */}
             <button
               onClick={toggleTheme}
-              className="py-2 px-3 rounded-md border transition-colors duration-200 border-[var(--border)] text-[var(--text)] hover:bg-[var(--card)]"
+              className="py-2 px-3 rounded-md border transition-colors duration-200 border-[var(--border)] text-[var(--text)] hover:bg-[var(--card)] hover:border-[var(--card-hover-border)] hover:shadow-sm"
               aria-label="テーマ切り替え"
               title="テーマ切り替え"
             >
@@ -101,7 +101,7 @@ const Header = () => {
                 </span>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="font-medium py-2 px-3 rounded-lg transition-colors duration-200 bg-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--card-hover-border)]"
+                  className="font-medium py-2 px-3 rounded-lg transition-colors duration-200 bg-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--card-hover-border)] hover:opacity-90"
                 >
                   ログアウト
                 </button>
@@ -110,13 +110,13 @@ const Header = () => {
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => router.push("/signin")}
-                  className="font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md bg-[var(--primary)] text-[var(--primary-contrast)]"
+                  className="font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
                 >
                   ログイン
                 </button>
                 <Link
                   href="/signup"
-                  className="font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md bg-[var(--primary)] text-[var(--primary-contrast)]"
+                  className="font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
                 >
                   新規登録
                 </Link>
@@ -165,7 +165,7 @@ const Header = () => {
             <Link
               href="/articles/new"
               onClick={closeMenu}
-              className="block w-full py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm bg-[var(--primary)] text-[var(--primary-contrast)]"
+              className="block w-full py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
             >
               記事を書く
             </Link>
@@ -209,7 +209,7 @@ const Header = () => {
                   closeMenu();
                   signOut({ callbackUrl: "/" });
                 }}
-                className="w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 bg-[var(--card)] text-[var(--text)] hover:border-[var(--card-hover-border)] border border-[var(--border)]"
+                className="w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 bg-[var(--card)] text-[var(--text)] hover:border-[var(--card-hover-border)] hover:opacity-90 border border-[var(--border)]"
               >
                 ログアウト
               </button>
@@ -221,14 +221,14 @@ const Header = () => {
                   closeMenu();
                   router.push("/signin");
                 }}
-                className="w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm bg-[var(--primary)] text-[var(--primary-contrast)]"
+                className="w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
               >
                 ログイン
               </button>
               <Link
                 href="/signup"
                 onClick={closeMenu}
-                className="block w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm bg-[var(--primary)] text-[var(--primary-contrast)]"
+                className="block w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 shadow-sm hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
               >
                 新規登録
               </Link>
