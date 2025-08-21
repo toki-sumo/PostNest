@@ -10,6 +10,25 @@ export async function GET(
   try {
     const article = await db.article.findUnique({
       where: { id },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+        tags: true,
+        imageUrl: true,
+        isPremium: true,
+        price: true,
+        authorId: true,
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
     });
 
     if (!article) {

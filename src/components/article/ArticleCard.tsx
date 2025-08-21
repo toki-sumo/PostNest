@@ -94,6 +94,21 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
         {/* コンテンツセクション */}
         <div className="flex flex-col justify-between p-4 lg:p-6 lg:w-3/5 w-full lg:rounded-r-2xl rounded-b-2xl lg:rounded-b-none h-full">
           <div className="space-y-1 lg:space-y-3">
+            {/* 有料記事表示 */}
+            {article.isPremium && (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-full px-2 py-1">
+                  <svg className="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <span className="text-xs text-yellow-400 font-medium">有料記事</span>
+                </div>
+                <div className="text-lg font-bold text-yellow-400">
+                  {`¥${(article.price ?? 0).toLocaleString()}`}
+                </div>
+              </div>
+            )}
+
             {/* タグ */}
             {article.tags && article.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 lg:gap-2 overflow-hidden">

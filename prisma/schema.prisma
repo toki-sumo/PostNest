@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
   image         String?
-  bio           String?   @default("")
-  role          String    @default("user")
+  bio           String?        @default("")
+  role          String         @default("user")
   password      String?
+  balance       Int            @default(0) // 残高（将来的な拡張用）
   accounts      Account[]
   Article       Article[]
   sessions      Session[]
+  subscriptions Subscription[] // 購読履歴
 }
 
 model Account {
@@ -66,5 +68,29 @@ model Article {
   tags      String[]
   authorId  String
   updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
+
+  // 有料記事関連フィールド
+  isPremium Boolean @default(false) // 有料記事フラグ
+  price     Int? // 価格（円）
+
+  author        User           @relation(fields: [authorId], references: [id])
+  subscriptions Subscription[] // 購読履歴
+}
+
+// 購読モデル（新規追加）
+model Subscription {
+  id                    String   @id @default(cuid())
+  userId                String
+  articleId             String
+  amount                Int // 支払い金額（円）
+  status                String // "pending", "completed", "failed", "refunded"
+  stripeSessionId       String? // StripeセッションID
+  stripePaymentIntentId String? // Stripe決済ID
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id])
+  article Article @relation(fields: [articleId], references: [id])
+
+  @@unique([userId, articleId]) // 同じユーザーが同じ記事を重複購読できないようにする
 }

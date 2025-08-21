@@ -6,11 +6,11 @@ import ArticleForm from '@/components/article/ArticleForm';
 export default function CreateBlogPage() {
     const router = useRouter();
 
-    const handleCreate = async ({ title, content, tags, imageURL }: any) => {
+    const handleCreate = async ({ title, content, tags, imageURL, isPremium, price }: any) => {
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, content, tags, imageURL }),
+            body: JSON.stringify({ title, content, tags, imageURL, isPremium, price }),
         });
 
         router.push('/articles');

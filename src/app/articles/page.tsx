@@ -32,9 +32,15 @@ export default async function ArticlesPage() {
                   一覧
                 </span>
               </h1>
-              <p className="text-lg md:text-xl text-slate-300 max-w-2xl lg:max-w-none">
+              <p className="text-lg md:text-xl text-slate-300 max-w-2xl lg:max-w-none mb-4">
                 最新のWeb開発情報と実践的なTipsをお届けします
               </p>
+              <div className="flex items-center justify-center lg:justify-start gap-2 text-sm text-slate-400">
+                <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span>星マークの記事は有料記事です</span>
+              </div>
             </div>
             
             <ArticleList articles={articles} />

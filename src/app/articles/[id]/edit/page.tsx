@@ -14,6 +14,8 @@ export default function EditBlogPage(){
     content: string;
     tags: string[];
     imageURL: string;
+    isPremium: boolean;
+    price: number;
   } | null>(null);
 
   const [loading, setLoading] = useState(true);
@@ -26,7 +28,9 @@ export default function EditBlogPage(){
         title: data.title,
         content: data.content,
         tags: data.tags || [],
-        imageURL: data.imageURL || '',
+        imageURL: data.imageUrl || '',
+        isPremium: data.isPremium || false,
+        price: data.price || 0,
       });
       setLoading(false);
     };
@@ -34,11 +38,11 @@ export default function EditBlogPage(){
     if (id) fetchArticle();
   }, [id]);
 
-  const handleUpdate = async ({ title, content, tags, imageURL }: any) => {
+  const handleUpdate = async ({ title, content, tags, imageURL, isPremium, price }: any) => {
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/articles/edit/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, content, tags, imageURL }),
+      body: JSON.stringify({ title, content, tags, imageURL, isPremium, price }),
     });
     console.log("update!!!!!!!!!!!!");
 
@@ -93,6 +97,8 @@ export default function EditBlogPage(){
           initialContent={article.content}
           initialTags={article.tags}
           initialImageURL={article.imageURL}
+          initialIsPremium={article.isPremium}
+          initialPrice={article.price}
           onSubmit={handleUpdate}
           isEdit={true}
         />

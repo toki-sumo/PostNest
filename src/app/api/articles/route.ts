@@ -9,7 +9,17 @@ export async function GET() {
       orderBy: {
         updatedAt: "desc",
       },
-      include: {
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+        tags: true,
+        imageUrl: true,
+        isPremium: true,
+        price: true,
+        authorId: true,
         author: {
           select: {
             name: true,
@@ -34,7 +44,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { title, content, tags, imageUrl } = body;
+    const { title, content, tags, imageURL, isPremium, price } = body;
     const authorId = session.user.id;
 
     if (!title || !content || !authorId) {
@@ -45,15 +55,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Tags must be an array' }, { status: 400 });
     }
 
+    // 有料記事の場合は価格のバリデーション
+    if (isPremium && (!price || price <= 0)) {
+      return NextResponse.json({ error: '有料記事の場合は価格を設定してください' }, { status: 400 });
+    }
+
     const article = await db.article.create({
       data: {
         title,
         content,
         authorId,
         tags: tags || [],
-        imageUrl,
+        imageUrl: imageURL, // imageURLをimageUrlとして保存
+        isPremium: isPremium || false,
+        price: isPremium ? price : null,
       },
     });
+
+    console.log('記事作成成功:', article); // デバッグログ追加
 
     return NextResponse.json(article);
   } catch (error) {

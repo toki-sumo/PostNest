@@ -11,11 +11,15 @@ type ArticleFormProps = {
   initialContent?: string;
   initialTags?: string[];
   initialImageURL?: string;
+  initialIsPremium?: boolean;
+  initialPrice?: number;
   onSubmit: (data: {
     title: string;
     content: string;
     tags: string[];
     imageURL: string;
+    isPremium: boolean;
+    price: number | null;
   }) => Promise<void>;
   isEdit?: boolean;
 };
@@ -25,6 +29,8 @@ export default function ArticleForm({
   initialContent = '',
   initialTags = [],
   initialImageURL = '',
+  initialIsPremium = false,
+  initialPrice = 0,
   onSubmit,
   isEdit = false,
 }: ArticleFormProps) {
@@ -32,6 +38,8 @@ export default function ArticleForm({
   const [content, setContent] = useState(initialContent);
   const [tags, setTags] = useState<string[]>(initialTags);
   const [imageURL, setImageURL] = useState(initialImageURL);
+  const [isPremium, setIsPremium] = useState(initialIsPremium);
+  const [price, setPrice] = useState(initialPrice);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -58,8 +66,22 @@ export default function ArticleForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await onSubmit({ title, content, tags, imageURL });
+    await onSubmit({ 
+      title, 
+      content, 
+      tags, 
+      imageURL, 
+      isPremium, 
+      price: isPremium ? price : null 
+    });
     setIsSubmitting(false);
+  };
+
+  const handlePremiumToggle = (checked: boolean) => {
+    setIsPremium(checked);
+    if (!checked) {
+      setPrice(0);
+    }
   };
 
   return (
@@ -90,6 +112,59 @@ export default function ArticleForm({
               placeholder="記事のタイトルを入力してください"
               className="w-full px-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
             />
+          </div>
+
+          {/* 有料記事設定 */}
+          <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl p-6">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  id="isPremium"
+                  checked={isPremium}
+                  onChange={(e) => handlePremiumToggle(e.target.checked)}
+                  className="w-5 h-5 text-yellow-500 bg-slate-700/50 border-slate-600/30 rounded focus:ring-yellow-500 focus:ring-2"
+                />
+                <label htmlFor="isPremium" className="text-lg font-semibold text-yellow-400 flex items-center">
+                  <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  有料記事にする
+                </label>
+              </div>
+              
+              {isPremium && (
+                <div className="space-y-3 pl-8">
+                  <p className="text-slate-300 text-sm">
+                    有料記事に設定すると、読者は記事の内容を読むために購読が必要になります。
+                  </p>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center">
+                      <svg className="w-4 h-4 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                      </svg>
+                      価格（円）
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">¥</span>
+                      <input
+                        type="number"
+                        min="0"
+                        max="99999"
+                        value={price}
+                        onChange={(e) => setPrice(Number(e.target.value))}
+                        className="w-full pl-8 pr-4 py-3 border border-slate-600/30 rounded-xl shadow-sm bg-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all duration-300"
+                        placeholder="100"
+                      />
+                    </div>
+                    <p className="text-xs text-slate-400 mt-1">
+                      0円以上、99,999円以下で設定してください
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* コンテンツ入力 */}
@@ -168,7 +243,7 @@ export default function ArticleForm({
           <div className="pt-6">
             <button
               type="submit"
-              disabled={isSubmitting || !title || !content}
+              disabled={isSubmitting || !title || !content || (isPremium && price <= 0)}
               className="w-full inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-bold rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:scale-105"
             >
               {isSubmitting ? (

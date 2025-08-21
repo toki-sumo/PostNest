@@ -25,6 +25,25 @@ export default async function ArticleDetailPage({ params, }: {
     const isAuthor = session?.user?.id === detailArticle.authorId;
     const imageURL = detailArticle.imageURL || `https://picsum.photos/seed/${(await params).id}/600/400`;
 
+    // 購読状態を確認（ログインしている場合のみ）
+    let isSubscribed = false;
+    if (session?.user) {
+        try {
+            const subscriptionRes = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/articles/${(await params).id}/subscription-status`,
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
+            if (subscriptionRes.ok) {
+                const subscriptionData = await subscriptionRes.json();
+                isSubscribed = subscriptionData.isSubscribed;
+            }
+        } catch (error) {
+            console.error('購読状態の確認に失敗:', error);
+        }
+    }
+
     return (
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
             {/* 背景の装飾要素 */}
@@ -62,6 +81,49 @@ export default async function ArticleDetailPage({ params, }: {
                         </div>
                     </div>
                 </div>
+
+                {/* 有料記事表示 */}
+                {detailArticle.isPremium && !isSubscribed && (
+                    <div className="mb-8">
+                        <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-2xl p-6 text-center">
+                            <div className="flex items-center justify-center gap-3 mb-4">
+                                <svg className="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                <h2 className="text-2xl font-bold text-yellow-400">有料記事</h2>
+                            </div>
+                            <p className="text-yellow-200 mb-4">
+                                この記事の内容を読むには購読が必要です
+                            </p>
+                            <div className="text-4xl font-bold text-yellow-400 mb-6">
+                                {`¥${(detailArticle.price ?? 0).toLocaleString()}`}
+                            </div>
+                            <button className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold px-8 py-3 rounded-xl hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-yellow-500/25 transform hover:scale-105">
+                                <svg className="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                                購読する
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* 購読済み表示 */}
+                {detailArticle.isPremium && isSubscribed && (
+                    <div className="mb-8">
+                        <div className="bg-gradient-to-r from-green-500/20 to-blue-500/20 border border-green-500/30 rounded-2xl p-6 text-center">
+                            <div className="flex items-center justify-center gap-3 mb-4">
+                                <svg className="w-8 h-8 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <h2 className="text-2xl font-bold text-green-400">購読済み</h2>
+                            </div>
+                            <p className="text-green-200">
+                                この記事は購読済みです。記事の内容をお読みいただけます。
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 {/* メインコンテンツ */}
                 <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm rounded-2xl border border-slate-600/30 shadow-2xl shadow-blue-500/10 overflow-hidden">
@@ -103,10 +165,27 @@ export default async function ArticleDetailPage({ params, }: {
 
                     {/* 記事本文 */}
                     <div className="p-6">
-                        <RichTextDisplay 
-                            content={detailArticle.content} 
-                            className="text-slate-300" 
-                        />
+                        {!detailArticle.isPremium || isSubscribed ? (
+                            <RichTextDisplay 
+                                content={detailArticle.content} 
+                                className="text-slate-300" 
+                            />
+                        ) : (
+                            <div className="text-center py-12">
+                                <div className="w-24 h-24 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <svg className="w-12 h-12 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                </div>
+                                <h3 className="text-xl font-bold text-yellow-400 mb-4">記事の内容は購読後に表示されます</h3>
+                                <p className="text-slate-300 mb-6">
+                                    上記の購読ボタンから記事を購読すると、内容をお読みいただけます。
+                                </p>
+                                <div className="text-2xl font-bold text-yellow-400">
+                                    {`¥${(detailArticle.price ?? 0).toLocaleString()}`}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 

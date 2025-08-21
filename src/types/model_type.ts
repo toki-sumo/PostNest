@@ -8,10 +8,31 @@ export type Article = {
     tags: string[];
     author: User;
     imageURL: string;
+    isPremium: boolean;
+    price: number | null;
 }
 
 export type User = {
     id: string;
     name: string;
     Article: Article[];
+}
+
+export type Subscription = {
+    id: string;
+    userId: string;
+    articleId: string;
+    amount: number;
+    status: SubscriptionStatus;
+    stripeSessionId?: string;
+    stripePaymentIntentId?: string;
+    createdAt: string;
+    updatedAt: string;
+    article?: Article;
+}
+
+export type SubscriptionStatus = 'pending' | 'completed' | 'failed' | 'refunded';
+
+export type SubscriptionWithArticle = Subscription & {
+    article: Article;
 }
