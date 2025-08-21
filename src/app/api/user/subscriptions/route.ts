@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
           select: {
             id: true,
             title: true,
-            imageURL: true,
+            imageUrl: true,
             isPremium: true,
             price: true,
             createdAt: true,

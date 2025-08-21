@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
         articleId: articleId,
         userId: session.user.id,
       },
-      success_url: `${baseUrl}/articles/${articleId}?success=1`,
+      success_url: `${baseUrl}/articles/${articleId}?success=1&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/articles/${articleId}?canceled=1`,
     })
 

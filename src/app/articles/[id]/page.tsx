@@ -6,16 +6,20 @@ import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/utils/formatDate";
 import RichTextDisplay from "@/components/article/RichTextDisplay";
 import PurchaseButton from "@/components/article/PurchaseButton";
+import { db } from "@/lib/db";
+import CheckoutSuccessHandler from "@/components/article/CheckoutSuccessHandler";
 
 export default async function ArticleDetailPage({ params, }: {
     params: Promise<{ id: string }>;
 }) {
     const session = await auth();
 
+    const { id } = await params;
+
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/articles/${(await params).id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/articles/${id}`,
         {
-            next: { revalidate: 10 }, // ISR
+            next: { revalidate: 10 },
         }
     );
 
@@ -24,29 +28,30 @@ export default async function ArticleDetailPage({ params, }: {
     const detailArticle = await res.json();
 
     const isAuthor = session?.user?.id === detailArticle.authorId;
-    const imageURL = detailArticle.imageUrl || `https://picsum.photos/seed/${(await params).id}/600/400`;
+    const imageURL = detailArticle.imageUrl || `https://picsum.photos/seed/${id}/600/400`;
 
     // 購読状態を確認（ログインしている場合のみ）
     let isSubscribed = false;
-    if (session?.user) {
+    if (session?.user && detailArticle.isPremium) {
         try {
-            const subscriptionRes = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/articles/${(await params).id}/subscription-status`,
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
-            if (subscriptionRes.ok) {
-                const subscriptionData = await subscriptionRes.json();
-                isSubscribed = subscriptionData.isSubscribed;
-            }
-        } catch (error) {
-            console.error('購読状態の確認に失敗:', error);
+            const subscription = await db.subscription.findUnique({
+                where: {
+                    userId_articleId: {
+                        userId: session.user.id,
+                        articleId: id,
+                    }
+                },
+                select: { status: true }
+            });
+            isSubscribed = subscription?.status === 'completed';
+        } catch (error: any) {
+            console.error('購読状態の確認に失敗:', error?.message || error);
         }
     }
 
     return (
         <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+            <CheckoutSuccessHandler />
             {/* 背景の装飾要素 */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
                 {/* 浮遊する幾何学的図形 */}
