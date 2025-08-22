@@ -10,27 +10,37 @@ import { db } from "@/lib/db";
 import CheckoutSuccessHandler from "@/components/article/CheckoutSuccessHandler";
 import BackgroundDecoration from "@/components/common/BackgroundDecoration";
 
+export const runtime = 'nodejs'
+
 export default async function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
 
     const { id } = await params;
 
     // API経由だと有料ガードでcontentが空になるため、サーバー側ではDBから直接取得
-    const detailArticle = await db.article.findUnique({
-        where: { id },
-        select: {
-            id: true,
-            title: true,
-            content: true,
-            createdAt: true,
-            updatedAt: true,
-            tags: true,
-            imageUrl: true,
-            isPremium: true,
-            price: true,
-            authorId: true,
-        },
-    });
+    let detailArticle: {
+        id: string; title: string; content: string; createdAt: Date; updatedAt: Date; tags: string[];
+        imageUrl: string | null; isPremium: boolean; price: number | null; authorId: string;
+    } | null = null
+    try {
+        detailArticle = await db.article.findUnique({
+            where: { id },
+            select: {
+                id: true,
+                title: true,
+                content: true,
+                createdAt: true,
+                updatedAt: true,
+                tags: true,
+                imageUrl: true,
+                isPremium: true,
+                price: true,
+                authorId: true,
+            },
+        });
+    } catch (e) {
+        console.error('記事取得に失敗:', e)
+    }
 
     if (!detailArticle) return notFound();
 

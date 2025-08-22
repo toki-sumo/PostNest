@@ -1,5 +1,4 @@
 // src/middleware.ts
-import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -20,9 +19,13 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const session = await auth();
+  // 記事詳細などの保護: クッキーにセッショントークンが無ければサインインへ
+  const hasSessionToken =
+    req.cookies.has("__Secure-authjs.session-token") ||
+    req.cookies.has("authjs.session-token") ||
+    req.cookies.has("next-auth.session-token")
 
-  if (!isPublicPath && !session) {
+  if (!isPublicPath && !hasSessionToken) {
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = "/signin";
     loginUrl.searchParams.set("callbackUrl", pathname);

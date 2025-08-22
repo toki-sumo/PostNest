@@ -32,7 +32,8 @@ export async function GET() {
     return NextResponse.json(articles);
   } catch (error) {
     console.error("Failed to fetch articles:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    // フェイルセーフ：エラーでも空配列を返し、UI を壊さない
+    return NextResponse.json([]);
   }
 }
 
