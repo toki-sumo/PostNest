@@ -97,7 +97,7 @@ const Header = () => {
                 </span>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="font-medium py-2 px-3 rounded-lg transition-colors duration-200 bg-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--card-hover-border)] hover:opacity-90"
+                  className="font-medium py-2 px-3 rounded-lg transition-all duration-200 bg-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--card-hover-border)] hover:opacity-90 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
                 >
                   ログアウト
                 </button>
@@ -106,7 +106,7 @@ const Header = () => {
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => router.push("/signin")}
-                  className="font-medium py-2 px-4 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md hover:opacity-90 bg-[var(--primary)] text-[var(--primary-contrast)]"
+                  className="font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-lg hover:-translate-y-0.5 bg-[var(--primary)] text-[var(--primary-contrast)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
                 >
                   ログイン
                 </button>
