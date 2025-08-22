@@ -12,10 +12,18 @@ import BackgroundDecoration from "@/components/common/BackgroundDecoration";
 
 export const runtime = 'nodejs'
 
+// Next.js v15の型に合わせ params は Promise として受け取り、実行時に解決
 export default async function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const session = await auth();
+    let session: Awaited<ReturnType<typeof auth>> | null = null
+    try {
+        session = await auth();
+    } catch (e) {
+        console.error('auth() failed on article detail:', e)
+        session = null
+    }
 
-    const { id } = await params;
+    // params が Promise かオブジェクトか実行環境で揺れるため吸収
+    const { id } = await params
 
     // API経由だと有料ガードでcontentが空になるため、サーバー側ではDBから直接取得
     let detailArticle: {

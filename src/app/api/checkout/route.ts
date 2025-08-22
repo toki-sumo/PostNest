@@ -3,6 +3,9 @@ import { auth } from '@/auth'
 import { db } from '@/lib/db'
 import { stripe } from '@/lib/stripe'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     const session = await auth()
@@ -33,7 +36,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Already subscribed' }, { status: 400 })
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || req.nextUrl.origin
+    // 正確なプロトコル/ホストを優先（プロキシ越し対応）
+    const xfProto = req.headers.get('x-forwarded-proto')
+    const xfHost = req.headers.get('x-forwarded-host') || req.headers.get('host')
+    const inferred = xfHost ? `${xfProto || 'http'}://${xfHost}` : req.nextUrl.origin
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || inferred
 
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: 'payment',

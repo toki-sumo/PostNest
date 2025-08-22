@@ -12,11 +12,16 @@ export default function CheckoutSuccessHandler() {
     const success = searchParams.get('success')
     const sessionId = searchParams.get('session_id')
 
+    // Stripeからのリダイレクトで 500 の場合に備えて軽い遅延を入れる
+    // （VPC内DNS/コールドスタート吸収）
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
     if (calledRef.current) return
     if (success === '1' && sessionId) {
       calledRef.current = true
       ;(async () => {
         try {
+          await sleep(400)
           const res = await fetch('/api/subscriptions/confirm', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
