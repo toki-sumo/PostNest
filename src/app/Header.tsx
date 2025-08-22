@@ -153,7 +153,7 @@ const Header = () => {
           
           {/* 記事投稿リンク（ログイン時のみ表示） */}
           {user && (
-            <LinkButton href="/articles/new">記事を書く</LinkButton>
+            <LinkButton href="/articles/new" className="block w-full text-center">記事を書く</LinkButton>
           )}
           
           {/* ダッシュボードリンク（ログイン時のみ表示） */}
