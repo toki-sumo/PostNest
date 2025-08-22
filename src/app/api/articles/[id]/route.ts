@@ -77,9 +77,28 @@ export async function DELETE(
   const { id } = await params;
 
   try {
-    const deletedArticle = await db.article.delete({
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // 対象記事の作者と照合
+    const target = await db.article.findUnique({
       where: { id },
-    });
+      select: { authorId: true },
+    })
+
+    if (!target) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 })
+    }
+
+    const isAuthor = session.user.id === target.authorId
+    const isAdmin = (session.user as any).role === 'Admin'
+    if (!isAuthor && !isAdmin) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    const deletedArticle = await db.article.delete({ where: { id } });
 
     return NextResponse.json(
       { message: 'Article deleted successfully', deletedArticle },

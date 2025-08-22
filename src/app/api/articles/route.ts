@@ -5,6 +5,9 @@ import { auth } from "@/auth"
 
 export async function GET() {
   try {
+    const session = await auth()
+    const isAdmin = (session?.user as any)?.role === 'Admin'
+
     const articles = await db.article.findMany({
       orderBy: {
         updatedAt: "desc",
@@ -29,6 +32,7 @@ export async function GET() {
       },
     });
     
+    // 管理者は全件返す。一般ユーザーでも一覧は公開仕様のため、このまま返却
     return NextResponse.json(articles);
   } catch (error) {
     console.error("Failed to fetch articles:", error);
