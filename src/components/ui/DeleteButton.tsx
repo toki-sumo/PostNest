@@ -6,9 +6,10 @@ import { Button } from "./Button";
 
 type DeleteButtonProps = {
     id: string;
+    onDeleted?: () => void;
 };
 
-const DeleteButton = ({ id }: DeleteButtonProps) => {
+const DeleteButton = ({ id, onDeleted }: DeleteButtonProps) => {
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -20,8 +21,12 @@ const DeleteButton = ({ id }: DeleteButtonProps) => {
                 method: "DELETE",
             });
             setShowModal(false);
-            router.push("/articles");
-            router.refresh();
+            if (onDeleted) {
+                onDeleted();
+            } else {
+                router.push("/articles");
+                router.refresh();
+            }
         } catch (error) {
             console.error("削除失敗:", error);
         } finally {

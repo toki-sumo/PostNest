@@ -24,7 +24,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full border-b z-50 shadow-lg bg-[var(--card)] border-[var(--border)] text-[var(--text)]">
+    <header className="fixed top-0 left-0 w-full border-b z-50 shadow-lg bg-[color:var(--bg)]/95 border-[var(--border)] text-[var(--text)] backdrop-blur-sm">
       {/* メインヘッダー */}
       <div className="px-4 py-4 lg:px-8 lg:py-5">
         <div className="flex justify-between items-center">

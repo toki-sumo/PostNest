@@ -1,6 +1,7 @@
 // app/admin/page.tsx
 'use client'
 
+import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -10,8 +11,12 @@ const AdminPage = () => {
     const router = useRouter()
     
     useEffect(() => {
-        if (status === 'unauthenticated' || session?.user?.role != 'Admin') {
-            router.push('/signin') // 未ログインならリダイレクト
+        if (status === 'unauthenticated') {
+            router.push('/signin')
+            return
+        }
+        if (status === 'authenticated' && session?.user?.role !== 'Admin') {
+            router.push('/')
         }
     }, [status, router, session])
 
@@ -104,9 +109,12 @@ const AdminPage = () => {
                             </div>
                             <h3 className="text-lg font-bold text-[var(--text)] mb-2">ユーザー管理</h3>
                             <p className="text-[var(--text)]/85 text-sm mb-4">ユーザーアカウントの管理と権限設定</p>
-                            <button className="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300">
-                                管理画面を開く
-                            </button>
+                            <Link
+                                href="/admin/users"
+                                className="inline-block px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 border border-[var(--border)] hover:border-[var(--card-hover-border)] hover:-translate-y-0.5 hover:shadow-md relative z-10"
+                            >
+                                ユーザー管理を開く
+                            </Link>
                         </div>
                     </div>
 
@@ -120,9 +128,12 @@ const AdminPage = () => {
                             </div>
                             <h3 className="text-lg font-bold text-[var(--text)] mb-2">記事管理</h3>
                             <p className="text-[var(--text)]/85 text-sm mb-4">投稿記事の審査と管理</p>
-                            <button className="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300">
-                                管理画面を開く
-                            </button>
+                            <Link
+                                href="/admin/articles"
+                                className="inline-block px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 border border-[var(--border)] hover:border-[var(--card-hover-border)] hover:-translate-y-0.5 hover:shadow-md relative z-10"
+                            >
+                                記事管理を開く
+                            </Link>
                         </div>
                     </div>
 
