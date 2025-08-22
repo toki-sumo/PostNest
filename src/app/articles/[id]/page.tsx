@@ -81,7 +81,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
             <CheckoutSuccessHandler />
             <BackgroundDecoration />
 
-            <main className="w-full max-w-4xl mx-auto pt-20 pb-8 relative z-10">
+            <main className="w-full max-w-4xl mx-auto pt-24 md:pt-28 pb-8 relative z-10">
                 {/* ヘッダーセクション */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl md:text-5xl font-bold text-[var(--text)] mb-4 leading-tight">
