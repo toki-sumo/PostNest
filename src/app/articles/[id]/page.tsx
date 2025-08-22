@@ -1,6 +1,7 @@
 import DeleteButton from "@/components/ui/DeleteButton";
 import EditButton from "@/components/ui/EditButton";
 import Image from "next/image";
+import type { Session } from "next-auth";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/utils/formatDate";
@@ -14,9 +15,9 @@ export const runtime = 'nodejs'
 
 // Next.js v15の型に合わせ params は Promise として受け取り、実行時に解決
 export default async function ArticleDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    let session: Awaited<ReturnType<typeof auth>> | null = null
+    let session: Session | null = null
     try {
-        session = await auth();
+        session = (await auth()) as Session | null
     } catch (e) {
         console.error('auth() failed on article detail:', e)
         session = null
