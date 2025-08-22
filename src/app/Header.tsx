@@ -210,7 +210,7 @@ const Header = () => {
               >
                 ログイン
               </button>
-              <LinkButton href="/signup">新規登録</LinkButton>
+              <LinkButton href="/signup" className="block w-full text-center">新規登録</LinkButton>
             </div>
           )}
         </div>
