@@ -24,41 +24,45 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full border-b z-50 shadow-lg bg-[color:var(--bg)]/95 border-[var(--border)] text-[var(--text)] backdrop-blur-sm">
+    <header className="sticky top-0 w-full z-500 text-[var(--text)] relative
+      bg-[color:var(--bg)] backdrop-blur-xl shadow-[0_8px_24px_rgba(0,0,0,0.10)]">
       {/* メインヘッダー */}
-      <div className="px-4 py-4 lg:px-8 lg:py-5">
-        <div className="flex justify-between items-center">
+      <div className="px-4 lg:px-8 h-[80px] flex items-center">
+        <div className="flex justify-between items-stretch w-full h-full">
           {/* ロゴ */}
-          <h1 className="text-xl lg:text-2xl font-bold text-[var(--text)]">
+          <h1 className="text-xl lg:text-2xl font-bold text-[var(--text)] h-full flex items-center">
             <Link 
               href="/" 
               onClick={closeMenu}
-              className="hover:text-[var(--muted)] transition-colors duration-200"
+              className="p-0 relative text-[var(--text)] hover:text-[var(--primary)] transition-colors duration-200 h-full flex items-center leading-none"
             >
               PostNest
             </Link>
           </h1>
 
-          {/* デスクトップナビゲーション */}
-          <nav className="hidden lg:flex items-center space-x-6">
+          {/* デスクトップナビゲーション（右寄せ） */}
+          <nav className="hidden lg:flex items-stretch space-x-6 ml-auto h-full">
             {/* 記事一覧リンク */}
             <Link
               href="/articles"
-              className="text-[var(--text)]/85 hover:text-[var(--text)] font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[color:var(--muted)]/10"
+              className="relative flex items-center self-stretch p-0 text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200 "
             >
               記事一覧
             </Link>
             
             {/* 記事投稿リンク（ログイン時のみ表示） */}
             {user && (
-              <LinkButton href="/articles/new">記事を書く</LinkButton>
+              <Link
+                href="/articles/new"
+                className="relative flex items-center self-stretch p-0 text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200 "
+              >記事を書く</Link>
             )}
             
             {/* ダッシュボードリンク（ログイン時のみ表示） */}
             {user && (
               <Link
                 href="/dashboard"
-                className="text-[var(--text)]/85 hover:text-[var(--text)] font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[color:var(--muted)]/10"
+                className="relative flex items-center self-stretch p-0 text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200 "
               >
                 ダッシュボード
               </Link>
@@ -68,7 +72,7 @@ const Header = () => {
             {user?.role === 'Admin' && (
               <Link
                 href="/admin"
-                className="text-[var(--text)]/85 hover:text-red-500 font-medium transition-colors duration-200 py-2 px-3 rounded-md hover:bg-[color:var(--muted)]/10"
+                className="relative flex items-center self-stretch p-0 text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200 "
               >
                 管理者
               </Link>
@@ -77,7 +81,7 @@ const Header = () => {
             {/* テーマトグル */}
             <button
               onClick={toggleTheme}
-              className="py-2 px-3 rounded-md border transition-colors duration-200 border-[var(--border)] text-[var(--text)] hover:bg-[var(--card)] hover:border-[var(--card-hover-border)] hover:shadow-sm"
+              className="p-0 inline-block relative text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200  h-full flex items-center"
               aria-label="テーマ切り替え"
               title="テーマ切り替え"
             >
@@ -86,31 +90,34 @@ const Header = () => {
 
             {/* ログイン状態の表示 */}
             {isLoading ? (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 h-full">
                 <div className="w-4 h-4 border-2 border-[var(--muted)] border-t-transparent rounded-full animate-spin"></div>
                 <span className="text-[var(--muted)] text-sm">読み込み中...</span>
               </div>
             ) : user ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 h-full">
                 <span className="text-[var(--text)]/85 text-sm font-medium">
                   {user.name ?? 'ゲスト'}さん
                 </span>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="font-medium py-2 px-3 rounded-lg transition-all duration-200 bg-[var(--card)] text-[var(--text)] border border-[var(--border)] hover:border-[var(--card-hover-border)] hover:opacity-90 hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
+                  className="p-0 inline-block relative text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200  h-full flex items-center"
                 >
                   ログアウト
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 h-full">
                 <button
                   onClick={() => router.push("/signin")}
-                  className="font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-sm hover:shadow-lg hover:-translate-y-0.5 bg-[var(--primary)] text-[var(--primary-contrast)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
+                  className="p-0 inline-block relative text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200  h-full flex items-center"
                 >
                   ログイン
                 </button>
-                <LinkButton href="/signup">新規登録</LinkButton>
+                <Link
+                  href="/signup"
+                  className="p-0 inline-block relative text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200  h-full flex items-center"
+                >新規登録</Link>
               </div>
             )}
           </nav>
@@ -118,7 +125,7 @@ const Header = () => {
           {/* ハンバーガーメニューボタン */}
           <button
             onClick={toggleMenu}
-            className="lg:hidden p-2 rounded-lg text-[var(--text)]/85 hover:text-[var(--text)] hover:bg-[color:var(--muted)]/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors duration-200"
+            className="lg:hidden p-2 rounded-lg text-[var(--text)]/85 hover:text-[var(--text)] hover:bg-[color:var(--muted)]/10 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2 transition-colors duration-200 h-full flex items-center"
             aria-label="メニューを開く"
           >
             <svg
