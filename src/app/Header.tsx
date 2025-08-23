@@ -114,10 +114,12 @@ const Header = () => {
                 >
                   ログイン
                 </button>
-                <Link
-                  href="/signup"
+                <button
+                  onClick={() => router.push("/signup")}
                   className="p-0 inline-block relative text-[var(--text)]/85 hover:text-[var(--primary)] transition-colors duration-200  h-full flex items-center"
-                >新規登録</Link>
+                >
+                  新規登録
+                </button>
               </div>
             )}
           </nav>
