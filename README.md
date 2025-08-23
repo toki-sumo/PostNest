@@ -81,6 +81,13 @@
 
 ---
 
+## 🏗️ Architecture（全体像）
+
+- システム構成図と Webhook シーケンス図は `docs/architecture.md` に掲載しています。
+- 要約: Next.js(App Router) → Route Handlers(API) → Prisma → PostgreSQL(RDS)。Checkout は Stripe に遷移し、完了時に Webhook が API を叩き、`Subscription` へ反映。
+
+---
+
 ## 🔒 セキュリティ実装（アピールポイント）
 
 - CSRF 対策: 書き込み API に同一オリジン検査（Origin/Host 検証）
@@ -244,6 +251,12 @@ NEXT_PUBLIC_BASE_URL="https://<your-domain>"
 ```bash
 pnpm prisma migrate deploy
 ```
+
+### 本番運用ベストプラクティス
+- HTTPS 化: Let’s Encrypt + Nginx（HTTP→HTTPS リダイレクト、TLSv1.2 以上）
+- マイグレーション: 本番は `migrate deploy` のみ（`migrate dev` は禁止）
+- バックアップ: RDS の自動スナップショット + `pg_dump` 世代管理
+- ログ: pm2 logs を CloudWatch/S3 へ集約、ローテーションを設定
 
 ### 本番: AWS EC2（Ubuntu）へのデプロイ
 
@@ -508,6 +521,42 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
   - CSRF（Origin/Host 不一致の 403）
   - XSS（DOMPurify サニタイズで危険タグ除去）
 
+### 実装ツール（例）
+- ユニット: Jest + ts-jest（関数・API ハンドラのロジック）
+- E2E: Playwright（ログイン→記事作成→Checkout→解禁までのフロー）
+- Contract: JSON Schema による API 応答検証
+
+---
+
+## 🚀 Performance / Optimization
+
+- App Router のサーバーコンポーネントでデータ取得を集約→不要なクライアントフェッチを削減
+- Prisma の `select` で必要最小限のフィールドのみ取得
+- 画像は `public/` 直配信を優先（将来は最適化サービス導入を検討）
+- キャッシュ: 将来的に KV/Redis を導入して、一覧/プロフィール等の短期キャッシュを実装予定
+
+---
+
+## 🗄️ Prisma Model 定義抜粋
+
+```prisma
+model Subscription {
+  id                  String   @id @default(cuid())
+  userId              String
+  articleId           String
+  amount              Int
+  status              String   // e.g. "completed", "pending"
+  stripeSessionId     String   @unique
+  stripePaymentIntent String?
+  createdAt           DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  article Article @relation(fields: [articleId], references: [id])
+
+  @@unique([userId, articleId])
+}
+```
+
 ---
 
 ## 📈 監視 / ログ
@@ -524,6 +573,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 ## 🔄 CI/CD（GitHub Actions 例）
 
 ### CI（PR / main）
+
 - pnpm セットアップ → 依存関係インストール
 - Lint / 型チェック / ビルド（必要ならユニットテスト）
 - 成果物のキャッシュ（node_modules/pnpm）
@@ -554,6 +604,7 @@ jobs:
 ```
 
 ### CD（デプロイ方針）
+
 - RDS マイグレーション: `pnpm prisma migrate deploy` をメンテナンス環境で実行
 - EC2 へは SSH で pull → install → build → pm2 restart
 
@@ -579,6 +630,7 @@ jobs:
 ## 🌐 Nginx リバースプロキシ（例）
 
 ### HTTP → HTTPS リダイレクト
+
 ```nginx
 server {
   listen 80;
@@ -588,6 +640,7 @@ server {
 ```
 
 ### HTTPS + Node(3000) へのプロキシ
+
 ```nginx
 server {
   listen 443 ssl http2;
@@ -627,11 +680,14 @@ server {
 ## 🔐 Secrets 管理（例）
 
 ### GitHub Actions での Secrets
+
 - `Settings > Secrets and variables > Actions` に `EC2_HOST`, `EC2_SSH_KEY`, `STRIPE_SECRET_KEY` などを登録
 - デプロイ時は上記を参照
 
 ### AWS SSM Parameter Store / Secrets Manager の利用
+
 - アプリ実行時に `.env` を生成する例（Parameter Store）:
+
 ```bash
 aws ssm get-parameter \
   --name "/postnest/prod/DATABASE_URL" \
@@ -641,6 +697,7 @@ aws ssm get-parameter \
 ```
 
 - systemd での環境読み込み例:
+
 ```ini
 [Service]
 EnvironmentFile=/home/ubuntu/PostNest/.env
