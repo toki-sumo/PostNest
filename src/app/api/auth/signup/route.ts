@@ -3,6 +3,7 @@ import { NextResponse } from "next/server"
 import { NextRequest } from "next/server"
 import { hash } from "bcryptjs"
 import { prisma } from "@/lib/prisma"
+import { getRequestIp, rateLimit } from '@/lib/utils'
 
 // メールアドレスからユーザー名を生成する関数
 function generateUsernameFromEmail(email: string): string {
@@ -19,10 +20,21 @@ function generateUsernameFromEmail(email: string): string {
 }
 
 export async function POST(req: NextRequest) {
+    const ip = getRequestIp(req)
+    const rl = rateLimit(`signup:${ip}`, 5, 60_000)
+    if (!rl.allowed) {
+        return NextResponse.json({ message: "Too many requests" }, { status: 429 })
+    }
+
     const { email, password } = await req.json()
 
     if (!email || !password) {
         return NextResponse.json({ message: "Email and password are required" }, { status: 400 })
+    }
+
+    // パスワードポリシー（最小8文字、1英字、1数字）
+    if (typeof password !== 'string' || password.length < 8 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+        return NextResponse.json({ message: "パスワードは8文字以上かつ英字と数字を含めてください" }, { status: 400 })
     }
 
     const existingUser = await prisma.user.findUnique({ where: { email } })

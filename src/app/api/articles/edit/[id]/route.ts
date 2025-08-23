@@ -15,6 +15,12 @@ export async function PUT(
   }
 
   try {
+    // CSRF: 同一オリジンのみ許可
+    const origin = req.headers.get('origin')
+    const host = req.headers.get('host')
+    if (!origin || !host || new URL(origin).host !== host) {
+      return new NextResponse('Invalid origin', { status: 403 })
+    }
     const { title, content, tags, imageUrl, isPremium, price } = await req.json()
 
     if (!title || !content) {

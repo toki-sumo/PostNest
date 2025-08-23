@@ -26,7 +26,6 @@ export async function GET(
           select: {
             id: true,
             name: true,
-            email: true,
           },
         },
       },
@@ -77,6 +76,12 @@ export async function DELETE(
   const { id } = await params;
 
   try {
+    // CSRF: 同一オリジンのみ許可
+    const origin = req.headers.get('origin')
+    const host = req.headers.get('host')
+    if (!origin || !host || new URL(origin).host !== host) {
+      return NextResponse.json({ error: 'Invalid origin' }, { status: 403 })
+    }
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

@@ -26,7 +26,6 @@ export async function GET() {
         author: {
           select: {
             name: true,
-            email: true,
           },
         },
       },
@@ -48,6 +47,13 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    // CSRF: 同一オリジンのみ許可
+    const origin = req.headers.get('origin')
+    const host = req.headers.get('host')
+    if (!origin || !host || new URL(origin).host !== host) {
+      return NextResponse.json({ error: 'Invalid origin' }, { status: 403 })
+    }
+
     const body = await req.json();
     const { title, content, tags, imageUrl, isPremium, price } = body;
     const authorId = session.user.id;

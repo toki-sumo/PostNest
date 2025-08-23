@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { db } from '@/lib/db'
+import { auth } from '@/auth'
 
 export async function POST(req: NextRequest) {
   try {
+    const sessionAuth = await auth()
+    if (!sessionAuth?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     const { sessionId } = await req.json()
     if (!sessionId) {
       return NextResponse.json({ error: 'sessionId is required' }, { status: 400 })
@@ -20,6 +25,11 @@ export async function POST(req: NextRequest) {
 
     if (!articleId || !userId || !amountTotal) {
       return NextResponse.json({ error: 'Missing metadata' }, { status: 400 })
+    }
+
+    // セッションのユーザーとメタデータのユーザーが一致するか検証
+    if (userId !== sessionAuth.user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     await db.subscription.upsert({
