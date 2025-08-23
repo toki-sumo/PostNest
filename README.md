@@ -62,6 +62,17 @@
 
 ---
 
+## 🧾 使用言語まとめ
+
+- TypeScript/TSX: Next.js(App Router), React コンポーネント, API Route Handlers, 認証/ユーティリティ
+- SQL/DDL(Prisma): `schema.prisma` によるモデル定義と `migrations` によるスキーマ差分の適用（PostgreSQL）
+- CSS(Tailwind): ユーティリティクラス中心のスタイリング（`globals.css` / 各コンポーネント）
+- YAML: `docker-compose.yml` による開発用 DB の起動
+- JSON: `package.json` ほか設定・データ
+- Shell/CLI: Stripe CLI, pm2, Git/Node/pnpm の運用コマンド
+
+---
+
 ## 🔒 セキュリティ実装（アピールポイント）
 
 - CSRF 対策: 書き込み API に同一オリジン検査（Origin/Host 検証）
@@ -127,6 +138,7 @@ src/
 - Stripe / Google / GitHub のキー
 
 ### 1. リポジトリ取得と依存関係
+
 ```bash
 git clone https://github.com/toki-sumo/PostNest.git
 cd PostNest
@@ -134,18 +146,24 @@ pnpm install
 ```
 
 ### 2. DB の用意（どちらかを選択）
+
 - Homebrew（macOS）
+
 ```bash
 brew install postgresql@16
 brew services start postgresql@16
 ```
+
 - Docker Compose
+
 ```bash
 docker compose up -d
 ```
 
 ### 3. 環境変数の設定（.env）
+
 ローカル実行の例:
+
 ```bash
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postnest?schema=public"
 NEXTAUTH_URL="http://localhost:3000"
@@ -158,25 +176,30 @@ NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 ```
 
 ### 4. Prisma セットアップ
+
 ```bash
 pnpm prisma generate
 pnpm prisma migrate dev
 ```
 
 ### 5. 開発サーバ起動
+
 ```bash
 pnpm dev
 # http://localhost:3000 にアクセス
 ```
 
 ### 6.（任意）Stripe Webhook（ローカル）
+
 Stripe CLI を利用してイベント転送と署名検証を設定します。
+
 ```bash
 stripe listen --forward-to localhost:3000/api/stripe/webhook
 # 表示された Signing secret を STRIPE_WEBHOOK_SECRET に設定
 ```
 
 ### 動作確認ポイント
+
 - 未購読ユーザーは有料記事の本文がマスクされる
 - 購読完了後（Checkout 成功）に本文が解禁される
 - 記事の作成/編集/削除はログイン済みの著者（または管理者）のみ可能
