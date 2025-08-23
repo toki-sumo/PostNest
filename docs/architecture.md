@@ -44,5 +44,3 @@ sequenceDiagram
   WH->>DB: Subscription upsert (userId, articleId, amount, status, stripeSessionId)
   WH-->>FE: 200 OK（フロントは再取得で解禁を反映）
 ```
-
-
