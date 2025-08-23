@@ -48,6 +48,14 @@
 
 ---
 
+## 🎛 UX の工夫（ユーザー視点）
+
+- 未購読時は本文を明確にマスクし、すぐ横に購入導線（価格・説明・ボタン）を配置
+- ダッシュボードはカードレイアウトで「投稿一覧」「購読履歴」「統計」を一目で把握
+- モバイルでも操作しやすいようにナビゲーションを最適化（ハンバーガー内にテーマ切替）
+
+---
+
 ## 🛠 技術スタック
 
 - **フロント/フレームワーク**: Next.js 15 (App Router, Route Handlers), React 18, TypeScript
@@ -408,7 +416,22 @@ pnpm prisma migrate dev
 
 ---
 
+## 🔁 Webhook と購読反映の流れ
+
+- Checkout セッション作成時に `metadata` として `{ userId, articleId }` を付与（`/api/checkout`）
+- Stripe は `checkout.session.completed` を `/api/stripe/webhook` に通知
+  - 署名は raw body を用いて検証（`STRIPE_WEBHOOK_SECRET`）
+- 通知受信後、Prisma の Subscription モデルに購読を反映（`upsert`）
+  - 複合一意キー `userId_articleId` で冪等化（再通知・重複を無視）
+  - `amount`, `status`, `stripeSessionId`, `stripePaymentIntentId` を保存（監査/重複判定に活用）
+
+参考実装: `src/app/api/stripe/webhook/route.ts`
+
+---
+
 ## 🧭 データモデル（ER 図 概要）
+
+モデル名は Prisma の `Subscription` に統一しています（本文中でも Purchase ではなく Subscription を使用）。
 
 ```mermaid
 erDiagram
@@ -471,12 +494,30 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ---
 
+## 🧪 テスト戦略（観点）
+
+- Stripe Webhook
+  - 正常系（checkout.session.completed）
+  - 署名不一致（400 応答）
+  - 二重通知（`upsert` で重複作成を防止）
+  - キャンセル/未決済（DB 反映しない）
+- 認証/認可
+  - 無効ユーザー（DISABLED）の拒否
+  - 権限外操作（他者記事の編集/削除）
+- セキュリティ
+  - CSRF（Origin/Host 不一致の 403）
+  - XSS（DOMPurify サニタイズで危険タグ除去）
+
+---
+
 ## 📈 監視 / ログ
 
 - pm2: `pm2 status`, `pm2 logs postnest --lines 100`
 - 監視推奨メトリクス
   - 5xx エラーレート、Webhook 失敗数、Checkout 失敗数
   - DB 接続数、レスポンスタイム（p95）
+- バックアップ: `pg_dump` を cron（日次）で取得し世代管理
+- ログローテーション: pm2 logs を CloudWatch/S3 へ集約 or `logrotate` でローテーション
 
 ---
 
@@ -543,42 +584,3 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 <video src="/screenshots/g2-checkout-flow.mp4" controls width="800">Checkout フロー</video>
 
 ![G3 記事作成フロー](/screenshots/g3-create-article.gif)
-
----
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
