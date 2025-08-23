@@ -521,26 +521,134 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ---
 
-## ♿ アクセシビリティ / 🌐 国際化
+## 🔄 CI/CD（GitHub Actions 例）
 
-- コントラスト/フォーカス、キーボード操作性を配慮（主要操作はボタン/リンクで提供）
-- 重要ラベルに `aria-label` を付与、アイコン併用
-- 現在は日本語 UI。将来的に i18n 対応予定
+### CI（PR / main）
+- pnpm セットアップ → 依存関係インストール
+- Lint / 型チェック / ビルド（必要ならユニットテスト）
+- 成果物のキャッシュ（node_modules/pnpm）
+
+```yaml
+name: CI
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -s lint || true # ルールに合わせて調整
+      - run: pnpm -s typecheck || true
+      - run: pnpm -s build
+```
+
+### CD（デプロイ方針）
+- RDS マイグレーション: `pnpm prisma migrate deploy` をメンテナンス環境で実行
+- EC2 へは SSH で pull → install → build → pm2 restart
+
+```yaml
+# 例: appleboy/ssh-action を用いた簡易デプロイ
+- name: Deploy to EC2
+  uses: appleboy/ssh-action@v1.0.3
+  with:
+    host: ${{ secrets.EC2_HOST }}
+    username: ubuntu
+    key: ${{ secrets.EC2_SSH_KEY }}
+    script: |
+      set -e
+      cd ~/PostNest
+      git pull origin main
+      pnpm install --frozen-lockfile
+      pnpm build
+      pm2 restart postnest || pm2 start pnpm --name postnest -- start
+```
 
 ---
 
-## ⚠️ 既知の制限と今後の計画
+## 🌐 Nginx リバースプロキシ（例）
 
-- レート制限はメモリ実装 → 本番は KV/Redis へ移行
-- 入力バリデーションの Zod 全面適用
-- 記事検索/タグページの拡充、画像アップロード（署名付き URL）
-- SSG/キャッシュ最適化
+### HTTP → HTTPS リダイレクト
+```nginx
+server {
+  listen 80;
+  server_name your-domain.example;
+  return 301 https://$host$request_uri;
+}
+```
+
+### HTTPS + Node(3000) へのプロキシ
+```nginx
+server {
+  listen 443 ssl http2;
+  server_name your-domain.example;
+
+  ssl_certificate     /etc/letsencrypt/live/your-domain/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/your-domain/privkey.pem;
+
+  # アップロード/Webhook 向けに適度なサイズ
+  client_max_body_size 10m;
+
+  # 共通ヘッダ
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+  }
+
+  # Stripe Webhook（raw body を改変しない。デフォルトでボディ変換は行われない）
+  location /api/stripe/webhook {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+  }
+}
+```
+
+> 注意: gzip などボディを再エンコードする設定を入れないでください（Webhook 署名検証に失敗します）。
 
 ---
 
-## 📄 ライセンス
+## 🔐 Secrets 管理（例）
 
-本リポジトリは個人ポートフォリオ用途です。公開時は MIT ライセンスの採用を想定。必要に応じて `LICENSE` を追加してください。
+### GitHub Actions での Secrets
+- `Settings > Secrets and variables > Actions` に `EC2_HOST`, `EC2_SSH_KEY`, `STRIPE_SECRET_KEY` などを登録
+- デプロイ時は上記を参照
+
+### AWS SSM Parameter Store / Secrets Manager の利用
+- アプリ実行時に `.env` を生成する例（Parameter Store）:
+```bash
+aws ssm get-parameter \
+  --name "/postnest/prod/DATABASE_URL" \
+  --with-decryption \
+  --query Parameter.Value \
+  --output text >> .env
+```
+
+- systemd での環境読み込み例:
+```ini
+[Service]
+EnvironmentFile=/home/ubuntu/PostNest/.env
+ExecStart=/usr/bin/pm2 start pnpm --name postnest -- start
+Restart=always
+```
+
+- Node 起動前に `export $(grep -v '^#' .env | xargs)` で環境変数を注入可能（セキュリティに注意）
 
 ---
 
