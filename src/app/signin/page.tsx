@@ -134,7 +134,7 @@ export default function SignInPage() {
                 </svg>
               </div>
               <h1 className="text-3xl font-bold text-[var(--text)] mb-2">ログイン</h1>
-              <p className="text-[var(--text)]/85">PostNestにようこそ</p>
+              <p className="text-[var(--text)]/85">PostNestにようこそ！<br />ゲスト用アカウント mail:guest@example.com, password:guestでログインできます</p>
             </div>
 
             {/* エラーメッセージ */}
@@ -163,7 +163,7 @@ export default function SignInPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="example@example.com"
+                  placeholder="guest@example.com"
                   className="w-full px-4 py-3"
                 />
                 {validationErrors.email && (
