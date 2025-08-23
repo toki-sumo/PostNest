@@ -166,7 +166,7 @@ const SignupPage = () => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="example@example.com"
+                                    placeholder="guest@example.com"
                                     className="w-full px-4 py-3"
                                 />
                                 {validationErrors.email && (
