@@ -1,59 +1,146 @@
-PostNest（投資系ブログ＋有料記事購読プラットフォーム）
-概要: 記事の作成・公開・課金購読までを一気通貫で提供。個人クリエイターが有料記事を安全に販売できるミニマムなプラットフォーム。
-特徴: App Router でのモダン構成、Stripe 決済、NextAuth 認証、Prisma による型安全なDB、リッチテキスト編集（TipTap）、強固なセキュリティ実装。
-主要機能
-記事: 一覧/詳細/検索タグ、リッチテキスト表示（XSS対策済み）
-投稿/編集/削除: 認証ユーザーが記事をCRUD、プレミアム設定と価格管理
-有料記事: Stripe Checkout 連携、購読済みユーザーのみ本文解禁
-ダッシュボード: 自分の投稿管理、購読履歴と統計
-管理者: ユーザー管理（役割変更/無効化）、記事管理
-認証: Google/GitHub OAuth＋メール/パスワード（NextAuth）
-404/エラーハンドリング: グローバル not-found とセグメント 404、安定した失敗時UX
-技術スタック
-フロント/フレームワーク: Next.js 15（App Router, Route Handlers）, React 18, TypeScript
-スタイル/UI: Tailwind（globals.css）, カスタムUI（カード/ボタン/フォーム）
-エディタ: TipTap（RichTextEditor.tsx）
-レンダリング: isomorphic-dompurify によるHTMLサニタイズ（RichTextDisplay.tsx）
-バックエンド: Next.js API（App Routerの/app/api配下）
-DB/ORM: Prisma（PostgreSQLを想定、prisma/migrations）
-認証: NextAuth（Google/GitHub/Credentials, JWTセッション）
-決済: Stripe（Checkout＋Webhook検証）
-インフラ補助: docker-compose.yml（DB起動用）
-セキュリティ実装（アピールポイント）
-CSRF対策: 書き込みAPIに同一オリジン検査（Origin/Host 検証）
-レート制限: AIタグ生成/サインアップにIP/ユーザー単位の制限（簡易メモリ実装）
-認可: 記事編集・削除は著者or管理者のみ（APIレベルで検証）
-機密情報の最小化: 公開APIから作者メールを除外
-XSS対策: DOMPurifyでHTMLをサニタイズして表示
-Webhook検証: Stripe署名（raw body）で厳格検証
-有料コンテンツ保護: APIは未購読時に本文マスク＋UI側でも購読状態に応じて制御
-パスワードポリシー: 8文字以上・英数混在、サインアップにレート制限
-NextAuth: 役割（Admin/user/DISABLED）をJWTへ伝播、クライアントとサーバで整合
-ディレクトリ（抜粋）
-UI: src/components/ui/*, src/components/article/*
-API: src/app/api/*（記事/認証/Stripe/管理者/ユーザー）
-ページ: src/app/articles/*, src/app/dashboard/*, src/app/admin/*
-認証: src/auth.ts, src/auth.config.ts
-DB: prisma/schema.prisma, prisma/migrations/*
-開発手順（ローカル）
-前提: Node 18+, pnpm, Docker（DB用）, Stripe/Google/GitHubのキー
-環境変数: DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, GOOGLE_ID/SECRET, GITHUB_ID/SECRET, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, NEXT_PUBLIC_BASE_URL
-起動:
-DB起動: docker compose up -d
-依存関係: pnpm install
-Prisma: pnpm prisma migrate deploy（必要に応じ generate）
-開発: pnpm dev
-Webhook（任意）: Stripe CLI で署名検証を設定
-404/購読動作確認: 未購読時に本文マスク、有料記事購入後は解禁
-設計の工夫
-App Router準拠: サーバーコンポーネントとAPI Route Handlersで責務分離
-堅牢な購読フロー: Checkout成功時はWebhook主導でDB確定、補助の確認APIは認証＋ユーザー照合
-ユーザー体験: ローディング/エンプティステート/404の整備、モバイル・ダークテーマ対応
-今後の発展
-本番向けレート制限はKV/Redisへ移行
-入力スキーマをZodで全APIに適用
-SSG/キャッシュ最適化、検索/タグページの拡充
-このプロジェクトは、モダンなNext.js構成の上で「安全な有料コンテンツ配信」を小さく確実に形にしたものです。フロント/バック/セキュリティ/決済の一通りを自走で設計・実装・改善できることを示します。
+# PostNest
+投資系ブログ＋有料記事購読プラットフォーム
+
+---
+
+## 📖 概要
+記事の作成・公開・課金購読までを一気通貫で提供。  
+個人クリエイターが有料記事を安全に販売できるミニマムなプラットフォーム。
+
+---
+
+## ✨ 特徴
+- App Router によるモダン構成
+- Stripe 決済
+- NextAuth 認証
+- Prisma による型安全なDB
+- リッチテキスト編集（TipTap）
+- 強固なセキュリティ実装
+
+---
+
+## 🚀 主要機能
+- **記事**
+  - 一覧 / 詳細 / タグ検索
+  - リッチテキスト表示（XSS対策済み）
+- **投稿 / 編集 / 削除**
+  - 認証ユーザーによる記事 CRUD
+  - プレミアム設定と価格管理
+- **有料記事**
+  - Stripe Checkout 連携
+  - 購読済みユーザーのみ本文解禁
+- **ダッシュボード**
+  - 投稿管理
+  - 購読履歴と統計表示
+- **管理者**
+  - ユーザー管理（役割変更 / 無効化）
+  - 記事管理
+- **認証**
+  - Google / GitHub OAuth + メール・パスワード
+- **エラーハンドリング**
+  - グローバル not-found
+  - セグメント単位の 404
+  - 安定した失敗時 UX
+
+---
+
+## 🛠 技術スタック
+- **フロント/フレームワーク**: Next.js 15 (App Router, Route Handlers), React 18, TypeScript
+- **スタイル/UI**: Tailwind CSS (globals.css), カスタムUI（カード/ボタン/フォーム）
+- **エディタ**: TipTap (RichTextEditor.tsx)
+- **レンダリング**: isomorphic-dompurify による HTML サニタイズ（RichTextDisplay.tsx）
+- **バックエンド**: Next.js API (App Router `/app/api`)
+- **DB/ORM**: Prisma（PostgreSQL, prisma/migrations）
+- **認証**: NextAuth（Google/GitHub/Credentials, JWTセッション）
+- **決済**: Stripe（Checkout + Webhook 検証）
+- **インフラ補助**: docker-compose.yml（DB起動用）
+
+---
+
+## 🔒 セキュリティ実装（アピールポイント）
+- CSRF対策: 書き込みAPIに同一オリジン検査（Origin/Host 検証）
+- レート制限: AIタグ生成 / サインアップに IP/ユーザー単位制限（簡易メモリ実装）
+- 認可: 記事編集・削除は著者 or 管理者のみ（APIレベルで検証）
+- 機密情報の最小化: 公開APIから作者メールを除外
+- XSS対策: DOMPurify による HTML サニタイズ
+- Webhook 検証: Stripe 署名（raw body）による厳格検証
+- 有料コンテンツ保護: API で未購読時は本文マスク + UI 側でも購読状態を制御
+- パスワードポリシー: 8文字以上・英数混在 + サインアップ時レート制限
+- NextAuth: 役割 (Admin/User/Disabled) を JWT へ伝播し、クライアントとサーバで整合
+
+---
+
+## 🧩 ミドルウェア（`src/middleware.ts`）
+- **目的**: ページレベルでの軽量なアクセス制御とリダイレクト。未ログインユーザーの保護ページアクセス時に、クッキー検査でサインインへサーバサイドリダイレクトします。
+- **動作概要**
+  - 公開パスは素通し:
+    - `/`, `/signin`, `/signup`, `/favicon.ico`, `/articles`
+    - `/_next` 配下, `/api` 配下, `.svg` リソース
+  - 公開パス以外は、以下のセッショントークンがクッキーに存在するかを検査:
+    - `__Secure-authjs.session-token` / `authjs.session-token` / `next-auth.session-token`
+  - 未ログイン時は `/signin?callbackUrl=アクセス元パス` にリダイレクト
+- **matcher**
+  - `config.matcher = ['/((?!api|_next|favicon.ico|.*\\.svg$).*)']`
+  - `api` と静的リソースを避け、アプリのページ遷移のみを対象化
+- **設計メモ**
+  - App Router のページ保護を SSR タイミングで行うことで、クライアント側でのフリッカー（保護ページが一瞬見える）を抑制
+  - 公開パスを明示して `UntrustedHost` を回避
+  - NextAuth の JWT セッションクッキーを前提とした軽量チェック（詳細な認可は API 側で強制）
+- **カスタマイズ方法**
+  - 公開ルートの追加: `publicPaths` へ追記
+  - 完全保護したい場合は `matcher` を広げる（ただし `api/_next` は除外）
+  - 役割ベースの分岐はページ/レイアウトレベル、もしくは API で厳格化
+
+
+## 📂 ディレクトリ構成（抜粋）
+src/
+├── components/
+│ ├── ui/*
+│ └── article/*
+├── app/
+│ ├── articles/*
+│ ├── dashboard/*
+│ ├── admin/*
+│ └── api/* # 認証 / 記事 / Stripe / 管理者 / ユーザー
+├── auth.ts
+├── auth.config.ts
+└── prisma/
+├── schema.prisma
+└── migrations/*
+
+
+---
+
+## 🔧 開発手順（ローカル）
+### 前提
+- Node 18+
+- pnpm
+- Docker（DB用）
+- Stripe / Google / GitHub のキー
+
+Webhook（任意）
+
+Stripe CLI を用いて署名検証を設定
+
+動作確認
+
+未購読時: 本文マスク
+
+購読後: 有料記事本文が解禁
+
+🏗 設計の工夫
+
+App Router 準拠: サーバーコンポーネントと API Route Handlers で責務を分離
+
+堅牢な購読フロー: Checkout 成功時は Webhook 主導で DB 確定、補助 API は認証 + ユーザー照合
+
+ユーザー体験:
+
+ローディング / エンプティステート / 404 整備
+
+モバイル対応
+
+ダークテーマ対応
 
 
 
