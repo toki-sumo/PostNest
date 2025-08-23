@@ -10,13 +10,13 @@ type PatchBody =
   | { action: 'disable' }
   | { action: 'enable' }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth()
   if ((session?.user as any)?.role !== 'Admin') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const { id } = params
+  const { id } = await params
   let body: PatchBody
   try {
     body = await req.json()
