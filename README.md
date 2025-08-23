@@ -205,27 +205,65 @@ pnpm start
 5. プロセスマネージャ（例: pm2）や systemd で常駐化、Nginx でリバースプロキシ（HTTPS 終端）
 
 #### EC2 への接続（SSH）
+
 1. AWS コンソールでキーペア（.pem）を作成・ダウンロード（漏えい厳禁）
 2. ローカルで鍵の権限を適切に設定
+
 ```bash
 chmod 400 keyname.pem
 ```
+
 3. SSH で接続（Ubuntu AMI の既定ユーザーは `ubuntu`）
+
 ```bash
 ssh -i keyname.pem ubuntu@<EC2_PUBLIC_IP>
 ```
-   - Elastic IP を割り当てている場合は `<EC2_PUBLIC_IP>` に Elastic IP を指定
-   - Amazon Linux では `ec2-user` が既定
+
+- Elastic IP を割り当てている場合は `<EC2_PUBLIC_IP>` に Elastic IP を指定
+- Amazon Linux では `ec2-user` が既定
+
 4. セキュリティグループの SSH(22) は自分のグローバル IP のみ許可（`X.X.X.X/32`）
 
 任意（接続を簡略化）: `.ssh/config` に設定
+
 ```sshconfig
 Host postnest-ec2
   HostName <EC2_PUBLIC_IP>
   User ubuntu
   IdentityFile ~/path/to/keyname.pem
 ```
+
 以降は `ssh postnest-ec2` で接続可能。
+
+#### pm2 による常駐化（推奨）
+1. pm2 をインストール
+```bash
+npm i -g pm2
+```
+2. アプリを常駐起動（例）
+```bash
+# Next.js を production 起動（pnpm を使う場合）
+pm2 start pnpm --name postnest -- start
+
+# npm を使う場合
+pm2 start npm --name postnest -- start
+
+# もしくは Node の実行ファイルを直接（standalone 構成等）
+# pm2 start .next/standalone/server.js --name postnest
+```
+3. 停止/再起動/状態/ログ
+```bash
+pm2 stop postnest
+pm2 restart postnest
+pm2 status
+pm2 logs postnest --lines 100
+```
+4. サーバ再起動後の自動起動
+```bash
+pm2 save
+pm2 startup systemd
+# 表示されるコマンドを sudo で実行して登録します
+```
 
 ### Stripe Webhook（本番）
 
