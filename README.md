@@ -123,32 +123,63 @@ src/
 
 - Node 18+
 - pnpm
-- Docker（DB 用）
+- PostgreSQL（Homebrew または Docker）
 - Stripe / Google / GitHub のキー
 
-Webhook（任意）
+### 1. リポジトリ取得と依存関係
+```bash
+git clone https://github.com/toki-sumo/PostNest.git
+cd PostNest
+pnpm install
+```
 
-Stripe CLI を用いて署名検証を設定
+### 2. DB の用意（どちらかを選択）
+- Homebrew（macOS）
+```bash
+brew install postgresql@16
+brew services start postgresql@16
+```
+- Docker Compose
+```bash
+docker compose up -d
+```
 
-動作確認
+### 3. 環境変数の設定（.env）
+ローカル実行の例:
+```bash
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postnest?schema=public"
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="dev-secret"
+GOOGLE_ID=... GOOGLE_SECRET=...
+GITHUB_ID=...  GITHUB_SECRET=...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...(任意)
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+```
 
-未購読時: 本文マスク
+### 4. Prisma セットアップ
+```bash
+pnpm prisma generate
+pnpm prisma migrate dev
+```
 
-購読後: 有料記事本文が解禁
+### 5. 開発サーバ起動
+```bash
+pnpm dev
+# http://localhost:3000 にアクセス
+```
 
-🏗 設計の工夫
+### 6.（任意）Stripe Webhook（ローカル）
+Stripe CLI を利用してイベント転送と署名検証を設定します。
+```bash
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+# 表示された Signing secret を STRIPE_WEBHOOK_SECRET に設定
+```
 
-App Router 準拠: サーバーコンポーネントと API Route Handlers で責務を分離
-
-堅牢な購読フロー: Checkout 成功時は Webhook 主導で DB 確定、補助 API は認証 + ユーザー照合
-
-ユーザー体験:
-
-ローディング / エンプティステート / 404 整備
-
-モバイル対応
-
-ダークテーマ対応
+### 動作確認ポイント
+- 未購読ユーザーは有料記事の本文がマスクされる
+- 購読完了後（Checkout 成功）に本文が解禁される
+- 記事の作成/編集/削除はログイン済みの著者（または管理者）のみ可能
 
 ---
 
@@ -236,11 +267,15 @@ Host postnest-ec2
 以降は `ssh postnest-ec2` で接続可能。
 
 #### pm2 による常駐化（推奨）
+
 1. pm2 をインストール
+
 ```bash
 npm i -g pm2
 ```
+
 2. アプリを常駐起動（例）
+
 ```bash
 # Next.js を production 起動（pnpm を使う場合）
 pm2 start pnpm --name postnest -- start
@@ -251,14 +286,18 @@ pm2 start npm --name postnest -- start
 # もしくは Node の実行ファイルを直接（standalone 構成等）
 # pm2 start .next/standalone/server.js --name postnest
 ```
+
 3. 停止/再起動/状態/ログ
+
 ```bash
 pm2 stop postnest
 pm2 restart postnest
 pm2 status
 pm2 logs postnest --lines 100
 ```
+
 4. サーバ再起動後の自動起動
+
 ```bash
 pm2 save
 pm2 startup systemd
