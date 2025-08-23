@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, notFound } from 'next/navigation';
 import ArticleForm from '@/components/article/ArticleForm';
 import BackgroundDecoration from '@/components/common/BackgroundDecoration';
 
@@ -23,17 +23,33 @@ export default function EditBlogPage(){
 
   useEffect(() => {
     const fetchArticle = async () => {
-      const res = await fetch(`/api/articles/${id}`);
-      const data = await res.json();
-      setArticle({
-        title: data.title,
-        content: data.content,
-        tags: data.tags || [],
-        imageUrl: data.imageUrl || '',
-        isPremium: data.isPremium || false,
-        price: data.price || 0,
-      });
-      setLoading(false);
+      try {
+        const res = await fetch(`/api/articles/${id}`);
+        if (res.status === 404) {
+          router.replace(`/articles/${id}`);
+          return;
+        }
+        if (!res.ok) {
+          throw new Error('Failed to fetch');
+        }
+        const data = await res.json();
+        if (!data?.id) {
+          router.replace(`/articles/${id}`);
+          return;
+        }
+        setArticle({
+          title: data.title,
+          content: data.content,
+          tags: data.tags || [],
+          imageUrl: data.imageUrl || '',
+          isPremium: data.isPremium || false,
+          price: data.price || 0,
+        });
+      } catch (e) {
+        router.replace(`/articles/${id}`);
+      } finally {
+        setLoading(false);
+      }
     };
 
     if (id) fetchArticle();
