@@ -377,13 +377,13 @@ pnpm prisma migrate dev
 
 ## 👤 役割と権限
 
-| 機能 | Admin | User | DISABLED |
-|---|---|---|---|
-| 記事閲覧（無料） | ○ | ○ | × |
-| 記事閲覧（有料/購読済） | ○ | ○ | × |
-| 記事作成/編集/削除 | ○ | ○（自分の投稿のみ） | × |
-| 管理画面アクセス | ○ | × | × |
-| ユーザー権限変更 | ○ | × | × |
+| 機能                    | Admin | User                | DISABLED |
+| ----------------------- | ----- | ------------------- | -------- |
+| 記事閲覧（無料）        | ○     | ○                   | ×        |
+| 記事閲覧（有料/購読済） | ○     | ○                   | ×        |
+| 記事作成/編集/削除      | ○     | ○（自分の投稿のみ） | ×        |
+| 管理画面アクセス        | ○     | ×                   | ×        |
+| ユーザー権限変更        | ○     | ×                   | ×        |
 
 ---
 
@@ -492,7 +492,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 - レート制限はメモリ実装 → 本番は KV/Redis へ移行
 - 入力バリデーションの Zod 全面適用
-- 記事検索/タグページの拡充、画像アップロード（署名付きURL）
+- 記事検索/タグページの拡充、画像アップロード（署名付き URL）
 - SSG/キャッシュ最適化
 
 ---
@@ -508,6 +508,41 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 - トップページ / 記事詳細（未購読/購読済み）
 - 管理画面 / ダッシュボード
 - 決済フロー（Checkout → 完了）
+
+### 画像プレースホルダ（後で差し替え）
+
+> 画像は `public/screenshots/` に配置してください（例: `public/screenshots/01-home-desktop.png`）。
+
+#### 主要画面（静止画）
+
+![01 トップページ（デスクトップ）](/screenshots/01-home-desktop.png)
+![02 記事一覧（有料表示あり）](/screenshots/02-articles-list-desktop.png)
+![03 記事詳細（無料記事）](/screenshots/03-article-free-desktop.png)
+![04 記事詳細（有料・ロック状態）](/screenshots/04-article-locked-desktop.png)
+![05 記事詳細（購読済み解禁）](/screenshots/05-article-unlocked-desktop.png)
+![06 記事作成フォーム](/screenshots/06-article-new-desktop.png)
+![07 記事編集フォーム](/screenshots/07-article-edit-desktop.png)
+![08 ダッシュボード（投稿一覧）](/screenshots/08-dashboard-articles-desktop.png)
+![09 ダッシュボード（購読履歴・統計）](/screenshots/09-dashboard-subscriptions-desktop.png)
+![10 管理者トップ](/screenshots/10-admin-home-desktop.png)
+![11 管理：ユーザー管理](/screenshots/11-admin-users-desktop.png)
+![12 管理：記事管理](/screenshots/12-admin-articles-desktop.png)
+![13 サインイン](/screenshots/13-auth-signin-desktop.png)
+![14 404 ページ](/screenshots/14-not-found-desktop.png)
+![15 モバイルメニュー（テーマ切替）](/screenshots/15-mobile-menu-theme-toggle-mobile.png)
+
+#### テーマ比較（任意）
+
+![トップ（ライト）](/screenshots/01-home-desktop-light.png)
+![トップ（ダーク）](/screenshots/01-home-desktop-dark.png)
+
+#### GIF / MP4（動作）
+
+![G1 テーマ切替（モバイル）](/screenshots/g1-theme-toggle-mobile.gif)
+
+<video src="/screenshots/g2-checkout-flow.mp4" controls width="800">Checkout フロー</video>
+
+![G3 記事作成フロー](/screenshots/g3-create-article.gif)
 
 ---
 
