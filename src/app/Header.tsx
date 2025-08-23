@@ -187,6 +187,18 @@ const Header = () => {
             </Link>
           )}
 
+          {/* テーマ切り替え（モバイル） */}
+          <button
+            onClick={() => {
+              toggleTheme();
+            }}
+            className="w-full font-medium py-3 px-4 rounded-lg text-center transition-colors duration-200 bg-[var(--card)] text-[var(--text)] hover:bg-[color:var(--muted)]/10 border border-[var(--border)]"
+            aria-label="テーマ切り替え"
+            title="テーマ切り替え"
+          >
+            {theme === 'dark' ? 'ライトモード' : 'ダークモード'}
+          </button>
+
           {/* ログイン状態の表示 */}
           {isLoading ? (
             <div className="flex items-center justify-center space-x-2 py-4 text-[var(--muted)]">
