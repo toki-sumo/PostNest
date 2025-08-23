@@ -155,14 +155,17 @@ App Router 準拠: サーバーコンポーネントと API Route Handlers で�
 ## 🚢 デプロイ手順 / 実行環境
 
 ### 環境の段階的構築（実績）
+
 - アプリ: ローカル ⇔ DB: Homebrew の PostgreSQL サーバ
 - アプリ: ローカル ⇔ DB: Docker（`docker-compose.yml`）の PostgreSQL サーバ
 - アプリ: ローカル ⇔ DB: AWS RDS（PostgreSQL）
 - アプリ: AWS EC2（Ubuntu）⇔ DB: AWS RDS（PostgreSQL）
 
 ### 本番: AWS RDS（PostgreSQL）
-1) RDS で PostgreSQL インスタンスを作成（VPC/サブネット/セキュリティグループ設定）
-2) 接続情報を `.env` へ設定
+
+1. RDS で PostgreSQL インスタンスを作成（VPC/サブネット/セキュリティグループ設定）
+2. 接続情報を `.env` へ設定
+
 ```bash
 DATABASE_URL="postgresql://<user>:<password>@<rds-endpoint>:5432/<db>?schema=public&sslmode=require"
 NEXTAUTH_URL="https://<your-domain>"
@@ -173,40 +176,72 @@ GOOGLE_ID=... GOOGLE_SECRET=...
 GITHUB_ID=... GITHUB_SECRET=...
 NEXT_PUBLIC_BASE_URL="https://<your-domain>"
 ```
-3) Prisma マイグレーション適用
+
+3. Prisma マイグレーション適用
+
 ```bash
 pnpm prisma migrate deploy
 ```
 
 ### 本番: AWS EC2（Ubuntu）へのデプロイ
-1) EC2 構築（Ubuntu）→ セキュリティグループで 80/443 を許可（必要に応じて 22）
-2) Node/pnpm 設定、リポジトリを clone
+
+1. EC2 構築（Ubuntu）→ セキュリティグループで 80/443 を許可（必要に応じて 22）
+2. Node/pnpm 設定、リポジトリを clone
+
 ```bash
 git clone https://github.com/toki-sumo/PostNest.git
 cd PostNest
 pnpm install
 ```
-3) 環境変数を設定（上記 `.env`）
-4) ビルドと起動
+
+3. 環境変数を設定（上記 `.env`）
+4. ビルドと起動
+
 ```bash
 pnpm build
 pnpm start
 ```
-5) プロセスマネージャ（例: pm2）や systemd で常駐化、Nginx でリバースプロキシ（HTTPS 終端）
+
+5. プロセスマネージャ（例: pm2）や systemd で常駐化、Nginx でリバースプロキシ（HTTPS 終端）
 
 ### Stripe Webhook（本番）
+
 - Stripe ダッシュボードで Webhook エンドポイントを登録（`/api/stripe/webhook`）
 - 署名シークレットを `STRIPE_WEBHOOK_SECRET` に設定
 - 署名検証は raw body で行うため、リバースプロキシの設定でボディ改変を避ける
 
+### セキュリティグループ設定（RDS / EC2）
+
+- **ローカル ⇔ RDS（PostgreSQL）**
+  - RDS（インバウンド）: TCP 5432 を「自宅/職場などのグローバル IP アドレス」からのみ許可（`X.X.X.X/32`）
+  - 注意: `0.0.0.0/0` で 5432 を開放しない（インターネット全体に公開となるため）
+
+- **EC2 ⇔ RDS（PostgreSQL）**
+  - EC2 に Elastic IP を割り当てる
+  - RDS（インバウンド）: TCP 5432 を EC2 の Elastic IP のみから許可（`E.E.E.E/32`）
+    - もしくは、RDS のインバウンドに「EC2 のセキュリティグループ」を参照設定（推奨）
+
+- **EC2（アプリ公開用）**
+  - HTTP: TCP 80 を `0.0.0.0/0`（公開）
+  - HTTPS: TCP 443 を `0.0.0.0/0`（公開）
+  - SSH: TCP 22 を 管理者のグローバル IP のみ（`X.X.X.X/32`）
+  - カスタム TCP（開発/検証用）: TCP 3000 を一時的に許可
+    - できれば「自分の IP のみ」（`X.X.X.X/32`）。やむを得ず公開する場合は `0.0.0.0/0` とし、検証後は必ず閉じる
+
+> 本番では 3000 番ポートは閉じ、Nginx 等のリバースプロキシ経由（80/443）でアプリを公開する運用を推奨します。
+
 ### 参考: ローカルと Docker
+
 - Homebrew PostgreSQL 例
+
 ```bash
 brew install postgresql@16
 brew services start postgresql@16
 export DATABASE_URL="postgresql://postgres:@localhost:5432/postnest?schema=public"
 ```
+
 - Docker Compose 例
+
 ```bash
 docker compose up -d
 export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postnest?schema=public"
