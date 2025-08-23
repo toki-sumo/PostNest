@@ -375,6 +375,142 @@ pnpm prisma migrate dev
 
 ---
 
+## 👤 役割と権限
+
+| 機能 | Admin | User | DISABLED |
+|---|---|---|---|
+| 記事閲覧（無料） | ○ | ○ | × |
+| 記事閲覧（有料/購読済） | ○ | ○ | × |
+| 記事作成/編集/削除 | ○ | ○（自分の投稿のみ） | × |
+| 管理画面アクセス | ○ | × | × |
+| ユーザー権限変更 | ○ | × | × |
+
+---
+
+## 🔗 API エンドポイント概要（抜粋）
+
+- 記事
+  - `GET /api/articles`（公開一覧）
+  - `GET /api/articles/[id]`（公開詳細。プレミアムは本文マスク）
+  - `POST /api/articles`（認証＋同一オリジン）
+  - `PUT /api/articles/edit/[id]`（著者のみ＋同一オリジン）
+  - `DELETE /api/articles/[id]`（著者/管理者＋同一オリジン）
+- 認証/ユーザー
+  - `POST /api/auth/signup`（パスワードポリシー＋レート制限）
+  - `PUT /api/user`（プロフィール更新：認証＋同一オリジン）
+- 決済/購読
+  - `POST /api/checkout`（認証、Checkout セッション作成）
+  - `POST /api/stripe/webhook`（署名検証）
+  - `POST /api/subscriptions/confirm`（認証＋ユーザー一致検証）
+- 管理
+  - `GET /api/admin/users`（Admin）
+  - `PATCH /api/admin/users/[id]`（Admin）
+
+---
+
+## 🧭 データモデル（ER 図 概要）
+
+```mermaid
+erDiagram
+  User ||--o{ Article : "writes"
+  User ||--o{ Subscription : "purchases"
+  Article ||--o{ Subscription : "is purchased"
+
+  User {
+    string id PK
+    string email
+    string role
+  }
+  Article {
+    string id PK
+    string authorId FK
+    boolean isPremium
+    int price
+  }
+  Subscription {
+    string id PK
+    string userId FK
+    string articleId FK
+    string status
+    int amount
+  }
+```
+
+---
+
+## 🗄️ DB バックアップ / リストア（例）
+
+```bash
+# Backup（環境に合わせて接続情報を指定）
+pg_dump --format=c --no-acl --no-owner "$DATABASE_URL" > backup.dump
+
+# Restore（先に空DBを用意し、同一スキーマで）
+pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
+```
+
+---
+
+## 💳 Stripe テスト情報（例）
+
+- テストカード: `4242 4242 4242 4242` / 01/33 / 123 / 任意名
+- Webhook: 署名シークレットを `STRIPE_WEBHOOK_SECRET` に設定し、raw body を破壊しないプロキシ設定にする
+- 失敗検証: 購入キャンセル、署名不一致、未購読時の本文マスクを確認
+
+---
+
+## 🧰 トラブルシューティング
+
+- Prisma の接続/マイグレーション
+  - `DATABASE_URL` を再確認、`pnpm prisma migrate deploy|dev` を実行
+- Webhook 署名失敗
+  - 署名シークレット誤り/ボディ改変（圧縮/再エンコード）を確認
+- CSRF の 403
+  - `Origin/Host` が一致しているか。フロントと API のホスト/プロトコルを揃える
+- 3000 番ポートが外から見えない
+  - 本番は 80/443 経由（Nginx）。検証時の 3000 開放は一時的に
+
+---
+
+## 📈 監視 / ログ
+
+- pm2: `pm2 status`, `pm2 logs postnest --lines 100`
+- 監視推奨メトリクス
+  - 5xx エラーレート、Webhook 失敗数、Checkout 失敗数
+  - DB 接続数、レスポンスタイム（p95）
+
+---
+
+## ♿ アクセシビリティ / 🌐 国際化
+
+- コントラスト/フォーカス、キーボード操作性を配慮（主要操作はボタン/リンクで提供）
+- 重要ラベルに `aria-label` を付与、アイコン併用
+- 現在は日本語 UI。将来的に i18n 対応予定
+
+---
+
+## ⚠️ 既知の制限と今後の計画
+
+- レート制限はメモリ実装 → 本番は KV/Redis へ移行
+- 入力バリデーションの Zod 全面適用
+- 記事検索/タグページの拡充、画像アップロード（署名付きURL）
+- SSG/キャッシュ最適化
+
+---
+
+## 📄 ライセンス
+
+本リポジトリは個人ポートフォリオ用途です。公開時は MIT ライセンスの採用を想定。必要に応じて `LICENSE` を追加してください。
+
+---
+
+## 🖼 スクリーンショット / デモ（任意）
+
+- トップページ / 記事詳細（未購読/購読済み）
+- 管理画面 / ダッシュボード
+- 決済フロー（Checkout → 完了）
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
