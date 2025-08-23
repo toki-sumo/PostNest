@@ -431,7 +431,7 @@ pnpm prisma migrate dev
 
 ## 🧭 データモデル（ER 図 概要）
 
-モデル名は Prisma の `Subscription` に統一しています（本文中でも Purchase ではなく Subscription を使用）。
+モデル名は Prisma の `Subscription` に統一しています。
 
 ```mermaid
 erDiagram
