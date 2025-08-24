@@ -91,16 +91,19 @@
 ## 🔒 セキュリティ実装（アピールポイント）
 
 ### API レベル
+
 - CSRF 対策: 書き込み API に同一オリジン検査（Origin/Host 検証）
 - 認可: 記事編集・削除は著者 or 管理者のみ（API レベルで検証）
 - Webhook 検証: Stripe 署名（raw body）による厳格検証
 
 ### UI レベル
+
 - XSS 対策: DOMPurify による HTML サニタイズ
 - 有料コンテンツ保護: 未購読時に本文を UI 上でマスク（API 側でも本文を返さない）
 
 ### アカウント / パスワード
-- パスワードポリシー: 8 文字以上・英数混在
+
+- パスワードポリシー: 8 文字以上・英数混在・大文字・小文字・記号
 - レート制限: サインアップ / AI タグ生成に IP / ユーザー単位制限
 - NextAuth: 役割 (Admin/User/Disabled) を JWT へ伝播し、クライアントとサーバで整合
 
@@ -131,19 +134,37 @@
 ## 📂 ディレクトリ構成（抜粋）
 
 src/
-├── components/
-│ ├── ui/_
-│ └── article/_
 ├── app/
-│ ├── articles/_
-│ ├── dashboard/_
-│ ├── admin/_
-│ └── api/_ # 認証 / 記事 / Stripe / 管理者 / ユーザー
+│   ├── articles/
+│   │   ├── [id]/
+│   │   ├── new/
+│   │   └── page.tsx
+│   ├── api/
+│   │   ├── articles/
+│   │   ├── stripe/webhook/
+│   │   └── ...
+│   ├── admin/
+│   ├── dashboard/
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── article/
+│   ├── ui/
+│   ├── dashboard/
+│   └── theme/
 ├── auth.ts
 ├── auth.config.ts
-└── prisma/
-├── schema.prisma
-└── migrations/\*
+├── lib/
+│   ├── db.ts / prisma.ts / stripe.ts
+│   └── utils/
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+├── docs/
+│   └── architecture.md
+├── public/
+│   └── screenshots/
+└── README.md
 
 ---
 
@@ -208,7 +229,7 @@ pnpm dev
 # http://localhost:3000 にアクセス
 ```
 
-> 正常確認: ブラウザでサインイン→記事投稿ができればセットアップ成功です。
+> 正常確認: ブラウザでサインイン → 記事投稿ができればセットアップ成功です。
 
 ### 6.（任意）Stripe Webhook（ローカル）
 
