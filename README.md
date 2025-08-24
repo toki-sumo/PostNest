@@ -58,15 +58,15 @@
 
 ## 🛠 技術スタック
 
-- **フロント/フレームワーク**: Next.js 15 (App Router, Route Handlers), React 18, TypeScript
-- **スタイル/UI**: Tailwind CSS (globals.css), カスタム UI（カード/ボタン/フォーム）
-- **エディタ**: TipTap (RichTextEditor.tsx)
-- **レンダリング**: isomorphic-dompurify による HTML サニタイズ（RichTextDisplay.tsx）
-- **バックエンド**: Next.js API (App Router `/app/api`)
-- **DB/ORM**: Prisma（PostgreSQL, prisma/migrations）
-- **認証**: NextAuth（Google/GitHub/Credentials, JWT セッション）
-- **決済**: Stripe（Checkout + Webhook 検証）
-- **インフラ補助**: docker-compose.yml（DB 起動用）
+- **フロントエンド**: Next.js 15（App Router, Route Handlers）, React 18, TypeScript, Tailwind CSS
+- **UI**: カスタムコンポーネント（カード / ボタン / フォーム）
+- **エディタ**: TipTap（リッチテキスト編集）
+- **レンダリング / サニタイズ**: isomorphic-dompurify
+- **バックエンド / API**: Next.js Route Handlers（/app/api）
+- **DB / ORM**: PostgreSQL + Prisma（migrations / schema.prisma）
+- **認証**: NextAuth（Google / GitHub / Credentials, JWT セッション）
+- **決済**: Stripe（Checkout + Webhook）
+- **インフラ**: AWS EC2 / RDS, Docker Compose（ローカル）
 
 ---
 
@@ -90,14 +90,18 @@
 
 ## 🔒 セキュリティ実装（アピールポイント）
 
+### API レベル
 - CSRF 対策: 書き込み API に同一オリジン検査（Origin/Host 検証）
-- レート制限: AI タグ生成 / サインアップに IP/ユーザー単位制限（簡易メモリ実装）
 - 認可: 記事編集・削除は著者 or 管理者のみ（API レベルで検証）
-- 機密情報の最小化: 公開 API から作者メールを除外
-- XSS 対策: DOMPurify による HTML サニタイズ
 - Webhook 検証: Stripe 署名（raw body）による厳格検証
-- 有料コンテンツ保護: API で未購読時は本文マスク + UI 側でも購読状態を制御
-- パスワードポリシー: 8 文字以上・英数混在 + サインアップ時レート制限
+
+### UI レベル
+- XSS 対策: DOMPurify による HTML サニタイズ
+- 有料コンテンツ保護: 未購読時に本文を UI 上でマスク（API 側でも本文を返さない）
+
+### アカウント / パスワード
+- パスワードポリシー: 8 文字以上・英数混在
+- レート制限: サインアップ / AI タグ生成に IP / ユーザー単位制限
 - NextAuth: 役割 (Admin/User/Disabled) を JWT へ伝播し、クライアントとサーバで整合
 
 ---
@@ -203,6 +207,8 @@ pnpm prisma migrate dev
 pnpm dev
 # http://localhost:3000 にアクセス
 ```
+
+> 正常確認: ブラウザでサインイン→記事投稿ができればセットアップ成功です。
 
 ### 6.（任意）Stripe Webhook（ローカル）
 
@@ -532,7 +538,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ## 🚀 Performance / Optimization（強化）
 
-- App Router サーバーコンポーネントでデータ取得を集約→不要なクライアントフェッチ削減
+- App Router サーバーコンポーネントでデータ取得を集約 → 不要なクライアントフェッチ削減
 - Prisma `select` で必要最小限のフィールド取得
 - 静的配信/キャッシュ
   - CloudFront + S3（将来）で静的アセットを配信
@@ -779,6 +785,7 @@ flowchart TD
 ## 🗄️ DB バックアップ / リストア（整理）
 
 ### 開発向け（簡易バックアップ）
+
 ```bash
 # Backup（環境に合わせて接続情報を指定）
 pg_dump --format=c --no-acl --no-owner "$DATABASE_URL" > backup.dump
@@ -788,6 +795,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 ```
 
 ### 本番向け（運用）
+
 - RDS の自動スナップショット（リテンション設定）を有効化
 - 重要メンテ直前に手動スナップショットを取得
 - 追加で `pg_dump` を cron で日次取得し、バケットへ世代管理
@@ -798,7 +806,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ## 🚀 Performance / Optimization（強化）
 
-- App Router サーバーコンポーネントでデータ取得を集約→不要なクライアントフェッチ削減
+- App Router サーバーコンポーネントでデータ取得を集約 → 不要なクライアントフェッチ削減
 - Prisma `select` で必要最小限のフィールド取得
 - 静的配信/キャッシュ
   - CloudFront + S3（将来）で静的アセットを配信
@@ -822,8 +830,9 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
   - XSS（DOMPurify サニタイズで危険タグ除去）
 
 ### 実装ツール（例）
+
 - ユニット: Jest + ts-jest（関数・API ハンドラのロジック）
-- E2E: Playwright（ログイン→記事作成→Checkout→解禁）
+- E2E: Playwright（ログイン → 記事作成 →Checkout→ 解禁）
 - Contract: JSON Schema による API 応答検証
 
 > 実例は `__tests__/` にサンプルを配置予定（`checkout.e2e.example.ts` など）。
