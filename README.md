@@ -1,9 +1,37 @@
 # PostNest
 
+- [📖 概要](#overview)
+- [✨ 特徴](#features)
+- [🎛 UX の工夫](#ux)
+- [🛠 技術スタック](#stack)
+- [🧾 使用言語まとめ](#langs)
+- [🏗️ Architecture（全体像）](#arch-summary)
+- [🔒 セキュリティ実装](#security)
+- [🧩 ミドルウェア](#middleware)
+- [📂 ディレクトリ構成](#dirs)
+- [🔧 開発手順（ローカル）](#dev)
+- [🚢 デプロイ手順 / 実行環境](#deploy)
+- [👤 役割と権限](#roles)
+- [🔗 API エンドポイント概要](#api)
+- [🔁 Webhook と購読反映の流れ](#webhook)
+- [🧭 データモデル（ER 図）](#er)
+- [🗄️ DB バックアップ / リストア](#backup)
+- [💳 Stripe テスト情報](#stripe-test)
+- [🧰 トラブルシューティング](#troubleshoot)
+- [🧪 テスト戦略](#testing)
+- [🚀 Performance / Optimization](#perf)
+- [📈 監視 / ログ](#ops)
+- [🔄 CI/CD](#cicd)
+- [🌐 Nginx リバースプロキシ](#nginx)
+- [🔐 Secrets 管理](#secrets)
+- [🖼 スクリーンショット / デモ](#screens)
+
+
 投資系ブログ＋有料記事購読プラットフォーム
 
 ---
 
+<a id="overview"></a>
 ## 📖 概要
 
 記事の作成・公開・課金購読までを一気通貫で提供。  
@@ -11,6 +39,7 @@
 
 ---
 
+<a id="features"></a>
 ## ✨ 特徴
 
 - App Router によるモダン構成
@@ -48,6 +77,7 @@
 
 ---
 
+<a id="ux"></a>
 ## 🎛 UX の工夫（ユーザー視点）
 
 - 未購読時は本文を明確にマスクし、すぐ横に購入導線（価格・説明・ボタン）を配置
@@ -56,6 +86,7 @@
 
 ---
 
+<a id="stack"></a>
 ## 🛠 技術スタック
 
 - **フロントエンド**: Next.js 15（App Router, Route Handlers）, React 18, TypeScript, Tailwind CSS
@@ -70,6 +101,7 @@
 
 ---
 
+<a id="langs"></a>
 ## 🧾 使用言語まとめ
 
 - TypeScript/TSX: Next.js(App Router), React コンポーネント, API Route Handlers, 認証/ユーティリティ
@@ -81,6 +113,7 @@
 
 ---
 
+<a id="arch-summary"></a>
 ## 🏗️ Architecture（全体像）
 
 - システム構成図と Webhook シーケンス図は `docs/architecture.md` に掲載しています。
@@ -88,6 +121,7 @@
 
 ---
 
+<a id="security"></a>
 ## 🔒 セキュリティ実装（アピールポイント）
 
 ### API レベル
@@ -109,6 +143,7 @@
 
 ---
 
+<a id="middleware"></a>
 ## 🧩 ミドルウェア（`src/middleware.ts`）
 
 - **目的**: ページレベルでの軽量なアクセス制御とリダイレクト。未ログインユーザーの保護ページアクセス時に、クッキー検査でサインインへサーバサイドリダイレクトします。
@@ -172,6 +207,7 @@ src/
 
 ---
 
+<a id="dev"></a>
 ## 🔧 開発手順（ローカル）
 
 ### 前提
@@ -252,6 +288,7 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 
 ---
 
+<a id="deploy"></a>
 ## 🚢 デプロイ手順 / 実行環境
 
 ### 環境の段階的構築（実績）
@@ -428,6 +465,7 @@ pnpm prisma migrate dev
 
 ---
 
+<a id="roles"></a>
 ## 👤 役割と権限
 
 | 機能                    | Admin | User                | DISABLED |
@@ -440,6 +478,7 @@ pnpm prisma migrate dev
 
 ---
 
+<a id="api"></a>
 ## 🔗 API エンドポイント概要（抜粋）
 
 - 記事
@@ -461,6 +500,7 @@ pnpm prisma migrate dev
 
 ---
 
+<a id="webhook"></a>
 ## 🔁 Webhook と購読反映の流れ
 
 - Checkout セッション作成時に `metadata` として `{ userId, articleId }` を付与（`/api/checkout`）
@@ -474,6 +514,7 @@ pnpm prisma migrate dev
 
 ---
 
+<a id="er"></a>
 ## 🧭 データモデル（ER 図 概要）
 
 モデル名は Prisma の `Subscription` に統一しています。
@@ -506,6 +547,7 @@ erDiagram
 
 ---
 
+<a id="backup"></a>
 ## 🗄️ DB バックアップ / リストア（例）
 
 ```bash
@@ -518,6 +560,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ---
 
+<a id="stripe-test"></a>
 ## 💳 Stripe テスト情報（例）
 
 - テストカード: `4242 4242 4242 4242` / 01/33 / 123 / 任意名
@@ -526,6 +569,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ---
 
+<a id="troubleshoot"></a>
 ## 🧰 トラブルシューティング
 
 - Prisma の接続/マイグレーション
@@ -539,6 +583,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ---
 
+<a id="testing"></a>
 ## 🧪 テスト戦略（観点）
 
 - Stripe Webhook
@@ -561,6 +606,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ---
 
+<a id="perf"></a>
 ## 🚀 Performance / Optimization（強化）
 
 - App Router サーバーコンポーネントでデータ取得を集約 → 不要なクライアントフェッチ削減
@@ -594,6 +640,7 @@ model Subscription {
 
 ---
 
+<a id="ops"></a>
 ## 📈 監視 / ログ（仕上げ）
 
 - pm2: `pm2 status`, `pm2 logs postnest --lines 100`
@@ -603,6 +650,7 @@ model Subscription {
 
 ---
 
+<a id="cicd"></a>
 ## 🔄 CI/CD（GitHub Actions 例）
 
 ### CI（PR / main）
@@ -660,6 +708,7 @@ jobs:
 
 ---
 
+<a id="nginx"></a>
 ## 🌐 Nginx リバースプロキシ（例）
 
 ### HTTP → HTTPS リダイレクト
@@ -710,6 +759,7 @@ server {
 
 ---
 
+<a id="secrets"></a>
 ## 🔐 Secrets 管理（例）
 
 ### GitHub Actions での Secrets
@@ -742,6 +792,7 @@ Restart=always
 
 ---
 
+<a id="screens"></a>
 ## 🖼 スクリーンショット / デモ（任意）
 
 - トップページ / 記事詳細（未購読/購読済み）
