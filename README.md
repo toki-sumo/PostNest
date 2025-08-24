@@ -2,6 +2,7 @@
 
 - [📖 概要](#overview)
 - [✨ 特徴](#features)
+  - [🚀 主要機能](#main-features)
   - [🎛 UX の工夫](#ux)
 - [🧱 技術・構成](#tech-arch)
   - [🛠 技術スタック](#stack)
@@ -51,6 +52,8 @@
 - 強固なセキュリティ実装
 
 ---
+
+<a id="main-features"></a>
 
 ## 🚀 主要機能
 
@@ -147,11 +150,7 @@
 - レート制限: サインアップ / AI タグ生成に IP / ユーザー単位制限
 - NextAuth: 役割 (Admin/User/Disabled) を JWT へ伝播し、クライアントとサーバで整合
 
----
-
-<a id="middleware"></a>
-
-## 🧩 ミドルウェア（`src/middleware.ts`）
+### ミドルウェア（`src/middleware.ts`）
 
 - **目的**: ページレベルでの軽量なアクセス制御とリダイレクト。未ログインユーザーの保護ページアクセス時に、クッキー検査でサインインへサーバサイドリダイレクトします。
 - **動作概要**
@@ -542,12 +541,16 @@ erDiagram
     string id PK
     string email
     string role
+    datetime createdAt
+    datetime updatedAt
   }
   Article {
     string id PK
     string authorId FK
     boolean isPremium
     int price
+    datetime createdAt
+    datetime updatedAt
   }
   Subscription {
     string id PK
@@ -555,6 +558,9 @@ erDiagram
     string articleId FK
     string status
     int amount
+    string stripeSessionId
+    string stripePaymentIntentId
+    datetime createdAt
   }
 ```
 
@@ -590,12 +596,16 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 - Prisma の接続/マイグレーション
   - `DATABASE_URL` を再確認、`pnpm prisma migrate deploy|dev` を実行
+  - DB が起動しているか確認（Docker/Local）。`psql` で疎通チェック
 - Webhook 署名失敗
   - 署名シークレット誤り/ボディ改変（圧縮/再エンコード）を確認
+  - Stripe ダッシュボードのイベントを再送して動作確認
 - CSRF の 403
   - `Origin/Host` が一致しているか。フロントと API のホスト/プロトコルを揃える
 - 3000 番ポートが外から見えない
   - 本番は 80/443 経由（Nginx）。検証時の 3000 開放は一時的に
+- 画像や静的アセットが出ない
+  - `public/` のパスと参照パス（`/screenshots/...`）を再確認
 
 ---
 
