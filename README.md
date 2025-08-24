@@ -799,7 +799,7 @@ flowchart TD
   Next --> API[API Route Handlers]
   API --> DB[(PostgreSQL - RDS)]
   API --> Stripe[Stripe API]
-  Stripe --> Webhook[Webhook Handler (/api/stripe/webhook)]
+  Stripe --> Webhook["Webhook Handler (/api/stripe/webhook)"]
   Webhook --> DB
 ```
 
