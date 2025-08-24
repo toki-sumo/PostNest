@@ -32,9 +32,20 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ message: "Email and password are required" }, { status: 400 })
     }
 
-    // パスワードポリシー（最小8文字、1英字、1数字）
-    if (typeof password !== 'string' || password.length < 8 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
-        return NextResponse.json({ message: "パスワードは8文字以上かつ英字と数字を含めてください" }, { status: 400 })
+    // パスワードポリシー（最小8文字、英大文字・小文字・数字・記号をすべて含む）
+    const hasUpper = /[A-Z]/.test(password)
+    const hasLower = /[a-z]/.test(password)
+    const hasNumber = /[0-9]/.test(password)
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    if (
+      typeof password !== 'string' ||
+      password.length < 8 ||
+      !hasUpper || !hasLower || !hasNumber || !hasSpecial
+    ) {
+      return NextResponse.json(
+        { message: "パスワードは8文字以上かつ英大文字・小文字・数字・記号を含めてください" },
+        { status: 400 }
+      )
     }
 
     const existingUser = await prisma.user.findUnique({ where: { email } })
