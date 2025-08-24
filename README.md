@@ -133,6 +133,7 @@
 
 ## 📂 ディレクトリ構成（抜粋）
 
+```text
 src/
 ├── app/
 │   ├── articles/
@@ -155,7 +156,9 @@ src/
 ├── auth.ts
 ├── auth.config.ts
 ├── lib/
-│   ├── db.ts / prisma.ts / stripe.ts
+│   ├── db.ts
+│   ├── prisma.ts
+│   ├── stripe.ts
 │   └── utils/
 ├── prisma/
 │   ├── schema.prisma
@@ -165,6 +168,7 @@ src/
 ├── public/
 │   └── screenshots/
 └── README.md
+```
 
 ---
 
