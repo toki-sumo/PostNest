@@ -34,8 +34,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "test-db.js"  ],
+    ".next/types/**/*.ts",
+    "test-db.js"
+  ],
   "exclude": [
     "node_modules"
   ],

@@ -1,18 +1,56 @@
 // src/app/articles/page.tsx
 import ArticleList from "@/components/article/ArticleList";
+export const revalidate = 120;
+import { db } from "@/lib/db";
 import BackgroundDecoration from "@/components/common/BackgroundDecoration";
 import Link from "next/link";
 
 export default async function ArticlesPage() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    process.env.NEXTAUTH_URL ||
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  let rows: Array<{
+    id: string;
+    title: string;
+    content: string;
+    createdAt: Date | string;
+    updatedAt: Date | string;
+    tags: string[] | null;
+    imageUrl: string | null;
+    isPremium: boolean;
+    price: number | null;
+    author: { id: string; name: string | null } | null;
+  }> = [];
+  try {
+    rows = await db.article.findMany({
+      orderBy: { updatedAt: "desc" },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+        tags: true,
+        imageUrl: true,
+        isPremium: true,
+        price: true,
+        author: { select: { id: true, name: true } },
+      },
+    });
+  } catch (error) {
+    console.warn("DB 接続に失敗したため、記事一覧を空でビルドします:", error);
+    rows = [];
+  }
 
-  const res = await fetch(`${baseUrl}/api/articles`, {
-    cache: "no-store",
-  });
-  const articles = await res.json();
+  const articles = rows.map((r) => ({
+    id: r.id,
+    title: r.title,
+    content: r.content,
+    createdAt: (r.createdAt instanceof Date ? r.createdAt.toISOString() : String(r.createdAt)),
+    updatedAt: (r.updatedAt instanceof Date ? r.updatedAt.toISOString() : String(r.updatedAt)),
+    tags: r.tags ?? [],
+    imageUrl: r.imageUrl ?? "",
+    isPremium: r.isPremium,
+    price: r.price ?? null,
+    author: { id: r.author?.id ?? "", name: r.author?.name ?? "", Article: [] },
+  }));
 
   return (
     <div className="min-h-screen pt-20">

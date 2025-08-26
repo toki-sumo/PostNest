@@ -1,6 +1,7 @@
 'use client'
 
-import RichTextEditor from '../RichTextEditor'
+import dynamic from 'next/dynamic'
+const RichTextEditor = dynamic(() => import('../RichTextEditor'), { ssr: false, loading: () => null })
 
 type Props = {
   value: string

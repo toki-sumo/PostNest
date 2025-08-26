@@ -1,25 +1,8 @@
 // src/lib/prisma.ts
-import fs from 'fs';
-import { PrismaClient } from '@prisma/client';
+// 統一: `db` を単一の PrismaClient インスタンスとして使用し、
+// 既存の `prisma` インポートも壊さないようエイリアスを提供
+import { db } from "./db";
 
-const globalForPrisma = globalThis as unknown as {
-    prisma: PrismaClient | undefined;
-};
+export const prisma = db;
 
-// PrismaClient の初期化
-export const prisma =
-    globalForPrisma.prisma ??
-    new PrismaClient({
-        // クエリログはデフォルト無効。必要時のみ PRISMA_LOG_QUERIES=true で有効化
-        log: process.env.PRISMA_LOG_QUERIES === 'true' ? ['query'] : [],
-        datasources: {
-            db: {
-                url: process.env.DATABASE_URL,
-            },
-        },
-    });
-
-// 開発環境ではグローバルキャッシュ
-if (process.env.NODE_ENV !== 'production') {
-    globalForPrisma.prisma = prisma;
-}
+export default prisma;
