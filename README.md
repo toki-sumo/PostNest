@@ -739,6 +739,7 @@ jobs:
 ---
 
 <a id="nginx"></a>
+
 ## 🌐 Nginx 設定（EC2 実設定）
 
 EC2 上で実際に稼働している設定のみを記載します。Ubuntu/Debian は `/etc/nginx/sites-available/postnest`（`sites-enabled` に symlink）、Amazon Linux は `/etc/nginx/conf.d/postnest.conf` に配置します。

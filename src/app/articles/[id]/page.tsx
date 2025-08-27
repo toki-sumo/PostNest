@@ -117,12 +117,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                                 <h2 className="text-2xl font-bold text-yellow-600">有料記事</h2>
                             </div>
                             <p className="text-yellow-700 mb-4">
-                                この記事の内容を読むには購読が必要です<br />
-                                この機能はテストモードで運用中です。遷移先で入力する内容は以下でも購入可能です。実際に支払いは行われません。<br />
-                                カード番号：4242-4242-4242-4242<br />
-                                有効期限：01/33<br />
-                                セキュリティコード：123<br />
-                                名前：XXXX
+                                この記事の内容を読むには購読が必要です
                             </p>
                             <div className="text-4xl font-bold text-yellow-600 mb-6">
                                 {`¥${(detailArticle.price ?? 0).toLocaleString()}`}

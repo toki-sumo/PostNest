@@ -134,7 +134,7 @@ export default function SignInPage() {
                 </svg>
               </div>
               <h1 className="text-3xl font-bold text-[var(--text)] mb-2">ログイン</h1>
-              <p className="text-[var(--text)]/85">PostNestにようこそ！<br />ゲスト用アカウント mail:guest@example.com, password:Guest@123でログインできます</p>
+              <p className="text-[var(--text)]/85">PostNestにようこそ！</p>
             </div>
 
             {/* エラーメッセージ */}
