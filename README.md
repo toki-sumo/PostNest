@@ -788,6 +788,73 @@ server {
 
 > 注意: gzip などボディを再エンコードする設定を入れないでください（Webhook 署名検証に失敗します）。
 
+### ドメイン無しでの HTTPS（自己署名証明書）
+
+本番では独自ドメイン＋ Let’s Encrypt を推奨しますが、検証用途で EC2 の公開 DNS のみでも自己署名証明書で HTTPS を追加できます（ブラウザに警告が表示されます）。
+
+1. 自己署名証明書の作成（SAN に EC2 公開 DNS を指定）
+
+```bash
+EC2_HOST=ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com
+sudo install -d -m 700 /etc/ssl/private
+sudo install -d -m 755 /etc/ssl/certs
+
+sudo openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
+  -keyout /etc/ssl/private/postnest-selfsigned.key \
+  -out /etc/ssl/certs/postnest-selfsigned.crt \
+  -subj "/CN=$EC2_HOST" \
+  -addext "subjectAltName=DNS:$EC2_HOST"
+
+sudo chown root:root /etc/ssl/private/postnest-selfsigned.key /etc/ssl/certs/postnest-selfsigned.crt
+sudo chmod 600 /etc/ssl/private/postnest-selfsigned.key
+sudo chmod 644 /etc/ssl/certs/postnest-selfsigned.crt
+```
+
+2. Nginx に 443 の server ブロックを追加（Ubuntu/Debian は `/etc/nginx/sites-available/postnest`、Amazon Linux は `/etc/nginx/conf.d/postnest.conf`）
+
+```nginx
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com;
+
+    ssl_certificate     /etc/ssl/certs/postnest-selfsigned.crt;
+    ssl_certificate_key /etc/ssl/private/postnest-selfsigned.key;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host              $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host  $host;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP         $remote_addr;
+
+        proxy_set_header Upgrade           $http_upgrade;
+        proxy_set_header Connection        "upgrade";
+    }
+}
+```
+
+3. 構文チェックと反映
+
+```bash
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+4. 動作確認（自己署名のため `-k` で検証回避）
+
+```bash
+curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
+```
+
+注意:
+
+- 自己署名は本番非推奨です。独自ドメイン取得後は Let’s Encrypt で正式証明書を発行してください。
+- アプリ側で URL 固定が必要な場合は `NEXTAUTH_URL=https://<ホスト名>` などの環境変数を見直してください。
+
 ---
 
 <a id="secrets"></a>
