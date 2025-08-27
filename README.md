@@ -739,80 +739,34 @@ jobs:
 ---
 
 <a id="nginx"></a>
+## 🌐 Nginx 設定（EC2 実設定）
 
-## 🌐 Nginx リバースプロキシ（例）
-
-### HTTP → HTTPS リダイレクト
+EC2 上で実際に稼働している設定のみを記載します。Ubuntu/Debian は `/etc/nginx/sites-available/postnest`（`sites-enabled` に symlink）、Amazon Linux は `/etc/nginx/conf.d/postnest.conf` に配置します。
 
 ```nginx
+# HTTP（80）
 server {
-  listen 80;
-  server_name your-domain.example;
-  return 301 https://$host$request_uri;
+    listen 80;
+    listen [::]:80;
+
+    server_name ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host              $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Host  $host;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP         $remote_addr;
+
+        proxy_set_header Upgrade           $http_upgrade;
+        proxy_set_header Connection        "upgrade";
+    }
 }
-```
 
-### HTTPS + Node(3000) へのプロキシ
-
-```nginx
-server {
-  listen 443 ssl http2;
-  server_name your-domain.example;
-
-  ssl_certificate     /etc/letsencrypt/live/your-domain/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/your-domain/privkey.pem;
-
-  # アップロード/Webhook 向けに適度なサイズ
-  client_max_body_size 10m;
-
-  # 共通ヘッダ
-  proxy_set_header Host $host;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Forwarded-Proto $scheme;
-
-  location / {
-    proxy_pass http://127.0.0.1:3000;
-    proxy_http_version 1.1;
-    proxy_set_header Connection "";
-  }
-
-  # Stripe Webhook（raw body を改変しない。デフォルトでボディ変換は行われない）
-  location /api/stripe/webhook {
-    proxy_pass http://127.0.0.1:3000;
-    proxy_http_version 1.1;
-    proxy_set_header Connection "";
-  }
-}
-```
-
-> 注意: gzip などボディを再エンコードする設定を入れないでください（Webhook 署名検証に失敗します）。
-
-### ドメイン無しでの HTTPS（自己署名証明書）
-
-本番では独自ドメイン＋ Let’s Encrypt を推奨しますが、検証用途で EC2 の公開 DNS のみでも自己署名証明書で HTTPS を追加できます（ブラウザに警告が表示されます）。
-
-1. 自己署名証明書の作成（SAN に EC2 公開 DNS を指定）
-
-```bash
-EC2_HOST=ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com
-sudo install -d -m 700 /etc/ssl/private
-sudo install -d -m 755 /etc/ssl/certs
-
-sudo openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
-  -keyout /etc/ssl/private/postnest-selfsigned.key \
-  -out /etc/ssl/certs/postnest-selfsigned.crt \
-  -subj "/CN=$EC2_HOST" \
-  -addext "subjectAltName=DNS:$EC2_HOST"
-
-sudo chown root:root /etc/ssl/private/postnest-selfsigned.key /etc/ssl/certs/postnest-selfsigned.crt
-sudo chmod 600 /etc/ssl/private/postnest-selfsigned.key
-sudo chmod 644 /etc/ssl/certs/postnest-selfsigned.crt
-```
-
-2. Nginx に 443 の server ブロックを追加（Ubuntu/Debian は `/etc/nginx/sites-available/postnest`、Amazon Linux は `/etc/nginx/conf.d/postnest.conf`）
-
-```nginx
+# HTTPS（443、自署証明書）
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
@@ -837,6 +791,30 @@ server {
     }
 }
 ```
+
+### ドメイン無しでの HTTPS（自己署名証明書）
+
+検証用途として、EC2 の公開 DNS に対して自己署名証明書で 443 を有効化しています（ブラウザには警告が表示されます）。
+
+1. 自己署名証明書の作成（SAN に EC2 公開 DNS を指定）
+
+```bash
+EC2_HOST=ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com
+sudo install -d -m 700 /etc/ssl/private
+sudo install -d -m 755 /etc/ssl/certs
+
+sudo openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
+  -keyout /etc/ssl/private/postnest-selfsigned.key \
+  -out /etc/ssl/certs/postnest-selfsigned.crt \
+  -subj "/CN=$EC2_HOST" \
+  -addext "subjectAltName=DNS:$EC2_HOST"
+
+sudo chown root:root /etc/ssl/private/postnest-selfsigned.key /etc/ssl/certs/postnest-selfsigned.crt
+sudo chmod 600 /etc/ssl/private/postnest-selfsigned.key
+sudo chmod 644 /etc/ssl/certs/postnest-selfsigned.crt
+```
+
+2. Nginx は上記の 443 ブロックを使用（ファイル配置は環境に合わせて）
 
 3. 構文チェックと反映
 
