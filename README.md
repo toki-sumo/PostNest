@@ -836,40 +836,6 @@ curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 
 ---
 
-<a id="secrets"></a>
-
-## 🔐 Secrets 管理（例）
-
-### GitHub Actions での Secrets
-
-- `Settings > Secrets and variables > Actions` に `EC2_HOST`, `EC2_SSH_KEY`, `STRIPE_SECRET_KEY` などを登録
-- デプロイ時は上記を参照
-
-### AWS SSM Parameter Store / Secrets Manager の利用
-
-- アプリ実行時に `.env` を生成する例（Parameter Store）:
-
-```bash
-aws ssm get-parameter \
-  --name "/postnest/prod/DATABASE_URL" \
-  --with-decryption \
-  --query Parameter.Value \
-  --output text >> .env
-```
-
-- systemd での環境読み込み例:
-
-```ini
-[Service]
-EnvironmentFile=/home/ubuntu/PostNest/.env
-ExecStart=/usr/bin/pm2 start pnpm --name postnest -- start
-Restart=always
-```
-
-- Node 起動前に `export $(grep -v '^#' .env | xargs)` で環境変数を注入可能（セキュリティに注意）
-
----
-
 <a id="screens"></a>
 
 ## 🖼 スクリーンショット / デモ（任意）
