@@ -785,32 +785,32 @@ curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 
 ![01 トップページ（デスクトップ）](/screenshots/homepage.png)
 ![02 記事一覧（有料表示あり）](/screenshots/articlelist.png)
-![03 記事詳細（無料記事）](/screenshots/03-article-free-desktop.png)
-![04 記事詳細（有料・ロック状態）](/screenshots/04-article-locked-desktop.png)
-![05 記事詳細（購読済み解禁）](/screenshots/05-article-unlocked-desktop.png)
-![06 記事作成フォーム](/screenshots/06-article-new-desktop.png)
-![07 記事編集フォーム](/screenshots/07-article-edit-desktop.png)
-![08 ダッシュボード（投稿一覧）](/screenshots/08-dashboard-articles-desktop.png)
-![09 ダッシュボード（購読履歴・統計）](/screenshots/09-dashboard-subscriptions-desktop.png)
-![10 管理者トップ](/screenshots/10-admin-home-desktop.png)
-![11 管理：ユーザー管理](/screenshots/11-admin-users-desktop.png)
+<!-- ![03 記事詳細（無料記事）](/screenshots/03-article-free-desktop.png) -->
+![04 記事詳細（有料・ロック状態）](/screenshots/premium.png)
+![05 記事詳細（購読済み解禁）](/screenshots/stripe2.png)
+![06 記事作成フォーム](/screenshots/newarticle.png)
+<!-- ![07 記事編集フォーム](/screenshots/07-article-edit-desktop.png) -->
+![08 ダッシュボード（投稿一覧）](/screenshots/dashboard.png)
+<!-- ![09 ダッシュボード（購読履歴・統計）](/screenshots/09-dashboard-subscriptions-desktop.png) -->
+![10 管理者トップ](/screenshots/admin.png)
+<!-- ![11 管理：ユーザー管理](/screenshots/11-admin-users-desktop.png) -->
 ![12 管理：記事管理](/screenshots/12-admin-articles-desktop.png)
-![13 サインイン](/screenshots/13-auth-signin-desktop.png)
-![14 404 ページ](/screenshots/14-not-found-desktop.png)
-![15 モバイルメニュー（テーマ切替）](/screenshots/15-mobile-menu-theme-toggle-mobile.png)
+![13 サインイン](/screenshots/signin.png)
+<!-- ![14 404 ページ](/screenshots/14-not-found-desktop.png) -->
+<!-- ![15 モバイルメニュー（テーマ切替）](/screenshots/15-mobile-menu-theme-toggle-mobile.png) -->
 
 #### テーマ比較
 
-![トップ（ライト）](/screenshots/01-home-desktop-light.png)
-![トップ（ダーク）](/screenshots/01-home-desktop-dark.png)
+![トップ（ライト）](/screenshots/homepage.png)
+![トップ（ダーク）](/screenshots/dark.png)
 
 #### GIF / MP4（動作）
 
-![G1 テーマ切替（モバイル）](/screenshots/g1-theme-toggle-mobile.gif)
+<!-- ![G1 テーマ切替（モバイル）](/screenshots/g1-theme-toggle-mobile.gif) -->
 
 <video src="/screenshots/g2-checkout-flow.mp4" controls width="800">Checkout フロー</video>
 
-![G3 記事作成フロー](/screenshots/g3-create-article.gif)
+<!-- ![G3 記事作成フロー](/screenshots/g3-create-article.gif) -->
 
 ---
 
