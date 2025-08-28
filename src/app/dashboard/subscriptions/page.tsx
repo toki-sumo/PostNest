@@ -75,7 +75,7 @@ export default function SubscriptionsPage() {
 
       {/* 統計情報 */}
       {subscriptionData && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
           <GlassCard className="p-6 text-center">
             <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 bg-[color:var(--muted)]/15">
               <svg className="w-8 h-8 text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
