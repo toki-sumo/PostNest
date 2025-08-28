@@ -119,14 +119,14 @@
 
 ## 🔒 セキュリティ（脅威 → 対策）
 
-| 脅威 | 対策 | 主要実装箇所 |
-| --- | --- | --- |
-| CSRF（書き込み API の不正呼び出し） | 同一オリジン検査（Origin/Host 検証） | `app/api/**` 各 Route Handlers |
-| XSS（リッチテキスト経由のスクリプト混入） | DOMPurify による HTML サニタイズ | `components/article/RichTextDisplay.tsx` |
-| 不正閲覧（未購読で有料本文取得） | API レイヤで本文を返さない＋UI マスク | `app/api/articles/[id]` / `ArticleCard` |
-| 認可漏れ（権限外の操作） | JWT にロールを埋め込み、API 側で検証 | `src/auth.config.ts` callbacks / 各 API |
-| Webhook なりすまし | Stripe 署名（raw body）検証 | `app/api/stripe/webhook/route.ts` |
-| パスワード総当たり | ポリシー＋レート制限（IP/ユーザー単位） | `app/api/auth/signup/route.ts`, `lib/utils` |
+| 脅威                                      | 対策                                    | 主要実装箇所                                |
+| ----------------------------------------- | --------------------------------------- | ------------------------------------------- |
+| CSRF（書き込み API の不正呼び出し）       | 同一オリジン検査（Origin/Host 検証）    | `app/api/**` 各 Route Handlers              |
+| XSS（リッチテキスト経由のスクリプト混入） | DOMPurify による HTML サニタイズ        | `components/article/RichTextDisplay.tsx`    |
+| 不正閲覧（未購読で有料本文取得）          | API レイヤで本文を返さない＋ UI マスク  | `app/api/articles/[id]` / `ArticleCard`     |
+| 認可漏れ（権限外の操作）                  | JWT にロールを埋め込み、API 側で検証    | `src/auth.config.ts` callbacks / 各 API     |
+| Webhook なりすまし                        | Stripe 署名（raw body）検証             | `app/api/stripe/webhook/route.ts`           |
+| パスワード総当たり                        | ポリシー＋レート制限（IP/ユーザー単位） | `app/api/auth/signup/route.ts`, `lib/utils` |
 
 ### ミドルウェア（`src/middleware.ts`）
 
@@ -783,8 +783,8 @@ curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 
 #### 主要画面（静止画）
 
-![01 トップページ（デスクトップ）](/screenshots/01-home-desktop.png)
-![02 記事一覧（有料表示あり）](/screenshots/02-articles-list-desktop.png)
+![01 トップページ（デスクトップ）](/screenshots/homepage.png)
+![02 記事一覧（有料表示あり）](/screenshots/articlelist.png)
 ![03 記事詳細（無料記事）](/screenshots/03-article-free-desktop.png)
 ![04 記事詳細（有料・ロック状態）](/screenshots/04-article-locked-desktop.png)
 ![05 記事詳細（購読済み解禁）](/screenshots/05-article-unlocked-desktop.png)
