@@ -38,46 +38,32 @@
 記事の作成・公開・課金購読までを一気通貫で提供。  
 個人クリエイターが有料記事を安全に販売できるミニマムなプラットフォーム。
 
+> まず UI を確認したい場合は「[スクリーンショット / デモ](#screens)」をご覧ください。
+
 ---
 
 <a id="features"></a>
 
-## ✨ 特徴
+## ✨ 特徴（技術者向け）
 
-- App Router によるモダン構成
+- Next.js App Router ベースのフルスタック構成
 - Stripe 決済
 - NextAuth 認証
 - Prisma による型安全な DB
-- リッチテキスト編集（TipTap）
-- 強固なセキュリティ実装
+- TipTap による拡張可能なリッチテキストエディタ
+- CSRF, XSS, JWT 認可まで網羅したセキュリティ制御
 
 ---
 
 <a id="main-features"></a>
 
-## 🚀 主要機能
+## 🚀 主要機能（ユーザーストーリー）
 
-- **記事**
-  - 一覧 / 詳細 / タグ検索
-  - リッチテキスト表示（XSS 対策済み）
-- **投稿 / 編集 / 削除**
-  - 認証ユーザーによる記事 CRUD
-  - プレミアム設定と価格管理
-- **有料記事**
-  - Stripe Checkout 連携
-  - 購読済みユーザーのみ本文解禁
-- **ダッシュボード**
-  - 投稿管理
-  - 購読履歴と統計表示
-- **管理者**
-  - ユーザー管理（役割変更 / 無効化）
-  - 記事管理
-- **認証**
-  - Google / GitHub OAuth + メール・パスワード
-- **エラーハンドリング**
-  - グローバル not-found
-  - セグメント単位の 404
-  - 安定した失敗時 UX
+- 記事の作成と販売: ユーザーは TipTap で記事を作成し、価格・タグを設定して Stripe Checkout で販売できる
+- 有料本文の保護: 未購読ユーザーは要約のみ閲覧、購読完了ユーザーのみ本文にアクセスできる
+- ダッシュボード運用: 投稿一覧・購読履歴・売上指標をダッシュボードで把握できる
+- 管理業務: 管理者はユーザーの役割変更/無効化、記事の公開状態を管理できる
+- 認証/認可: Google/GitHub OAuth とメール・パスワード認証、JWT でロールを伝播して権限を制御
 
 ---
 
@@ -131,24 +117,16 @@
 
 <a id="security"></a>
 
-## 🔒 セキュリティ実装（アピールポイント）
+## 🔒 セキュリティ（脅威 → 対策）
 
-### API レベル
-
-- CSRF 対策: 書き込み API に同一オリジン検査（Origin/Host 検証）
-- 認可: 記事編集・削除は著者 or 管理者のみ（API レベルで検証）
-- Webhook 検証: Stripe 署名（raw body）による厳格検証
-
-### UI レベル
-
-- XSS 対策: DOMPurify による HTML サニタイズ
-- 有料コンテンツ保護: 未購読時に本文を UI 上でマスク（API 側でも本文を返さない）
-
-### アカウント / パスワード
-
-- パスワードポリシー: 8 文字以上・英数混在・大文字・小文字・記号
-- レート制限: サインアップ / AI タグ生成に IP / ユーザー単位制限
-- NextAuth: 役割 (Admin/User/Disabled) を JWT へ伝播し、クライアントとサーバで整合
+| 脅威 | 対策 | 主要実装箇所 |
+| --- | --- | --- |
+| CSRF（書き込み API の不正呼び出し） | 同一オリジン検査（Origin/Host 検証） | `app/api/**` 各 Route Handlers |
+| XSS（リッチテキスト経由のスクリプト混入） | DOMPurify による HTML サニタイズ | `components/article/RichTextDisplay.tsx` |
+| 不正閲覧（未購読で有料本文取得） | API レイヤで本文を返さない＋UI マスク | `app/api/articles/[id]` / `ArticleCard` |
+| 認可漏れ（権限外の操作） | JWT にロールを埋め込み、API 側で検証 | `src/auth.config.ts` callbacks / 各 API |
+| Webhook なりすまし | Stripe 署名（raw body）検証 | `app/api/stripe/webhook/route.ts` |
+| パスワード総当たり | ポリシー＋レート制限（IP/ユーザー単位） | `app/api/auth/signup/route.ts`, `lib/utils` |
 
 ### ミドルウェア（`src/middleware.ts`）
 
@@ -249,17 +227,12 @@ docker compose up -d
 
 ### 3. 環境変数の設定（.env）
 
-ローカル実行の例:
+ローカル実行の最小例（必要最低限）:
 
 ```bash
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postnest?schema=public"
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="dev-secret"
-GOOGLE_ID=... GOOGLE_SECRET=...
-GITHUB_ID=...  GITHUB_SECRET=...
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...(任意)
-NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+STRIPE_SECRET_KEY="sk_test_..."
 ```
 
 ### 4. Prisma セットアップ
@@ -283,8 +256,9 @@ pnpm dev
 Stripe CLI を利用してイベント転送と署名検証を設定します。
 
 ```bash
+stripe login
 stripe listen --forward-to localhost:3000/api/stripe/webhook
-# 表示された Signing secret を STRIPE_WEBHOOK_SECRET に設定
+# 表示された Signing secret を .env の STRIPE_WEBHOOK_SECRET に設定
 ```
 
 ### 動作確認ポイント
@@ -523,6 +497,25 @@ pnpm prisma migrate dev
 
 参考実装: `src/app/api/stripe/webhook/route.ts`
 
+### API/JSON 実例（抜粋）
+
+記事作成（認証必須）:
+
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <JWT>" \
+  -d '{
+    "title": "サンプル記事",
+    "content": "<p>本文</p>",
+    "price": 500,
+    "tags": ["macro", "equity"]
+  }' \
+  https://<host>/api/articles
+```
+
+> その他のエンドポイント詳細は `docs/api.md` を参照してください。
+
 ---
 
 <a id="er"></a>
@@ -609,43 +602,6 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 
 ---
 
-<a id="testing"></a>
-
-## 🧪 テスト戦略（観点）
-
-- Stripe Webhook
-  - 正常系（checkout.session.completed）
-  - 署名不一致（400 応答）
-  - 二重通知（`upsert` で重複作成を防止）
-  - キャンセル/未決済（DB 反映しない）
-- 認証/認可
-  - 無効ユーザー（DISABLED）の拒否
-  - 権限外操作（他者記事の編集/削除）
-- セキュリティ
-  - CSRF（Origin/Host 不一致の 403）
-  - XSS（DOMPurify サニタイズで危険タグ除去）
-
-### 実装ツール（例）
-
-- ユニット: Jest + ts-jest（関数・API ハンドラのロジック）
-- E2E: Playwright（ログイン → 記事作成 →Checkout→ 解禁までのフロー）
-- Contract: JSON Schema による API 応答検証
-
----
-
-<a id="perf"></a>
-
-## 🚀 Performance / Optimization（強化）
-
-- App Router サーバーコンポーネントでデータ取得を集約 → 不要なクライアントフェッチ削減
-- Prisma `select` で必要最小限のフィールド取得
-- 静的配信/キャッシュ
-  - CloudFront + S3（将来）で静的アセットを配信
-  - SSG（Static Site Generation）で記事一覧等をキャッシュ
-  - Redis/KV（将来）でセッションや記事メタ情報を短期キャッシュ
-
----
-
 ## 🗄️ Prisma Model 定義抜粋
 
 ```prisma
@@ -670,7 +626,7 @@ model Subscription {
 
 <a id="ops"></a>
 
-## 📈 監視 / ログ（仕上げ）
+## 📈 監視 / ログ
 
 - pm2: `pm2 status`, `pm2 logs postnest --lines 100`
 - CloudWatch Logs に pm2 ログを集約 or S3 で世代管理
@@ -740,33 +696,9 @@ jobs:
 
 <a id="nginx"></a>
 
-## 🌐 Nginx 設定（EC2 実設定）
-
-EC2 上で実際に稼働している設定のみを記載します。Ubuntu/Debian は `/etc/nginx/sites-available/postnest`（`sites-enabled` に symlink）、Amazon Linux は `/etc/nginx/conf.d/postnest.conf` に配置します。
+## 🌐 Nginx 設定（EC2）
 
 ```nginx
-# HTTP（80）
-server {
-    listen 80;
-    listen [::]:80;
-
-    server_name ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com;
-
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-
-        proxy_set_header Host              $host;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-Host  $host;
-        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
-        proxy_set_header X-Real-IP         $remote_addr;
-
-        proxy_set_header Upgrade           $http_upgrade;
-        proxy_set_header Connection        "upgrade";
-    }
-}
-
 # HTTPS（443、自署証明書）
 server {
     listen 443 ssl http2;
@@ -829,16 +761,11 @@ sudo nginx -t && sudo systemctl reload nginx
 curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 ```
 
-注意:
-
-- 自己署名は本番非推奨です。独自ドメイン取得後は Let’s Encrypt で正式証明書を発行してください。
-- アプリ側で URL 固定が必要な場合は `NEXTAUTH_URL=https://<ホスト名>` などの環境変数を見直してください。
-
 ---
 
 <a id="screens"></a>
 
-## 🖼 スクリーンショット / デモ（任意）
+## 🖼 スクリーンショット / デモ（準備中）
 
 - トップページ / 記事詳細（未購読/購読済み）
 - 管理画面 / ダッシュボード
@@ -872,7 +799,7 @@ curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 ![14 404 ページ](/screenshots/14-not-found-desktop.png)
 ![15 モバイルメニュー（テーマ切替）](/screenshots/15-mobile-menu-theme-toggle-mobile.png)
 
-#### テーマ比較（任意）
+#### テーマ比較
 
 ![トップ（ライト）](/screenshots/01-home-desktop-light.png)
 ![トップ（ダーク）](/screenshots/01-home-desktop-dark.png)
