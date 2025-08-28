@@ -777,7 +777,7 @@ curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 >
 > `![管理ユーザー](/screenshots/11-admin-users-desktop.png)`
 
-### 画像プレースホルダ（後で差し替え）
+### 画像プレースホルダ
 
 > 画像は `public/screenshots/` に配置してください（例: `public/screenshots/01-home-desktop.png`）。
 

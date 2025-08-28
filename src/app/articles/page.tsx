@@ -61,7 +61,7 @@ export default async function ArticlesPage() {
         <main className="w-full lg:w-3/4 p-4 lg:p-8">
           <div className="max-w-5xl mx-auto">
             {/* ヘッダーセクション */}
-            <div className="text-center lg:text-left mb-12">
+            <div className="text-center lg:text-left mb-4">
               <h1 className="text-4xl md:text-5xl font-bold text-[var(--text)] mb-4">
                 記事
                 <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
