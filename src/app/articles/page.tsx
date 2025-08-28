@@ -53,7 +53,7 @@ export default async function ArticlesPage() {
   }));
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-10">
       <BackgroundDecoration />
 
       <div className="flex flex-col lg:flex-row max-w-8xl mx-auto relative z-10">
