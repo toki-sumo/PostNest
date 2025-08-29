@@ -2,7 +2,7 @@ name: E2E (webhook-direct)
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   e2e:
@@ -71,5 +71,3 @@ jobs:
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
           BASE_URL: http://localhost:4000
         run: pnpm test:e2e -- --grep webhook-direct
-
-
