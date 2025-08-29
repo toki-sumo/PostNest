@@ -16,15 +16,17 @@ describe('POST /api/articles (authenticated)', () => {
     const email = `test${Date.now()}@example.com`
     const password = 'Aa1!aaaa'
 
+    const agent = request.agent(BASE)
+
     // 1) signup
-    const su = await request(BASE)
+    const su = await agent
       .post('/api/auth/signup')
       .set('Content-Type', 'application/json')
       .send({ email, password })
     expect([200, 201, 400]).toContain(su.status)
 
-    // 2) sign in via NextAuth credentials provider
-    const signin = await request(BASE)
+    // 2) sign in via NextAuth credentials provider (allow redirect, persist cookie on agent)
+    const signin = await agent
       .post('/api/auth/callback/credentials')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .set('Origin', ORIGIN)
@@ -33,13 +35,11 @@ describe('POST /api/articles (authenticated)', () => {
           email,
           password,
           callbackUrl: `${BASE}/`,
-          json: 'true',
         })
       )
 
-    // capture session cookie
-    const setCookie = signin.headers['set-cookie']
-    expect(setCookie).toBeTruthy()
+    // should redirect to callbackUrl with session cookie set on agent
+    expect([200, 302]).toContain(signin.status)
 
     // 3) create article with cookie + origin
     const payload = {
@@ -49,10 +49,9 @@ describe('POST /api/articles (authenticated)', () => {
       isPremium: false,
     }
 
-    const res = await request(BASE)
+    const res = await agent
       .post('/api/articles')
       .set('Origin', ORIGIN)
-      .set('Cookie', setCookie)
       .set('Content-Type', 'application/json')
       .send(payload)
 
