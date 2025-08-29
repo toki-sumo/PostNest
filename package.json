@@ -8,6 +8,8 @@
     "build": "next build --no-lint",
     "start": "next start -H 0.0.0.0 --port 3000",
     "lint": "next lint",
+    "test": "jest --passWithNoTests",
+    "test:watch": "jest --watch",
     "json-server": "json-server --watch src/data/hosts.json --port 3001"
   },
   "dependencies": {
