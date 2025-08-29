@@ -17,7 +17,7 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: 'Invalid origin' }, { status: 403 })
   }
 
-  const { name, bio } = await req.json()
+  const { name, bio, image } = await req.json()
   const safeName = String(name ?? '').slice(0, 50)
   const safeBio = String(bio ?? '').slice(0, 500)
 
@@ -26,6 +26,7 @@ export async function PUT(req: Request) {
     data: {
       name: safeName,
       bio: safeBio,
+      image: image ? String(image).slice(0, 500) : undefined,
     },
   })
 

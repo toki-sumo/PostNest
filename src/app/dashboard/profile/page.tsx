@@ -3,7 +3,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import DashboardHeader from '../../../components/dashboard/DashboardHeader'
 import GlassCard from '../../../components/dashboard/GlassCard'
 import Section from '../../../components/ui/Section'
@@ -15,6 +15,9 @@ const ProfilePage = () => {
   const [name, setName] = useState('')
   const [bio, setBio] = useState('')
   const [loading, setLoading] = useState(false)
+  const [avatarUploading, setAvatarUploading] = useState(false)
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [message, setMessage] = useState('')
 
   useEffect(() => {
@@ -25,6 +28,7 @@ const ProfilePage = () => {
     if (session?.user) {
       setName(session.user.name || '')
       setBio(session.user.bio || '')
+      setAvatarUrl(session.user.image as string | undefined)
     }
   }, [status, router, session])
 
@@ -35,10 +39,10 @@ const ProfilePage = () => {
       const res = await fetch('/api/user', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, bio }),
+        body: JSON.stringify({ name, bio, image: avatarUrl }),
       })
       if (res.ok) {
-        await update({ name, bio })
+        await update({ name, bio, image: avatarUrl })
         setMessage('保存しました。')
       } else {
         const error = await res.json()
@@ -48,6 +52,35 @@ const ProfilePage = () => {
       setMessage('予期せぬエラーが発生しました')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleAvatarUpload = async (file: File) => {
+    setAvatarUploading(true)
+    try {
+      const contentType = file.type || 'image/png'
+      const pres = await fetch('/api/user/avatar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contentType }),
+      })
+      if (!pres.ok) throw new Error('Failed to get presigned URL')
+      const { url, fields, publicUrl } = await pres.json()
+
+      const formData = new FormData()
+      Object.entries(fields).forEach(([k, v]) => formData.append(k, String(v)))
+      formData.append('Content-Type', contentType)
+      formData.append('file', file)
+
+      const up = await fetch(url, { method: 'POST', body: formData })
+      if (!up.ok) throw new Error('Upload failed')
+
+      setAvatarUrl(publicUrl)
+      setMessage('アイコンをアップロードしました。保存で反映されます。')
+    } catch (e) {
+      setMessage('アイコンのアップロードに失敗しました')
+    } finally {
+      setAvatarUploading(false)
     }
   }
 
@@ -71,6 +104,32 @@ const ProfilePage = () => {
       <div className="space-y-8">
         <Section title="現在の情報">
           <div className="space-y-3">
+            <div className="flex items-center gap-4">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt="avatar" className="w-16 h-16 rounded-full object-cover border" />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-[var(--muted)]/20 border" />
+              )}
+              <div className="flex items-center gap-3">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0]
+                    if (f) handleAvatarUpload(f)
+                  }}
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={avatarUploading}
+                  className="px-3 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:bg-[var(--card-hover)] disabled:opacity-50"
+                >
+                  {avatarUploading ? 'アップロード中...' : 'アイコンを選択'}
+                </button>
+              </div>
+            </div>
             <div className="flex items-center gap-3">
               <span className="text-[var(--muted)] font-medium">ユーザー名:</span>
               <span className="text-[var(--text)] font-semibold">{session?.user?.name || '未設定'}</span>
