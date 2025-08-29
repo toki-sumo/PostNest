@@ -1,5 +1,8 @@
 import request from 'supertest'
 
+// Allow extra time for first compile on dev server
+jest.setTimeout(20000)
+
 const BASE = process.env.BASE_URL || 'http://localhost:3000'
 
 describe('GET /api/articles', () => {
