@@ -18,6 +18,14 @@ describe('POST /api/articles (authenticated)', () => {
 
     const agent = request.agent(BASE)
 
+    // 0) fetch CSRF token for NextAuth
+    const csrfRes = await agent
+      .get('/api/auth/csrf')
+      .set('Accept', 'application/json')
+    expect(csrfRes.status).toBe(200)
+    const csrfToken = csrfRes.body?.csrfToken
+    expect(typeof csrfToken).toBe('string')
+
     // 1) signup
     const su = await agent
       .post('/api/auth/signup')
@@ -32,6 +40,7 @@ describe('POST /api/articles (authenticated)', () => {
       .set('Origin', ORIGIN)
       .send(
         form({
+          csrfToken: csrfToken as string,
           email,
           password,
           callbackUrl: `${BASE}/`,
