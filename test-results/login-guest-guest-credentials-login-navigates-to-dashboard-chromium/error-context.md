@@ -1,0 +1,57 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - heading "PostNest" [level=1] [ref=e5]:
+        - link "PostNest" [ref=e6] [cursor=pointer]:
+          - /url: /
+      - navigation [ref=e7]:
+        - link "記事一覧" [ref=e8] [cursor=pointer]:
+          - /url: /articles
+        - button "テーマ切り替え" [ref=e9]: Dark
+        - generic [ref=e10]:
+          - button "ログイン" [ref=e11]
+          - button "新規登録" [ref=e12]
+  - main [ref=e13]:
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - img [ref=e20]
+        - heading "ログイン" [level=1] [ref=e22]
+        - paragraph [ref=e23]: PostNestにようこそ！
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - img [ref=e27]
+            - text: メールアドレス
+          - textbox "guest@example.com" [ref=e29]
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - img [ref=e32]
+            - text: パスワード
+          - textbox "パスワードを入力" [ref=e34]
+        - button "ログイン" [ref=e35] [cursor=pointer]:
+          - generic [ref=e36] [cursor=pointer]:
+            - img [ref=e37] [cursor=pointer]
+            - generic [ref=e39] [cursor=pointer]: ログイン
+      - generic [ref=e45]: または
+      - generic [ref=e46]:
+        - button "google logo Sign in with Google" [ref=e47]:
+          - img "google logo" [ref=e48]
+          - generic [ref=e49]: Sign in with Google
+        - button "github logo Sign in with GitHub" [ref=e50]:
+          - img "github logo" [ref=e51]
+          - generic [ref=e52]: Sign in with GitHub
+      - paragraph [ref=e54]:
+        - text: アカウントをお持ちでない方は
+        - link "新規登録" [ref=e55] [cursor=pointer]:
+          - /url: /signup
+  - contentinfo [ref=e56]:
+    - generic [ref=e57]:
+      - generic [ref=e58]: © 2025 PostNest. All rights reserved.
+      - generic [ref=e59]: 資産形成のための知識プラットフォーム
+  - button "Open Next.js Dev Tools" [ref=e65] [cursor=pointer]:
+    - img [ref=e66] [cursor=pointer]
+  - alert [ref=e69]
+```

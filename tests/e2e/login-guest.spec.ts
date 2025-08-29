@@ -16,8 +16,8 @@ test('guest credentials login navigates to dashboard', async ({ page, request })
 
   // UI login
   await page.goto('/signin')
-  await page.getByLabel('メールアドレス').fill(email)
-  await page.getByLabel('パスワード').fill(password)
+  await page.getByPlaceholder('guest@example.com').fill(email)
+  await page.getByPlaceholder('パスワードを入力').fill(password)
   await page.getByRole('button', { name: 'ログイン' }).click()
 
   await page.waitForURL('**/dashboard*', { timeout: 15000 })
