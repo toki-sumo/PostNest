@@ -1,0 +1,75 @@
+name: E2E (webhook-direct)
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: nacky
+          POSTGRES_PASSWORD: portfolio
+          POSTGRES_DB: postnest_db
+        options: >-
+          --health-cmd="pg_isready -U nacky -d postnest_db" \
+          --health-interval=10s \
+          --health-timeout=5s \
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://nacky:portfolio@localhost:5432/postnest_db?schema=public
+      NEXTAUTH_URL: http://localhost:4000
+      NEXT_PUBLIC_BASE_URL: http://localhost:4000
+      NEXTAUTH_SECRET: testsecret123
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client and apply migrations
+        run: |
+          pnpm prisma generate
+          pnpm prisma migrate deploy
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Start app (4000)
+        run: |
+          nohup pnpm exec next start -H 0.0.0.0 -p 4000 >/dev/null 2>&1 &
+          for i in {1..30}; do
+            if curl -sSf http://localhost:4000/api/articles >/dev/null; then echo "App is up"; break; fi
+            sleep 2
+          done
+
+      - name: Run E2E (webhook-direct)
+        env:
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          BASE_URL: http://localhost:4000
+        run: pnpm test:e2e -- --grep webhook-direct
+
+
