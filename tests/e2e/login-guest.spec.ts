@@ -18,7 +18,7 @@ test('guest credentials login navigates to dashboard', async ({ page, request })
   await page.goto('/signin')
   await page.getByPlaceholder('guest@example.com').fill(email)
   await page.getByPlaceholder('パスワードを入力').fill(password)
-  await page.getByRole('button', { name: 'ログイン' }).click()
+  await page.getByRole('main').getByRole('button', { name: 'ログイン' }).click()
 
   await page.waitForURL('**/dashboard*', { timeout: 15000 })
   expect(page.url()).toContain('/dashboard')

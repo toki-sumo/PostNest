@@ -1,7 +1,7 @@
 # Page snapshot
 
 ```yaml
-- generic [active] [ref=e1]:
+- generic [ref=e1]:
   - banner [ref=e2]:
     - generic [ref=e4]:
       - heading "PostNest" [level=1] [ref=e5]:
@@ -30,7 +30,7 @@
           - generic [ref=e31]:
             - img [ref=e32]
             - text: パスワード
-          - textbox "パスワードを入力" [ref=e34]
+          - textbox "パスワードを入力" [active] [ref=e34]: Guest@123
         - button "ログイン" [ref=e35] [cursor=pointer]:
           - generic [ref=e36] [cursor=pointer]:
             - img [ref=e37] [cursor=pointer]
