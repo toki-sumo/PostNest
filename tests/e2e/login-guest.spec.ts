@@ -20,7 +20,16 @@ test('guest credentials login navigates to dashboard', async ({ page, request })
   await page.getByPlaceholder('パスワードを入力').fill(password)
   await page.getByRole('main').getByRole('button', { name: 'ログイン' }).click()
 
-  await page.waitForURL('**/dashboard*', { timeout: 15000 })
+  // race: dashboard URL vs. visible error message
+  const dashboardWait = page.waitForURL('**/dashboard*', { timeout: 30000 })
+  const errorWait = page.locator('div', { hasText: 'エラー' }).first().waitFor({ timeout: 30000 }).catch(() => null)
+  await Promise.race([dashboardWait, errorWait])
+
+  if (!page.url().includes('/dashboard')) {
+    const errorBox = page.locator('div', { hasText: 'エラー' }).first()
+    const msg = (await errorBox.isVisible()) ? await errorBox.textContent() : 'No explicit error box found'
+    throw new Error(`Login did not navigate to /dashboard. URL=${page.url()} Error=${(msg||'').trim()}`)
+  }
   expect(page.url()).toContain('/dashboard')
 })
 

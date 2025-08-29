@@ -1,7 +1,7 @@
 # Page snapshot
 
 ```yaml
-- generic [ref=e1]:
+- generic [active] [ref=e1]:
   - banner [ref=e2]:
     - generic [ref=e4]:
       - heading "PostNest" [level=1] [ref=e5]:
@@ -10,48 +10,52 @@
       - navigation [ref=e7]:
         - link "記事一覧" [ref=e8] [cursor=pointer]:
           - /url: /articles
-        - button "テーマ切り替え" [ref=e9]: Dark
-        - generic [ref=e10]:
-          - button "ログイン" [ref=e11]
-          - button "新規登録" [ref=e12]
-  - main [ref=e13]:
-    - generic [ref=e17]:
-      - generic [ref=e18]:
-        - img [ref=e20]
-        - heading "ログイン" [level=1] [ref=e22]
-        - paragraph [ref=e23]: PostNestにようこそ！
-      - generic [ref=e24]:
-        - generic [ref=e25]:
-          - generic [ref=e26]:
-            - img [ref=e27]
+        - link "記事を書く" [ref=e9] [cursor=pointer]:
+          - /url: /articles/new
+        - link "ダッシュボード" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+        - button "テーマ切り替え" [ref=e11]: Dark
+        - generic [ref=e12]:
+          - generic [ref=e13]: guestさん
+          - button "ログアウト" [ref=e14]
+  - main [ref=e15]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - img [ref=e22]
+        - heading "ログイン" [level=1] [ref=e24]
+        - paragraph [ref=e25]: PostNestにようこそ！
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - img [ref=e29]
             - text: メールアドレス
-          - textbox "guest@example.com" [ref=e29]
-        - generic [ref=e30]:
-          - generic [ref=e31]:
-            - img [ref=e32]
+          - textbox "guest@example.com" [ref=e31]
+        - generic [ref=e32]:
+          - generic [ref=e33]:
+            - img [ref=e34]
             - text: パスワード
-          - textbox "パスワードを入力" [active] [ref=e34]: Guest@123
-        - button "ログイン" [ref=e35] [cursor=pointer]:
-          - generic [ref=e36] [cursor=pointer]:
-            - img [ref=e37] [cursor=pointer]
-            - generic [ref=e39] [cursor=pointer]: ログイン
-      - generic [ref=e45]: または
-      - generic [ref=e46]:
-        - button "google logo Sign in with Google" [ref=e47]:
-          - img "google logo" [ref=e48]
-          - generic [ref=e49]: Sign in with Google
-        - button "github logo Sign in with GitHub" [ref=e50]:
-          - img "github logo" [ref=e51]
-          - generic [ref=e52]: Sign in with GitHub
-      - paragraph [ref=e54]:
+          - textbox "パスワードを入力" [ref=e36]: Guest@123
+        - button "ログイン" [ref=e37] [cursor=pointer]:
+          - generic [ref=e38] [cursor=pointer]:
+            - img [ref=e39] [cursor=pointer]
+            - generic [ref=e41] [cursor=pointer]: ログイン
+      - generic [ref=e47]: または
+      - generic [ref=e48]:
+        - button "google logo Sign in with Google" [ref=e49]:
+          - img "google logo" [ref=e50]
+          - generic [ref=e51]: Sign in with Google
+        - button "github logo Sign in with GitHub" [ref=e52]:
+          - img "github logo" [ref=e53]
+          - generic [ref=e54]: Sign in with GitHub
+      - paragraph [ref=e56]:
         - text: アカウントをお持ちでない方は
-        - link "新規登録" [ref=e55] [cursor=pointer]:
+        - link "新規登録" [ref=e57] [cursor=pointer]:
           - /url: /signup
-  - contentinfo [ref=e56]:
-    - generic [ref=e57]:
-      - generic [ref=e58]: © 2025 PostNest. All rights reserved.
-      - generic [ref=e59]: 資産形成のための知識プラットフォーム
-  - button "Open Next.js Dev Tools" [ref=e65] [cursor=pointer]:
-    - img [ref=e66] [cursor=pointer]
-  - alert [ref=e69]
+  - contentinfo [ref=e58]:
+    - generic [ref=e59]:
+      - generic [ref=e60]: © 2025 PostNest. All rights reserved.
+      - generic [ref=e61]: 資産形成のための知識プラットフォーム
+  - button "Open Next.js Dev Tools" [ref=e67] [cursor=pointer]:
+    - img [ref=e68] [cursor=pointer]
+  - alert [ref=e71]
 ```
