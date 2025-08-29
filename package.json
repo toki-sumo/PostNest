@@ -53,6 +53,7 @@
     "jest": "^30.1.1",
     "json-server": "^1.0.0-beta.3",
     "prisma": "^6.12.0",
+    "supertest": "^7.1.4",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
