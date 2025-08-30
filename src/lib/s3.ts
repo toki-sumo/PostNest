@@ -6,12 +6,13 @@ const S3_BUCKET = process.env.S3_BUCKET_NAME as string
 const S3_ACCESS_KEY_ID = process.env.S3_ACCESS_KEY_ID as string
 const S3_SECRET_ACCESS_KEY = process.env.S3_SECRET_ACCESS_KEY as string
 
+// Use explicit credentials only if both are provided; otherwise fall back to
+// default credential provider chain (EC2 role/IMDS, ECS, env, etc.)
 export const s3 = new S3Client({
   region: S3_REGION,
-  credentials: {
-    accessKeyId: S3_ACCESS_KEY_ID,
-    secretAccessKey: S3_SECRET_ACCESS_KEY,
-  },
+  ...(S3_ACCESS_KEY_ID && S3_SECRET_ACCESS_KEY
+    ? { credentials: { accessKeyId: S3_ACCESS_KEY_ID, secretAccessKey: S3_SECRET_ACCESS_KEY } }
+    : {}),
 })
 
 export async function createAvatarPresignedPost(key: string, contentType: string) {
