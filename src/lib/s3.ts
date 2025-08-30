@@ -15,18 +15,16 @@ export const s3 = new S3Client({
     : {}),
 })
 
-export async function createAvatarPresignedPost(key: string, contentType: string) {
+export async function createAvatarPresignedPost(key: string, _contentType: string) {
   const maxSize = 5 * 1024 * 1024 // 5MB
   const presigned = await createPresignedPost(s3, {
     Bucket: S3_BUCKET,
     Key: key,
     Conditions: [
       ['content-length-range', 0, maxSize],
-      ['starts-with', '$Content-Type', contentType.split('/')[0] + '/'],
+      // Allow any content-type (validated app-side). If you enforce here, it must match exactly.
     ],
-    Fields: {
-      'Content-Type': contentType,
-    },
+    Fields: {},
     Expires: 60, // seconds
   })
 

@@ -58,7 +58,7 @@ const ProfilePage = () => {
   const handleAvatarUpload = async (file: File) => {
     setAvatarUploading(true)
     try {
-      const contentType = file.type || 'image/png'
+      const contentType = file.type || 'application/octet-stream'
       const pres = await fetch('/api/user/avatar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -69,7 +69,9 @@ const ProfilePage = () => {
 
       const formData = new FormData()
       Object.entries(fields).forEach(([k, v]) => formData.append(k, String(v)))
-      formData.append('Content-Type', contentType)
+      if (fields['Content-Type']) {
+        formData.append('Content-Type', contentType)
+      }
       formData.append('file', file)
 
       const up = await fetch(url, { method: 'POST', body: formData })
