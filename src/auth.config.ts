@@ -92,6 +92,7 @@ export const authConfig = {
         token.role = user.role;
         token.name = user.name;
         token.bio = user.bio;
+        token.image = user.image;
       }
       if (trigger === "update" && session) {
         token.name = session.name;
@@ -105,6 +106,7 @@ export const authConfig = {
         session.user.role = token.role as string;
         session.user.name = token.name as string;
         session.user.bio = token.bio as string;
+        session.user.image = token.image as string | undefined;
       }
       return session;
     },
