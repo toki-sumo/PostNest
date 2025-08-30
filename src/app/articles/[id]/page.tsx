@@ -5,6 +5,7 @@ import type { Session } from "next-auth";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/utils/formatDate";
+import Link from "next/link";
 import RichTextDisplay from "@/components/article/RichTextDisplay";
 import PurchaseButton from "@/components/article/PurchaseButton";
 import { db } from "@/lib/db";
@@ -30,6 +31,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
     let detailArticle: {
         id: string; title: string; content: string; createdAt: Date; updatedAt: Date; tags: string[];
         imageUrl: string | null; isPremium: boolean; price: number | null; authorId: string;
+        author: { id: string; name: string | null } | null;
     } | null = null
     try {
         detailArticle = await db.article.findUnique({
@@ -45,6 +47,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                 isPremium: true,
                 price: true,
                 authorId: true,
+                author: { select: { id: true, name: true } },
             },
         });
     } catch (e) {
@@ -99,7 +102,11 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                             <span className="text-sm">
-                                by {session?.user.name ?? "ユーザ名が取得できませんでした"}
+                                by {detailArticle.author?.name ? (
+                                  <Link href={`/users/${detailArticle.author.id}`} className="text-[var(--primary)] hover:underline">
+                                    {detailArticle.author.name}
+                                  </Link>
+                                ) : "投稿者"}
                                 {isAuthor && "（あなた）"}
                             </span>
                         </div>

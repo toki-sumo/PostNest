@@ -28,7 +28,7 @@ const ProfilePage = () => {
     if (session?.user) {
       setName(session.user.name || '')
       setBio(session.user.bio || '')
-      setAvatarUrl(session.user.image as string | undefined)
+      setAvatarUrl((session.user.image as string | undefined) || '/guest_icon.png')
     }
   }, [status, router, session])
 
@@ -112,11 +112,9 @@ const ProfilePage = () => {
         <Section title="現在の情報">
           <div className="space-y-3">
             <div className="flex items-center gap-4">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt="avatar" className="w-16 h-16 rounded-full object-cover border" />
-              ) : (
-                <div className="w-16 h-16 rounded-full bg-[var(--muted)]/20 border" />
-              )}
+              <div className="w-16 h-16 rounded-full border overflow-hidden">
+                <img src={avatarUrl || '/guest_icon.png'} alt="avatar" className="w-full h-full object-cover" />
+              </div>
               <div className="flex items-center gap-3">
                 <input
                   ref={fileInputRef}
