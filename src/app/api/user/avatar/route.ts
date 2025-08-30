@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid contentType' }, { status: 400 })
   }
 
-  const key = `avatars/${session.user.id}/${Date.now()}`
+  const key = `avatars/original/${session.user.id}/${Date.now()}`
   const data = await createAvatarPresignedPost(key, contentType)
   return NextResponse.json(data)
 }
