@@ -43,6 +43,8 @@ const ProfilePage = () => {
       })
       if (res.ok) {
         await update({ name, bio, image: avatarUrl })
+        // For NextAuth v5, update merges into token via trigger:update, but ensure local UI uses new url
+        setAvatarUrl(avatarUrl)
         setMessage('保存しました。')
       } else {
         const error = await res.json()

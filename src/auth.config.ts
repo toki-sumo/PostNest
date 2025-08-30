@@ -97,6 +97,9 @@ export const authConfig = {
       if (trigger === "update" && session) {
         token.name = session.name;
         token.bio = session.bio;
+        // propagate image on client-side session update
+        // @ts-ignore
+        token.image = (session as any).image;
       }
       return token;
     },
