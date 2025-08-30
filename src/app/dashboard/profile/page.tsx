@@ -73,12 +73,15 @@ const ProfilePage = () => {
       formData.append('file', file)
 
       const up = await fetch(url, { method: 'POST', body: formData })
-      if (!up.ok) throw new Error('Upload failed')
+      if (!up.ok) {
+        const errText = await up.text().catch(() => '')
+        throw new Error(`Upload failed: ${up.status} ${errText?.slice(0,200)}`)
+      }
 
       setAvatarUrl(publicUrl)
       setMessage('アイコンをアップロードしました。保存で反映されます。')
-    } catch (e) {
-      setMessage('アイコンのアップロードに失敗しました')
+    } catch (e: any) {
+      setMessage(`アイコンのアップロードに失敗しました: ${e?.message ?? ''}`)
     } finally {
       setAvatarUploading(false)
     }
