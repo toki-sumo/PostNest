@@ -1,6 +1,7 @@
 // src/app/api/articles/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/auth"
 
 export async function GET() {
@@ -73,6 +74,23 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // 重複ガード（直近30秒以内に同じタイトル・内容の投稿があれば既存を返す）
+    const thirtySecAgo = new Date(Date.now() - 30_000)
+    const duplicate = await db.article.findFirst({
+      where: {
+        authorId,
+        title,
+        content,
+        createdAt: { gte: thirtySecAgo },
+      },
+      select: { id: true },
+    })
+    if (duplicate) {
+      // 一意性のためのclient側UXを壊さず既存IDを返す
+      revalidatePath('/articles')
+      return NextResponse.json({ id: duplicate.id, duplicate: true })
+    }
+
     const article = await db.article.create({
       data: {
         title,
@@ -85,7 +103,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log('記事作成成功:', article); // デバッグログ追加
+    console.log('記事作成成功:', article); // デバッグログ
+
+    // キャッシュを即時更新
+    revalidatePath('/articles')
 
     return NextResponse.json(article);
   } catch (error) {

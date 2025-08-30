@@ -133,8 +133,16 @@ const ProfilePage = () => {
                   disabled={avatarUploading}
                   className="px-3 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:bg-[var(--card-hover)] disabled:opacity-50"
                 >
-                  {avatarUploading ? 'アップロード中...' : 'アイコンを選択'}
+                  {avatarUploading ? (
+                    <span className="inline-flex items-center gap-2">
+                      <span className="animate-spin h-4 w-4 rounded-full border-2 border-[var(--primary)] border-t-transparent"></span>
+                      アップロード中...
+                    </span>
+                  ) : 'アイコンを選択'}
                 </button>
+                {avatarUploading && (
+                  <span className="text-xs text-[var(--muted)]">アップロード中です...</span>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-3">

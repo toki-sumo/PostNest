@@ -122,7 +122,9 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
               <div className="text-xs lg:text-sm text-[var(--muted)] space-y-0.5 lg:space-y-1">
                 <div className="flex items-center gap-1 lg:gap-2">
                   <span className="font-medium text-[var(--text)]/80">投稿者:</span>
-                  <span className="font-medium text-[var(--primary)]">{article.author.name}</span>
+                  <Link href={`/users/${article.author.id}`} className="font-medium text-[var(--primary)] hover:underline">
+                    {article.author.name}
+                  </Link>
                 </div>
                 <div className="flex items-center gap-1 lg:gap-2">
                   <span className="font-medium text-[var(--text)]/80">投稿日:</span>

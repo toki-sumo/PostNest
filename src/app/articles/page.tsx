@@ -1,6 +1,6 @@
 // src/app/articles/page.tsx
 import ArticleList from "@/components/article/ArticleList";
-export const revalidate = 120;
+export const revalidate = 10; // 早めに反映させる
 import { db } from "@/lib/db";
 import BackgroundDecoration from "@/components/common/BackgroundDecoration";
 import Link from "next/link";
