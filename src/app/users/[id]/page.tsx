@@ -10,7 +10,6 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
       name: true,
       bio: true,
       image: true,
-      createdAt: true,
       Article: {
         select: { id: true, title: true, createdAt: true },
         orderBy: { createdAt: 'desc' },
@@ -38,7 +37,6 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
         )}
         <div>
           <h1 className="text-2xl font-bold">{user.name ?? '名無しさん'}</h1>
-          <p className="text-[var(--muted)] text-sm">登録日: {formatDate(String(user.createdAt))}</p>
         </div>
       </div>
 
