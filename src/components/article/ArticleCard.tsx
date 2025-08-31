@@ -120,9 +120,12 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
           <div className="mt-2 lg:mt-4 pt-2 lg:pt-4 border-t flex-shrink-0 min-h-[80px] lg:min-h-0 border-[var(--border)]">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 lg:gap-3">
               <div className="text-xs lg:text-sm text-[var(--muted)] space-y-0.5 lg:space-y-1">
-                <div className="flex items-center gap-1 lg:gap-2">
+                <div className="flex items-center gap-1 lg:gap-2 whitespace-nowrap lg:whitespace-normal min-w-0">
                   <span className="font-medium text-[var(--text)]/80">投稿者:</span>
-                  <Link href={`/users/${article.author.id}`} className="font-medium text-[var(--primary)] hover:underline">
+                  <Link
+                    href={`/users/${article.author.id}`}
+                    className="font-medium text-[var(--primary)] hover:underline truncate max-w-[60vw] sm:max-w-none"
+                  >
                     {article.author.name}
                   </Link>
                 </div>
