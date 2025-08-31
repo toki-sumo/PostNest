@@ -125,6 +125,12 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
                   <Link
                     href={`/users/${article.author.id}`}
                     className="font-medium text-[var(--primary)] hover:underline truncate max-w-[60vw] sm:max-w-none"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                    onKeyDown={(e) => {
+                      e.stopPropagation()
+                    }}
                   >
                     {article.author.name}
                   </Link>
