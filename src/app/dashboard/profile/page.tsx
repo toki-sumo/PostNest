@@ -199,9 +199,6 @@ const ProfilePage = () => {
                     </span>
                   ) : 'アイコンを選択'}
                 </button>
-                {avatarUploading && (
-                  <span className="text-xs text-[var(--muted)]">アップロード中です...</span>
-                )}
                 {processingDerived && (
                   <span className="text-xs text-[var(--muted)]">最適化中です...</span>
                 )}
