@@ -31,7 +31,20 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
       <div className="flex items-center gap-4 mb-8">
         <div className="w-16 h-16 rounded-full border overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={user.image || '/guest_icon.png'} alt="avatar" className="w-full h-full object-cover" />
+          <img
+            src={user.image || '/guest_icon.png'}
+            alt="avatar"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              const src = e.currentTarget.src
+              if (!src.includes('/guest_icon.png')) {
+                const sep = src.includes('?') ? '&' : '?'
+                e.currentTarget.src = `${src}${sep}v=${Date.now()}`
+              } else {
+                e.currentTarget.src = '/guest_icon.png'
+              }
+            }}
+          />
         </div>
         <div>
           <h1 className="text-2xl font-bold">{user.name ?? '名無しさん'}</h1>

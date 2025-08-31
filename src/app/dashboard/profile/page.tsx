@@ -16,7 +16,9 @@ const ProfilePage = () => {
   const [bio, setBio] = useState('')
   const [loading, setLoading] = useState(false)
   const [avatarUploading, setAvatarUploading] = useState(false)
+  const [processingDerived, setProcessingDerived] = useState(false)
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
+  const [avatarRetry, setAvatarRetry] = useState(0)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [message, setMessage] = useState('')
 
@@ -29,8 +31,20 @@ const ProfilePage = () => {
       setName(session.user.name || '')
       setBio(session.user.bio || '')
       setAvatarUrl((session.user.image as string | undefined) || '/guest_icon.png')
+      setAvatarRetry(0)
     }
   }, [status, router, session])
+
+  const handleAvatarImgError = () => {
+    if (!avatarUrl || avatarUrl.includes('/guest_icon.png')) return
+    if (avatarRetry < 2) {
+      setAvatarRetry(avatarRetry + 1)
+      const sep = avatarUrl.includes('?') ? '&' : '?'
+      setAvatarUrl(`${avatarUrl}${sep}v=${Date.now()}`)
+    } else {
+      setAvatarUrl('/guest_icon.png')
+    }
+  }
 
   const handleSave = async () => {
     setLoading(true)
@@ -83,7 +97,49 @@ const ProfilePage = () => {
       }
 
       setAvatarUrl(publicUrl)
-      setMessage('アイコンをアップロードしました。保存で反映されます。')
+      setMessage('アイコンをアップロードしました。処理が完了すると自動で最適化版へ切替えます。')
+
+      // 派生画像の自動検知と切替え（128px）
+      try {
+        const key: string | undefined = (fields as any)?.key
+        if (key && typeof key === 'string' && publicUrl) {
+          const origin = new URL(publicUrl).origin
+          const base = key.replace(/^avatars\/original\//, '').replace(/\.[^.]+$/, '')
+          const derivedKey = `avatars/derived/${base}.128.jpeg`
+          const derivedUrl = `${origin}/${derivedKey}`
+
+          setProcessingDerived(true)
+          const start = Date.now()
+          const timeoutMs = 60_000
+          const intervalMs = 3_000
+          let switched = false
+          while (Date.now() - start < timeoutMs) {
+            const resp = await fetch(derivedUrl, { method: 'HEAD', cache: 'no-store' })
+            if (resp.ok) {
+              setAvatarUrl(derivedUrl)
+              try {
+                const res = await fetch('/api/user', {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ name, bio, image: derivedUrl }),
+                })
+                if (res.ok) {
+                  await update({ name, bio, image: derivedUrl })
+                  setMessage('最適化画像に切替えました。')
+                }
+              } catch {}
+              switched = true
+              break
+            }
+            await new Promise(r => setTimeout(r, intervalMs))
+          }
+          if (!switched) {
+            setMessage('最適化画像の生成を待機しましたが見つかりませんでした。後で保存してください。')
+          }
+        }
+      } finally {
+        setProcessingDerived(false)
+      }
     } catch (e: any) {
       setMessage(`アイコンのアップロードに失敗しました: ${e?.message ?? ''}`)
     } finally {
@@ -113,7 +169,12 @@ const ProfilePage = () => {
           <div className="space-y-3">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full border overflow-hidden">
-                <img src={avatarUrl || '/guest_icon.png'} alt="avatar" className="w-full h-full object-cover" />
+                <img
+                  src={avatarUrl || '/guest_icon.png'}
+                  alt="avatar"
+                  className="w-full h-full object-cover"
+                  onError={handleAvatarImgError}
+                />
               </div>
               <div className="flex items-center gap-3">
                 <input
@@ -140,6 +201,9 @@ const ProfilePage = () => {
                 </button>
                 {avatarUploading && (
                   <span className="text-xs text-[var(--muted)]">アップロード中です...</span>
+                )}
+                {processingDerived && (
+                  <span className="text-xs text-[var(--muted)]">最適化中です...</span>
                 )}
               </div>
             </div>
