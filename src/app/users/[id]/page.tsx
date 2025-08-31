@@ -1,8 +1,8 @@
 import { db } from '@/lib/db'
 import { formatDate } from '@/lib/utils/formatDate'
 
-export default async function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+export default async function UserProfilePage({ params }: { params: { id: string } }) {
+  const { id } = params
   const user = await db.user.findUnique({
     where: { id },
     select: {
