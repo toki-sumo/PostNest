@@ -3,20 +3,39 @@ import { formatDate } from '@/lib/utils/formatDate'
 
 export default async function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const user = await db.user.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      name: true,
-      bio: true,
-      image: true,
-      Article: {
-        select: { id: true, title: true, createdAt: true },
-        orderBy: { createdAt: 'desc' },
-        take: 20,
+  type UserView = {
+    id: string
+    name: string | null
+    bio: string | null
+    image: string | null
+    Article: { id: string; title: string; createdAt: Date }[]
+  }
+
+  let user: UserView | null = null
+  try {
+    user = await db.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        bio: true,
+        image: true,
+        Article: {
+          select: { id: true, title: true, createdAt: true },
+          orderBy: { createdAt: 'desc' },
+          take: 20,
+        },
       },
-    },
-  })
+    })
+  } catch (err) {
+    console.error('UserProfilePage DB error:', err)
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-10">
+        <h1 className="text-2xl font-bold">エラーが発生しました</h1>
+        <p className="text-[var(--muted)] mt-2">時間をおいて再度お試しください。</p>
+      </div>
+    )
+  }
 
   if (!user) {
     return (
