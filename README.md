@@ -4,7 +4,7 @@
   https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 - 現在も機能追加・修正中のため、一部エラーが発生する可能性があります。
 - 自己署名証明書を使用しているため警告が出ますが、閲覧には問題ありません。
-- 自由にアカウント作成や記事投稿を行っていただけます。個人情報の入力は行わないでください。
+- 自由にアカウント作成や記事投稿を行えますが、個人情報の入力は避けてください。
 
 - [📖 概要](#overview)
 - [✨ 特徴](#features)
@@ -13,7 +13,7 @@
 - [🧱 技術・構成](#tech-arch)
   - [🛠 技術スタック](#stack)
   - [🧾 使用言語まとめ](#langs)
-  - [🏗️ Architecture（Overview）](#arch-summary)
+  - [🏗️ System Architecture](#arch-summary)
   - [📂 ディレクトリ構成](#dirs)
 - [🧑‍💻 開発・デプロイ](#dev-deploy)
   - [🔧 開発手順（ローカル）](#dev)
@@ -30,7 +30,7 @@
 - [🧪 テストとパフォーマンス](#test-perf)
   - [🧪 テスト戦略](#testing)
   - [🚀 Performance / Optimization](#perf)
-- [🛠 運用](#ops-ops)
+- [🛠 運用](#ops)
   - [📈 監視 / ログ](#ops)
   - [🗄️ バックアップ / リストア](#backup)
 - [🖼 スクリーンショット / デモ](#screens)
@@ -42,7 +42,7 @@
 ## 📖 概要
 
 記事の作成・公開・課金購読までを一気通貫で提供。  
-個人クリエイターが有料記事を安全に販売できるミニマムなプラットフォーム。
+個人クリエイターが有料記事を安全に販売できるシンプルなプラットフォーム。
 
 > まず UI を確認したい場合は「[スクリーンショット / デモ](#screens)」をご覧ください。
 
@@ -66,10 +66,10 @@
 ## 🚀 主要機能（利用者向け）
 
 - 記事の作成と販売: ユーザーは TipTap で記事を作成し、価格・タグを設定して Stripe Checkout で販売できる
-- 有料本文の保護: 要約のみ閲覧可能。本文は購読完了ユーザーのみがアクセス可能。
+- 有料本文の保護: 要約のみ閲覧可能。本文は購読済みユーザーのみがアクセス可能。
 - ダッシュボード運用: 投稿一覧・購読履歴・売上指標をダッシュボードで把握できる
 - 管理業務: 管理者はユーザーの役割変更/無効化、記事の公開状態を管理できる
-- 認証/認可: Google/GitHub OAuth とメール・パスワード認証、JWT でロールを伝播して権限を制御
+- 認証/認可: Google / GitHub OAuth とメール・パスワード認証、JWT でロールを伝播して権限を制御
 
 ---
 
@@ -90,9 +90,9 @@
 - **フロントエンド**: Next.js 15（App Router, Route Handlers）, React 18, TypeScript, Tailwind CSS
 - **UI**: カスタムコンポーネント（カード / ボタン / フォーム）
 - **エディタ**: TipTap（リッチテキスト編集）
-- **レンダリング / サニタイズ**: isomorphic-dompurify
+- **レンダリング / サニタイズ**: Isomorphic-DOMPurify
 - **バックエンド / API**: Next.js Route Handlers（/app/api）
-- **ランタイム**: Node.js 18+（Next.js は Node.js 上で稼働）
+- **ランタイム**: Node.js 18+（Next.js は Node.js 上で実行）
 - **DB / ORM**: PostgreSQL + Prisma（migrations / schema.prisma）
 - **認証**: NextAuth（Google / GitHub / Credentials, JWT セッション）
 - **決済**: Stripe（Checkout + Webhook）
@@ -128,7 +128,7 @@
 
 <a id="arch-summary"></a>
 
-## 🏗️ Architecture（Overview）
+## 🏗️ System Architecture
 
 ```mermaid
 flowchart TD
@@ -251,7 +251,7 @@ src/
 
 <a id="dev"></a>
 
-## 🔧 開発手順（ローカル）
+## 🔧 ローカル開発手順
 
 ### 前提
 
@@ -330,14 +330,14 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 ### 動作確認ポイント
 
 - 未購読ユーザーは有料記事の本文がマスクされる
-- Checkout 成功後に本文が閲覧可能になる
+- Checkout 完了後に本文を閲覧可能
 - 記事の作成/編集/削除はログイン済みの著者（または管理者）のみ可能
 
 ---
 
 <a id="deploy"></a>
 
-## 🚢 デプロイ手順 / 実行環境
+## 🚢 デプロイ手順（実行環境）
 
 ### 環境の段階的構築（実績）
 
