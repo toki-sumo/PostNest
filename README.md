@@ -128,9 +128,46 @@
 <a id="arch-summary"></a>
 
 ## 🏗️ Architecture（全体像）
+```mermaid
+flowchart TD
+  Client[ブラウザ] --> Next[Next.js App Router]
+  Next --> API[API Route Handlers]
+  API --> Auth[NextAuth]
+  API --> Prisma[Prisma Client]
+  Prisma --> DB[(PostgreSQL - RDS)]
+  API --> Stripe[Stripe API]
+  Stripe --> Webhook["Webhook Handler (/api/stripe/webhook)"]
+  Webhook --> Prisma
+  Client -.-> S3[S3 (avatar upload, presigned POST)]
+  S3 -.-> Lambda[(Lambda: thumbnail 生成 任意)]
+  Lambda -.-> S3
+  Logs[(CloudWatch Logs)] --- API
+  Logs --- Lambda
+```
 
-- システム構成図と Webhook シーケンス図は `docs/architecture.md` に掲載しています。
-- 要約: Next.js(App Router) → Route Handlers(API) → Prisma → PostgreSQL(RDS)。Checkout は Stripe に遷移し、完了時に Webhook が API を叩き、`Subscription` へ反映。
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant FE as Next.js (Client)
+  participant API as API (Route Handlers)
+  participant ST as Stripe
+  participant WH as Webhook Handler
+  participant DB as PostgreSQL
+
+  U->>FE: 購入ボタン
+  FE->>API: POST /api/checkout
+  API->>ST: Checkout Session 作成
+  ST-->>FE: セッションURL
+  FE->>ST: 遷移して決済
+  ST-->>WH: checkout.session.completed
+  WH->>DB: upsert Subscription
+  FE->>API: 記事取得
+  API->>DB: 購読確認
+  DB-->>API: OK
+  API-->>FE: 本文返却
+```
+
+> 詳細解説は `docs/architecture.md` も参照してください。
 
 ---
 
@@ -974,21 +1011,7 @@ curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 
 ---
 
-## 🏗️ Architecture（簡易図）
-
-```mermaid
-flowchart TD
-  Client[ブラウザ] --> Next[Next.js App Router]
-  Next --> API[API Route Handlers]
-  API --> DB[(PostgreSQL - RDS)]
-  API --> Stripe[Stripe API]
-  Stripe --> Webhook["Webhook Handler (/api/stripe/webhook)"]
-  Webhook --> DB
-```
-
-> 詳細図・シーケンス図は `docs/architecture.md` を参照してください。
-
----
+<!-- 旧: 簡易図は全体像に統合 -->
 
 ## 🗄️ DB バックアップ / リストア（整理）
 
