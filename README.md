@@ -128,6 +128,7 @@
 <a id="arch-summary"></a>
 
 ## 🏗️ Architecture（全体像）
+
 ```mermaid
 flowchart TD
   Client[ブラウザ] --> Next[Next.js App Router]
@@ -138,11 +139,11 @@ flowchart TD
   API --> Stripe[Stripe API]
   Stripe --> Webhook["Webhook Handler (/api/stripe/webhook)"]
   Webhook --> Prisma
-  Client -.-> S3[S3 (avatar upload, presigned POST)]
-  S3 -.-> Lambda[(Lambda: thumbnail 生成 任意)]
+  Client -.-> S3["S3 (avatar upload, presigned POST)"]
+  S3 -.-> Lambda[(Lambda: thumbnail 生成)]
   Lambda -.-> S3
-  Logs[(CloudWatch Logs)] --- API
-  Logs --- Lambda
+  CW[(CloudWatch Logs)] --- API
+  CW --- Lambda
 ```
 
 ```mermaid
