@@ -1,9 +1,10 @@
-# PostNest(投資系ブログ＋有料記事購読プラットフォーム)ー準備中
+# PostNest (投資系ブログ＋有料記事購読プラットフォーム) — [WIP]
 
-公開中サイト↓　（25/9現在：随時、機能追加・修正をしているためエラーがでるときもあります）
-　https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
-自己署名証明書を使用しているため警告が出ますが、閲覧には問題ありません。
-自由にアカウント作成や記事の投稿していただいても構いません。個人情報の記入はご遠慮ください。
+- 公開中サイト（25/9 現在）
+  https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
+- 現在も機能追加・修正中のため、一部エラーが発生する可能性があります。
+- 自己署名証明書を使用しているため警告が出ますが、閲覧には問題ありません。
+- 自由にアカウント作成や記事投稿を行っていただけます。個人情報の入力は行わないでください。
 
 - [📖 概要](#overview)
 - [✨ 特徴](#features)
@@ -12,13 +13,13 @@
 - [🧱 技術・構成](#tech-arch)
   - [🛠 技術スタック](#stack)
   - [🧾 使用言語まとめ](#langs)
-  - [🏗️ Architecture（全体像）](#arch-summary)
+  - [🏗️ Architecture（Overview）](#arch-summary)
   - [📂 ディレクトリ構成](#dirs)
 - [🧑‍💻 開発・デプロイ](#dev-deploy)
   - [🔧 開発手順（ローカル）](#dev)
   - [🚢 デプロイ手順 / 実行環境](#deploy)
     - [🌐 Nginx リバースプロキシ](#nginx)
-    - [🔐 Secrets 管理](#secrets)
+    - [🔐 Secrets Management](#secrets)
 - [🔒 セキュリティ](#security)
   - [🧩 ミドルウェア](#middleware)
   - [🔗 API エンドポイント概要](#api)
@@ -49,12 +50,12 @@
 
 <a id="features"></a>
 
-## ✨ 特徴（技術者向け）
+## ✨ 特徴（開発者向け）
 
 - Next.js App Router ベースのフルスタック構成
-- Stripe 決済
+- Stripe Checkout 決済
 - NextAuth 認証
-- Prisma による型安全な DB
+- Prisma による型安全な ORM（データベース操作）
 - TipTap による拡張可能なリッチテキストエディタ
 - CSRF, XSS, JWT 認可まで網羅したセキュリティ制御
 
@@ -62,10 +63,10 @@
 
 <a id="main-features"></a>
 
-## 🚀 主要機能（ユーザーストーリー）
+## 🚀 主要機能（利用者向け）
 
 - 記事の作成と販売: ユーザーは TipTap で記事を作成し、価格・タグを設定して Stripe Checkout で販売できる
-- 有料本文の保護: 未購読ユーザーは要約のみ閲覧、購読完了ユーザーのみ本文にアクセスできる
+- 有料本文の保護: 要約のみ閲覧可能。本文は購読完了ユーザーのみがアクセス可能。
 - ダッシュボード運用: 投稿一覧・購読履歴・売上指標をダッシュボードで把握できる
 - 管理業務: 管理者はユーザーの役割変更/無効化、記事の公開状態を管理できる
 - 認証/認可: Google/GitHub OAuth とメール・パスワード認証、JWT でロールを伝播して権限を制御
@@ -74,7 +75,7 @@
 
 <a id="ux"></a>
 
-## 🎛 UX の工夫（ユーザー視点）
+## 🎛 UX の工夫（利用者向け）
 
 - 未購読時は本文を明確にマスクし、すぐ横に購入導線（価格・説明・ボタン）を配置
 - ダッシュボードはカードレイアウトで「投稿一覧」「購読履歴」「統計」を一目で把握
@@ -115,7 +116,11 @@
 
 | 種別             | 主な用途                                                                                             | 代表ファイル / ディレクトリ                                                                            |
 | ---------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| TypeScript / TSX | Next.js(App Router) ページ/レイアウト、API Route Handlers、React コンポーネント、認証/ユーティリティ | `src/app/**`, `src/app/api/**`, `src/components/**`, `src/auth.ts`, `src/auth.config.ts`, `src/lib/**` |
+| TypeScript / TSX | Next.js(App Router) ページ/レイアウト、API Route Handlers、React コンポーネント、認証/ユーティリティ | `src/app/**`  \
+`src/app/api/**`  \
+`src/components/**`  \
+`src/auth.ts` / `src/auth.config.ts`  \
+`src/lib/**` |
 | SQL / Prisma DDL | データモデル定義とマイグレーション                                                                   | `prisma/schema.prisma`, `prisma/migrations/*`                                                          |
 | CSS (Tailwind)   | グローバルスタイルとユーティリティクラス                                                             | `src/app/globals.css`, 各 TSX 内のクラス指定                                                           |
 | JSON             | 依存関係・設定                                                                                       | `package.json`, `tsconfig.json`, `eslint.config.mjs`, `playwright.config.ts`                           |
@@ -127,7 +132,7 @@
 
 <a id="arch-summary"></a>
 
-## 🏗️ Architecture（全体像）
+## 🏗️ Architecture（Overview）
 
 ```mermaid
 flowchart TD
@@ -243,7 +248,7 @@ src/
 │   └── architecture.md
 ├── public/
 │   └── screenshots/
-└── README.md
+└── ...
 ```
 
 ---
@@ -329,7 +334,7 @@ stripe listen --forward-to localhost:3000/api/stripe/webhook
 ### 動作確認ポイント
 
 - 未購読ユーザーは有料記事の本文がマスクされる
-- 購読完了後（Checkout 成功）に本文が解禁される
+- Checkout 成功後に本文が閲覧可能になる
 - 記事の作成/編集/削除はログイン済みの著者（または管理者）のみ可能
 
 ---
@@ -372,7 +377,7 @@ pnpm prisma migrate deploy
 - HTTPS 化: Let’s Encrypt + Nginx（HTTP→HTTPS リダイレクト、TLSv1.2 以上）
 - マイグレーション: 本番は `migrate deploy` のみ（`migrate dev` は禁止）
 - バックアップ: RDS の自動スナップショット + `pg_dump` 世代管理
-- ログ: pm2 logs を CloudWatch/S3 へ集約、ローテーションを設定
+- ログ: pm2 logs を CloudWatch / S3 へ集約、ローテーションを設定
 
 ### 本番: AWS EC2（Ubuntu）へのデプロイ
 
