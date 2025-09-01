@@ -96,7 +96,7 @@
 - **DB / ORM**: PostgreSQL + Prisma（migrations / schema.prisma）
 - **認証**: NextAuth（Google / GitHub / Credentials, JWT セッション）
 - **決済**: Stripe（Checkout + Webhook）
-- **インフラ**: AWS EC2 / RDS, Docker Compose（ローカル）
+- **インフラ**: AWS EC2 / VPC / Security Groups / RDS（PostgreSQL）/ S3 / Lambda / CloudWatch Logs / IAM / AWS Budgets, Docker Compose（ローカル）
 
 ---
 
