@@ -1,5 +1,6 @@
 # PostNest(投資系ブログ＋有料記事購読プラットフォーム)ー準備中
-公開中サイト↓　
+
+公開中サイト↓　（25/9現在：随時、機能追加・修正をしているためエラーがでるときもあります）
 　https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 自己署名証明書を使用しているため警告が出ますが、閲覧には問題ありません。
 自由にアカウント作成や記事の投稿していただいても構いません。個人情報の記入はご遠慮ください。
@@ -23,6 +24,8 @@
   - [🔗 API エンドポイント概要](#api)
   - [🔁 Webhook と購読反映](#webhook)
   - [🧭 ER 図](#er)
+- [🖼 画像アップロード（S3 / Lambda 任意）](#s3-upload)
+- [☁️ AWS サービス（運用基盤）](#aws-services)
 - [🧪 テストとパフォーマンス](#test-perf)
   - [🧪 テスト戦略](#testing)
   - [🚀 Performance / Optimization](#perf)
@@ -30,7 +33,6 @@
   - [📈 監視 / ログ](#ops)
   - [🗄️ バックアップ / リストア](#backup)
 - [🖼 スクリーンショット / デモ](#screens)
-
 
 ---
 
@@ -89,6 +91,7 @@
 - **エディタ**: TipTap（リッチテキスト編集）
 - **レンダリング / サニタイズ**: isomorphic-dompurify
 - **バックエンド / API**: Next.js Route Handlers（/app/api）
+- **ランタイム**: Node.js 18+（Next.js は Node.js 上で稼働）
 - **DB / ORM**: PostgreSQL + Prisma（migrations / schema.prisma）
 - **認証**: NextAuth（Google / GitHub / Credentials, JWT セッション）
 - **決済**: Stripe（Checkout + Webhook）
@@ -100,12 +103,25 @@
 
 ## 🧾 使用言語まとめ
 
-- TypeScript/TSX: Next.js(App Router), React コンポーネント, API Route Handlers, 認証/ユーティリティ
-- SQL/DDL(Prisma): `schema.prisma` によるモデル定義と `migrations` によるスキーマ差分の適用（PostgreSQL）
-- CSS(Tailwind): ユーティリティクラス中心のスタイリング（`globals.css` / 各コンポーネント）
-- YAML: `docker-compose.yml` による開発用 DB の起動
-- JSON: `package.json` ほか設定・データ
-- Shell/CLI: Stripe CLI, pm2, Git/Node/pnpm の運用コマンド
+- 使用言語（簡潔版）
+  - TypeScript/TSX
+  - HTML（JSX/TSX に内包）
+  - CSS（Tailwind CSS）
+  - SQL（Prisma DDL）
+  - JSON
+  - YAML
+  - Shell（CLI）
+  - Markdown
+
+| 種別             | 主な用途                                                                                             | 代表ファイル / ディレクトリ                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| TypeScript / TSX | Next.js(App Router) ページ/レイアウト、API Route Handlers、React コンポーネント、認証/ユーティリティ | `src/app/**`, `src/app/api/**`, `src/components/**`, `src/auth.ts`, `src/auth.config.ts`, `src/lib/**` |
+| SQL / Prisma DDL | データモデル定義とマイグレーション                                                                   | `prisma/schema.prisma`, `prisma/migrations/*`                                                          |
+| CSS (Tailwind)   | グローバルスタイルとユーティリティクラス                                                             | `src/app/globals.css`, 各 TSX 内のクラス指定                                                           |
+| JSON             | 依存関係・設定                                                                                       | `package.json`, `tsconfig.json`, `eslint.config.mjs`, `playwright.config.ts`                           |
+| YAML             | ローカル開発での DB 起動                                                                             | `docker-compose.yml`                                                                                   |
+| Shell / CLI      | 運用コマンド・ツール                                                                                 | README/Docs 記載の `pnpm`, `pm2`, Stripe CLI 等                                                        |
+| Markdown         | ドキュメント                                                                                         | `README.md`, `docs/*.md`                                                                               |
 
 ---
 
@@ -236,6 +252,14 @@ docker compose up -d
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postnest?schema=public"
 NEXTAUTH_URL="http://localhost:3000"
 STRIPE_SECRET_KEY="sk_test_..."
+# S3（画像アップロードを使う場合）
+S3_REGION="ap-northeast-1"
+S3_BUCKET_NAME="your-s3-bucket"
+# 以下はローカル/明示指定したい場合のみ。EC2 ロール使用時は未設定でOK
+S3_ACCESS_KEY_ID="AKIA..."
+S3_SECRET_ACCESS_KEY="..."
+# 公開 URL のベース（CloudFront を使う場合は配信ドメインを指定）
+NEXT_PUBLIC_S3_PUBLIC_BASE_URL="https://your-s3-bucket.s3.ap-northeast-1.amazonaws.com"
 ```
 
 ### 4. Prisma セットアップ
@@ -411,12 +435,10 @@ pm2 startup systemd
 ### セキュリティグループ設定（RDS / EC2）
 
 - **ローカル ⇔ RDS（PostgreSQL）**
-
   - RDS（インバウンド）: TCP 5432 を「自宅/職場などのグローバル IP アドレス」からのみ許可（`X.X.X.X/32`）
   - 注意: `0.0.0.0/0` で 5432 を開放しない（インターネット全体に公開となるため）
 
 - **EC2 ⇔ RDS（PostgreSQL）**
-
   - EC2 に Elastic IP を割り当てる
   - RDS（インバウンド）: TCP 5432 を EC2 の Elastic IP のみから許可（`E.E.E.E/32`）
     - もしくは、RDS のインバウンドに「EC2 のセキュリティグループ」を参照設定（推奨）
@@ -477,6 +499,7 @@ pnpm prisma migrate dev
 - 認証/ユーザー
   - `POST /api/auth/signup`（パスワードポリシー＋レート制限）
   - `PUT /api/user`（プロフィール更新：認証＋同一オリジン）
+  - `POST /api/user/avatar`（認証。S3 Presigned POST を払い出し）
 - 決済/購読
   - `POST /api/checkout`（認証、Checkout セッション作成）
   - `POST /api/stripe/webhook`（署名検証）
@@ -499,6 +522,131 @@ pnpm prisma migrate dev
   - `amount`, `status`, `stripeSessionId`, `stripePaymentIntentId` を保存（監査/重複判定に活用）
 
 参考実装: `src/app/api/stripe/webhook/route.ts`
+
+---
+
+<a id="s3-upload"></a>
+
+## 🖼 画像アップロード（S3 / Lambda 任意）
+
+本アプリではプロフィール画像を **S3 Presigned POST** で直接 S3 にアップロードします。
+
+- 実装箇所
+  - サーバ: `src/lib/s3.ts`（S3 クライアントと Presigned POST 生成）
+  - API: `src/app/api/user/avatar/route.ts`（認証後に presigned を払い出し）
+  - UI: `src/app/dashboard/profile/page.tsx`（フォームから S3 に直接 POST）
+
+### フロー（概要）
+
+1. クライアントが `POST /api/user/avatar` に `contentType`（例: `image/jpeg`）を送信
+2. サーバは `createPresignedPost` で条件付きの Presigned フォームを生成し返却
+   - ファイルサイズ上限（5MB）
+   - Content-Type を固定
+   - アップロード先キー例: `avatars/original/<userId>/<timestamp>`
+3. クライアントは返却された `url` と `fields` を用いて、S3 に直接 `multipart/form-data` で POST
+4. 成功後、`publicUrl` をプロフィール画像 URL として保存（`PUT /api/user`）
+
+### 環境変数（再掲）
+
+`.env` に S3 関連を設定します（EC2 ロールで動かす場合は `ACCESS_KEY/SECRET` は省略可）。
+
+```bash
+S3_REGION="ap-northeast-1"
+S3_BUCKET_NAME="your-s3-bucket"
+S3_ACCESS_KEY_ID="AKIA..."            # 任意（明示する場合）
+S3_SECRET_ACCESS_KEY="..."             # 任意（明示する場合）
+NEXT_PUBLIC_S3_PUBLIC_BASE_URL="https://your-s3-bucket.s3.ap-northeast-1.amazonaws.com"
+```
+
+### 任意: Lambda でのサムネイル自動生成
+
+本番運用では、S3 の `avatars/original/` への PUT をトリガに **Lambda** でサムネイル（例: 128px JPEG）を生成し、
+`avatars/derived/<userId>/<timestamp>.128.jpeg` に保存する構成を想定しています。
+
+- 代表的な構成
+  - トリガ: S3:ObjectCreated（original プレフィックス）
+  - ランタイム: Node.js 20 + `sharp`
+  - 出力: 同バケットの `avatars/derived/`
+  - パーミッション: バケット read/write 権限付与
+
+UI ではアップロード直後に `publicUrl`（original）を一旦表示し、一定時間 `HEAD` で derived の存在をポーリングして
+見つかれば自動で切り替えます（`src/app/dashboard/profile/page.tsx` 参照）。
+
+### セキュリティ注意点
+
+- Presigned POST は短寿命（デフォルト 60 秒）。条件（Content-Type/サイズ）で濫用を抑制
+- API は認証必須（`auth()` で `session.user.id` を検証）
+- 公開 URL は読み取り専用にし、書き込みは Presigned 経由のみに限定
+
+### テスト（観点）
+
+- 単体: `createAvatarPresignedPost` がサイズ/Content-Type 条件を含むか
+- 結合: `POST /api/user/avatar` が未認証で 401、画像以外で 400 を返すか
+- E2E: UI からの選択 → presigned 取得 → S3 POST → URL 保存までが正常に流れるか
+- Lambda（任意）: original→derived 生成が規定のキーで出力され、UI が derived へ切り替わるか
+
+---
+
+<a id="aws-services"></a>
+
+## ☁️ AWS サービス（運用基盤）
+
+本プロジェクトで想定/利用している AWS サービスのうち、README で明示しておくと運用・セキュリティ観点で伝わりやすい項目をまとめます。
+
+### IAM（最小権限）
+
+- EC2 インスタンスロール（アプリ）
+  - 目的: S3 Presigned POST の生成に必要な最低権限
+  - 権限例（バケットとプレフィックスを限定）:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AppWriteToOriginalAvatarsOnly",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject"],
+      "Resource": "arn:aws:s3:::<BUCKET_NAME>/avatars/original/*"
+    }
+  ]
+}
+```
+
+- Lambda 実行ロール（サムネイル生成・任意）
+  - 目的: original を読み、derived へ書き出す
+  - 権限例:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LambdaReadOriginal",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": "arn:aws:s3:::<BUCKET_NAME>/avatars/original/*"
+    },
+    {
+      "Sid": "LambdaWriteDerived",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject"],
+      "Resource": "arn:aws:s3:::<BUCKET_NAME>/avatars/derived/*"
+    }
+  ]
+}
+```
+
+### CloudWatch（ログ/監視）
+
+- ログ集約: pm2 のアプリログを CloudWatch Logs に集約（保持期間を設定）
+- 監視/アラーム例:
+  - API の 5xx（Nginx/ALB/アプリのいずれか）増加
+  - EC2 CPU/メモリ/ディスク使用率の閾値超過
+  - Stripe Webhook 失敗回数の増加（アプリメトリクス/ログベースメトリクス）
+  - Lambda（任意）: エラー率/タイムアウト、DLQ 設定
+
+> これらは `docs/deploy.md` の運用項目とも関連します。最小権限/見える化を前提に本番環境を設計してください。
 
 ### API/JSON 実例（抜粋）
 
@@ -788,17 +936,26 @@ curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 
 ![01 トップページ（デスクトップ）](/screenshots/homepage.png)
 ![02 記事一覧（有料表示あり）](/screenshots/articlelist.png)
+
 <!-- ![03 記事詳細（無料記事）](/screenshots/03-article-free-desktop.png) -->
+
 ![04 記事詳細（有料・ロック状態）](/screenshots/premium.png)
 ![05 記事詳細（購読済み解禁）](/screenshots/stripe2.png)
 ![06 記事作成フォーム](/screenshots/newarticle.png)
+
 <!-- ![07 記事編集フォーム](/screenshots/07-article-edit-desktop.png) -->
+
 ![08 ダッシュボード（投稿一覧）](/screenshots/dashboard.png)
+
 <!-- ![09 ダッシュボード（購読履歴・統計）](/screenshots/09-dashboard-subscriptions-desktop.png) -->
+
 ![10 管理者トップ](/screenshots/admin.png)
+
 <!-- ![11 管理：ユーザー管理](/screenshots/11-admin-users-desktop.png) -->
+
 ![12 管理：記事管理](/screenshots/12-admin-articles-desktop.png)
 ![13 サインイン](/screenshots/signin.png)
+
 <!-- ![14 404 ページ](/screenshots/14-not-found-desktop.png) -->
 <!-- ![15 モバイルメニュー（テーマ切替）](/screenshots/15-mobile-menu-theme-toggle-mobile.png) -->
 
