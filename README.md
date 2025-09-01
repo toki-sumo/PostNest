@@ -116,12 +116,7 @@
 
 | 種別             | 主な用途                                                                                             | 代表ファイル / ディレクトリ |
 | ---------------- | ---------------------------------------------------------------------------------------------------- | --------------------------- |
-| TypeScript / TSX | Next.js(App Router) ページ/レイアウト、API Route Handlers、React コンポーネント、認証/ユーティリティ | `src/app/**` \              |
-
-`src/app/api/**` \
-`src/components/**` \
-`src/auth.ts` / `src/auth.config.ts` \
-`src/lib/**` |
+| TypeScript / TSX | Next.js(App Router) ページ/レイアウト、API Route Handlers、React コンポーネント、認証/ユーティリティ | `src/app/**`<br>`src/app/api/**`<br>`src/components/**`<br>`src/auth.ts` / `src/auth.config.ts`<br>`src/lib/**` |
 | SQL / Prisma DDL | データモデル定義とマイグレーション | `prisma/schema.prisma`, `prisma/migrations/*` |
 | CSS (Tailwind) | グローバルスタイルとユーティリティクラス | `src/app/globals.css`, 各 TSX 内のクラス指定 |
 | JSON | 依存関係・設定 | `package.json`, `tsconfig.json`, `eslint.config.mjs`, `playwright.config.ts` |
