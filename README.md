@@ -675,6 +675,14 @@ S3 の `avatars/original/` へのアップロードをトリガに、Lambda で 
 
 - 実装済み: pm2 のアプリログを CloudWatch Logs に集約（保持期間設定）
 
+### AWS Budgets（コスト監視 / メール通知）
+
+- 実装済み: AWS Budgets によるコスト予算の設定とメール通知
+  - 月次の使用料に対してしきい値超過時に運用者へメール通知
+  - 設定場所: AWS Console → Billing → Budgets
+  - 対象: 使用料（Cost）
+  - 通知: しきい値超過時に登録メールへ送信（運用者アドレス）
+
 > これらは `docs/deploy.md` の運用項目とも関連します。最小権限/見える化を前提に本番環境を設計してください。
 
 ### API/JSON 実例（抜粋）
