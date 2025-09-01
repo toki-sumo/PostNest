@@ -25,7 +25,7 @@
   - [🔗 API エンドポイント概要](#api)
   - [🔁 Webhook と購読反映](#webhook)
   - [🧭 ER 図](#er)
-- [🖼 画像アップロード（S3 / Lambda 任意）](#s3-upload)
+- [🖼 画像アップロード（S3）](#s3-upload)
 - [☁️ AWS サービス（運用基盤）](#aws-services)
 - [🧪 テストとパフォーマンス](#test-perf)
   - [🧪 テスト戦略](#testing)
@@ -114,19 +114,20 @@
   - Shell（CLI）
   - Markdown
 
-| 種別             | 主な用途                                                                                             | 代表ファイル / ディレクトリ                                                                            |
-| ---------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| TypeScript / TSX | Next.js(App Router) ページ/レイアウト、API Route Handlers、React コンポーネント、認証/ユーティリティ | `src/app/**`  \
-`src/app/api/**`  \
-`src/components/**`  \
-`src/auth.ts` / `src/auth.config.ts`  \
+| 種別             | 主な用途                                                                                             | 代表ファイル / ディレクトリ |
+| ---------------- | ---------------------------------------------------------------------------------------------------- | --------------------------- |
+| TypeScript / TSX | Next.js(App Router) ページ/レイアウト、API Route Handlers、React コンポーネント、認証/ユーティリティ | `src/app/**` \              |
+
+`src/app/api/**` \
+`src/components/**` \
+`src/auth.ts` / `src/auth.config.ts` \
 `src/lib/**` |
-| SQL / Prisma DDL | データモデル定義とマイグレーション                                                                   | `prisma/schema.prisma`, `prisma/migrations/*`                                                          |
-| CSS (Tailwind)   | グローバルスタイルとユーティリティクラス                                                             | `src/app/globals.css`, 各 TSX 内のクラス指定                                                           |
-| JSON             | 依存関係・設定                                                                                       | `package.json`, `tsconfig.json`, `eslint.config.mjs`, `playwright.config.ts`                           |
-| YAML             | ローカル開発での DB 起動                                                                             | `docker-compose.yml`                                                                                   |
-| Shell / CLI      | 運用コマンド・ツール                                                                                 | README/Docs 記載の `pnpm`, `pm2`, Stripe CLI 等                                                        |
-| Markdown         | ドキュメント                                                                                         | `README.md`, `docs/*.md`                                                                               |
+| SQL / Prisma DDL | データモデル定義とマイグレーション | `prisma/schema.prisma`, `prisma/migrations/*` |
+| CSS (Tailwind) | グローバルスタイルとユーティリティクラス | `src/app/globals.css`, 各 TSX 内のクラス指定 |
+| JSON | 依存関係・設定 | `package.json`, `tsconfig.json`, `eslint.config.mjs`, `playwright.config.ts` |
+| YAML | ローカル開発での DB 起動 | `docker-compose.yml` |
+| Shell / CLI | 運用コマンド・ツール | README/Docs 記載の `pnpm`, `pm2`, Stripe CLI 等 |
+| Markdown | ドキュメント | `README.md`, `docs/*.md` |
 
 ---
 
@@ -144,11 +145,8 @@ flowchart TD
   API --> Stripe[Stripe API]
   Stripe --> Webhook["Webhook Handler (/api/stripe/webhook)"]
   Webhook --> Prisma
-  Client -.-> S3["S3 (avatar upload, presigned POST)"]
-  S3 -.-> Lambda[(Lambda: thumbnail 生成)]
-  Lambda -.-> S3
+  Client -.-> S3["S3 (avatar upload)"]
   CW[(CloudWatch Logs)] --- API
-  CW --- Lambda
 ```
 
 ```mermaid
@@ -301,7 +299,7 @@ S3_BUCKET_NAME="your-s3-bucket"
 # 以下はローカル/明示指定したい場合のみ。EC2 ロール使用時は未設定でOK
 S3_ACCESS_KEY_ID="AKIA..."
 S3_SECRET_ACCESS_KEY="..."
-# 公開 URL のベース（CloudFront を使う場合は配信ドメインを指定）
+# 公開 URL のベース
 NEXT_PUBLIC_S3_PUBLIC_BASE_URL="https://your-s3-bucket.s3.ap-northeast-1.amazonaws.com"
 ```
 
@@ -321,7 +319,7 @@ pnpm dev
 
 > 正常確認: ブラウザでサインイン → 記事投稿ができればセットアップ成功です。
 
-### 6.（任意）Stripe Webhook（ローカル）
+### 6. Stripe Webhook（ローカル）
 
 Stripe CLI を利用してイベント転送と署名検証を設定します。
 
@@ -570,7 +568,7 @@ pnpm prisma migrate dev
 
 <a id="s3-upload"></a>
 
-## 🖼 画像アップロード（S3 / Lambda 任意）
+## 🖼 画像アップロード（S3）
 
 本アプリではプロフィール画像を **S3 Presigned POST** で直接 S3 にアップロードします。
 
@@ -601,19 +599,7 @@ S3_SECRET_ACCESS_KEY="..."             # 任意（明示する場合）
 NEXT_PUBLIC_S3_PUBLIC_BASE_URL="https://your-s3-bucket.s3.ap-northeast-1.amazonaws.com"
 ```
 
-### 任意: Lambda でのサムネイル自動生成
-
-本番運用では、S3 の `avatars/original/` への PUT をトリガに **Lambda** でサムネイル（例: 128px JPEG）を生成し、
-`avatars/derived/<userId>/<timestamp>.128.jpeg` に保存する構成を想定しています。
-
-- 代表的な構成
-  - トリガ: S3:ObjectCreated（original プレフィックス）
-  - ランタイム: Node.js 20 + `sharp`
-  - 出力: 同バケットの `avatars/derived/`
-  - パーミッション: バケット read/write 権限付与
-
-UI ではアップロード直後に `publicUrl`（original）を一旦表示し、一定時間 `HEAD` で derived の存在をポーリングして
-見つかれば自動で切り替えます（`src/app/dashboard/profile/page.tsx` 参照）。
+<!-- 将来の Lambda 自動生成についての記述は削除（未実装のため） -->
 
 ### セキュリティ注意点
 
@@ -626,7 +612,6 @@ UI ではアップロード直後に `publicUrl`（original）を一旦表示し
 - 単体: `createAvatarPresignedPost` がサイズ/Content-Type 条件を含むか
 - 結合: `POST /api/user/avatar` が未認証で 401、画像以外で 400 を返すか
 - E2E: UI からの選択 → presigned 取得 → S3 POST → URL 保存までが正常に流れるか
-- Lambda（任意）: original→derived 生成が規定のキーで出力され、UI が derived へ切り替わるか
 
 ---
 
@@ -656,29 +641,7 @@ UI ではアップロード直後に `publicUrl`（original）を一旦表示し
 }
 ```
 
-- Lambda 実行ロール（サムネイル生成・任意）
-  - 目的: original を読み、derived へ書き出す
-  - 権限例:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "LambdaReadOriginal",
-      "Effect": "Allow",
-      "Action": ["s3:GetObject"],
-      "Resource": "arn:aws:s3:::<BUCKET_NAME>/avatars/original/*"
-    },
-    {
-      "Sid": "LambdaWriteDerived",
-      "Effect": "Allow",
-      "Action": ["s3:PutObject"],
-      "Resource": "arn:aws:s3:::<BUCKET_NAME>/avatars/derived/*"
-    }
-  ]
-}
-```
+<!-- 未実装の Lambda ロール例は削除 -->
 
 ### CloudWatch（ログ/監視）
 
@@ -687,7 +650,7 @@ UI ではアップロード直後に `publicUrl`（original）を一旦表示し
   - API の 5xx（Nginx/ALB/アプリのいずれか）増加
   - EC2 CPU/メモリ/ディスク使用率の閾値超過
   - Stripe Webhook 失敗回数の増加（アプリメトリクス/ログベースメトリクス）
-  - Lambda（任意）: エラー率/タイムアウト、DLQ 設定
+  <!-- 未実装の Lambda 監視は削除 -->
 
 > これらは `docs/deploy.md` の運用項目とも関連します。最小権限/見える化を前提に本番環境を設計してください。
 
@@ -824,8 +787,7 @@ model Subscription {
 
 - pm2: `pm2 status`, `pm2 logs postnest --lines 100`
 - CloudWatch Logs に pm2 ログを集約 or S3 で世代管理
-- ヘルスチェック: `/api/health` を設置し DB 接続も確認（将来）
-- エラートラッキング: Sentry 等の導入を検討（将来）
+<!-- 未実装のヘルスチェック/エラートラッキング記述は削除 -->
 
 ---
 
@@ -965,16 +927,6 @@ curl -k https://ec2-57-181-61-159.ap-northeast-1.compute.amazonaws.com/
 - 管理画面 / ダッシュボード
 - 決済フロー（Checkout → 完了）
 
-> 画像は `public/screenshots/` または `docs/screenshots/` に配置し、下記のように参照します。
->
-> `![ダッシュボード一覧](/screenshots/08-dashboard-articles-desktop.png)`
->
-> `![管理ユーザー](/screenshots/11-admin-users-desktop.png)`
-
-### 画像プレースホルダ
-
-> 画像は `public/screenshots/` に配置してください（例: `public/screenshots/01-home-desktop.png`）。
-
 #### 主要画面（静止画）
 
 ![01 トップページ（デスクトップ）](/screenshots/homepage.png)
@@ -1046,9 +998,7 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
 - App Router サーバーコンポーネントでデータ取得を集約 → 不要なクライアントフェッチ削減
 - Prisma `select` で必要最小限のフィールド取得
 - 静的配信/キャッシュ
-  - CloudFront + S3（将来）で静的アセットを配信
   - SSG（Static Site Generation）で記事一覧等をキャッシュ
-  - Redis/KV（将来）でセッションや記事メタ情報を短期キャッシュ
 
 ---
 
