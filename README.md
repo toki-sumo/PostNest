@@ -1044,13 +1044,30 @@ pg_restore --clean --no-acl --no-owner -d "$DATABASE_URL" backup.dump
   - CSRF（Origin/Host 不一致の 403）
   - XSS（DOMPurify サニタイズで危険タグ除去）
 
-### 実装ツール（例）
+### 実装/実行方法
 
-- ユニット: Jest + ts-jest（関数・API ハンドラのロジック）
-- E2E: Playwright（ログイン → 記事作成 →Checkout→ 解禁）
-- Contract: JSON Schema による API 応答検証
+- 単体/統合テスト（Jest）
+  - 実装場所: `__tests__/unit/**`, `__tests__/integration/**`
+  - 実行:
+    ```bash
+    pnpm test           # 全体
+    pnpm test:api       # integration 配下
+    pnpm test:watch     # 監視
+    ```
+  - 例: `__tests__/unit/formatDate.test.ts`, `__tests__/integration/articles.api.test.ts`
 
-> 実例は `__tests__/` にサンプルを配置予定（`checkout.e2e.example.ts` など）。
+- E2E テスト（Playwright）
+  - 実装場所: `tests/e2e/**`
+  - 実行:
+    ```bash
+    pnpm test:e2e       # ヘッドレス
+    pnpm test:e2e:ui    # UI モード
+    ```
+  - 例: `tests/e2e/checkout.spec.ts`, `tests/e2e/smoke.spec.ts`
+
+- 補足
+  - Stripe Webhook 依存のテストは、必要に応じて Stripe CLI で `listen --forward-to` を併用してください。
+  - Playwright の設定は `playwright.config.ts`、Jest は `jest.config.ts` を参照。
 
 ---
 
