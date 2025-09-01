@@ -25,7 +25,7 @@
   - [🔗 API エンドポイント概要](#api)
   - [🔁 Webhook と購読反映](#webhook)
   - [🧭 ER 図](#er)
-- [🖼 画像アップロード（S3）](#s3-upload)
+- [🖼 画像アップロード（S3 / Lambda）](#s3-upload)
 - [☁️ AWS サービス（運用基盤）](#aws-services)
 - [🧪 テストとパフォーマンス](#test-perf)
   - [🧪 テスト戦略](#testing)
@@ -114,15 +114,15 @@
   - Shell（CLI）
   - Markdown
 
-| 種別             | 主な用途                                                                                             | 代表ファイル / ディレクトリ |
-| ---------------- | ---------------------------------------------------------------------------------------------------- | --------------------------- |
+| 種別             | 主な用途                                                                                             | 代表ファイル / ディレクトリ                                                                                     |
+| ---------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | TypeScript / TSX | Next.js(App Router) ページ/レイアウト、API Route Handlers、React コンポーネント、認証/ユーティリティ | `src/app/**`<br>`src/app/api/**`<br>`src/components/**`<br>`src/auth.ts` / `src/auth.config.ts`<br>`src/lib/**` |
-| SQL / Prisma DDL | データモデル定義とマイグレーション | `prisma/schema.prisma`, `prisma/migrations/*` |
-| CSS (Tailwind) | グローバルスタイルとユーティリティクラス | `src/app/globals.css`, 各 TSX 内のクラス指定 |
-| JSON | 依存関係・設定 | `package.json`, `tsconfig.json`, `eslint.config.mjs`, `playwright.config.ts` |
-| YAML | ローカル開発での DB 起動 | `docker-compose.yml` |
-| Shell / CLI | 運用コマンド・ツール | README/Docs 記載の `pnpm`, `pm2`, Stripe CLI 等 |
-| Markdown | ドキュメント | `README.md`, `docs/*.md` |
+| SQL / Prisma DDL | データモデル定義とマイグレーション                                                                   | `prisma/schema.prisma`, `prisma/migrations/*`                                                                   |
+| CSS (Tailwind)   | グローバルスタイルとユーティリティクラス                                                             | `src/app/globals.css`, 各 TSX 内のクラス指定                                                                    |
+| JSON             | 依存関係・設定                                                                                       | `package.json`, `tsconfig.json`, `eslint.config.mjs`, `playwright.config.ts`                                    |
+| YAML             | ローカル開発での DB 起動                                                                             | `docker-compose.yml`                                                                                            |
+| Shell / CLI      | 運用コマンド・ツール                                                                                 | README/Docs 記載の `pnpm`, `pm2`, Stripe CLI 等                                                                 |
+| Markdown         | ドキュメント                                                                                         | `README.md`, `docs/*.md`                                                                                        |
 
 ---
 
@@ -141,7 +141,10 @@ flowchart TD
   Stripe --> Webhook["Webhook Handler (/api/stripe/webhook)"]
   Webhook --> Prisma
   Client -.-> S3["S3 (avatar upload)"]
+  S3 -.-> Lambda[(Lambda thumbnail)]
+  Lambda -.-> S3
   CW[(CloudWatch Logs)] --- API
+  CW --- Lambda
 ```
 
 ```mermaid
@@ -563,7 +566,7 @@ pnpm prisma migrate dev
 
 <a id="s3-upload"></a>
 
-## 🖼 画像アップロード（S3）
+## 🖼 画像アップロード（S3 / Lambda）
 
 本アプリではプロフィール画像を **S3 Presigned POST** で直接 S3 にアップロードします。
 
@@ -594,7 +597,15 @@ S3_SECRET_ACCESS_KEY="..."             # 任意（明示する場合）
 NEXT_PUBLIC_S3_PUBLIC_BASE_URL="https://your-s3-bucket.s3.ap-northeast-1.amazonaws.com"
 ```
 
-<!-- 将来の Lambda 自動生成についての記述は削除（未実装のため） -->
+### Lambda でのサムネイル自動生成
+
+S3 の `avatars/original/` へのアップロードをトリガに、Lambda で 128px のサムネイルを生成し、
+`avatars/derived/<userId>/<timestamp>.128.jpeg` に保存します（UI は存在検知で自動切替）。
+
+- トリガ: S3:ObjectCreated（original プレフィックス）
+- ランタイム: Node.js 20 + `sharp`
+- 出力: 同バケットの `avatars/derived/`
+- 権限: バケット read/write（下記 IAM 例参照）
 
 ### セキュリティ注意点
 
@@ -638,6 +649,28 @@ NEXT_PUBLIC_S3_PUBLIC_BASE_URL="https://your-s3-bucket.s3.ap-northeast-1.amazona
 
 <!-- 未実装の Lambda ロール例は削除 -->
 
+#### Lambda 実行ロール（サムネイル生成）
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "LambdaReadOriginal",
+      "Effect": "Allow",
+      "Action": ["s3:GetObject"],
+      "Resource": "arn:aws:s3:::<BUCKET_NAME>/avatars/original/*"
+    },
+    {
+      "Sid": "LambdaWriteDerived",
+      "Effect": "Allow",
+      "Action": ["s3:PutObject"],
+      "Resource": "arn:aws:s3:::<BUCKET_NAME>/avatars/derived/*"
+    }
+  ]
+}
+```
+
 ### CloudWatch（ログ/監視）
 
 - ログ集約: pm2 のアプリログを CloudWatch Logs に集約（保持期間を設定）
@@ -645,7 +678,7 @@ NEXT_PUBLIC_S3_PUBLIC_BASE_URL="https://your-s3-bucket.s3.ap-northeast-1.amazona
   - API の 5xx（Nginx/ALB/アプリのいずれか）増加
   - EC2 CPU/メモリ/ディスク使用率の閾値超過
   - Stripe Webhook 失敗回数の増加（アプリメトリクス/ログベースメトリクス）
-  <!-- 未実装の Lambda 監視は削除 -->
+  - Lambda: エラー率/タイムアウト、DLQ 設定
 
 > これらは `docs/deploy.md` の運用項目とも関連します。最小権限/見える化を前提に本番環境を設計してください。
 
