@@ -1,179 +1,187 @@
 // src/app/dashboard/profile/page.tsx
-'use client'
+"use client";
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState, useRef } from 'react'
-import DashboardHeader from '../../../components/dashboard/DashboardHeader'
-import GlassCard from '../../../components/dashboard/GlassCard'
-import Section from '../../../components/ui/Section'
-import Notice from '../../../components/ui/Notice'
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+import DashboardHeader from "../../../components/dashboard/DashboardHeader";
+import Section from "../../../components/ui/Section";
+import Notice from "../../../components/ui/Notice";
+import Image from "next/image";
 
 const ProfilePage = () => {
-  const { data: session, status, update } = useSession()
-  const router = useRouter()
-  const [name, setName] = useState('')
-  const [bio, setBio] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [avatarUploading, setAvatarUploading] = useState(false)
-  const [processingDerived, setProcessingDerived] = useState(false)
-  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined)
-  const [avatarRetry, setAvatarRetry] = useState(0)
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const [message, setMessage] = useState('')
+  const { data: session, status, update } = useSession();
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [processingDerived, setProcessingDerived] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
+  const [pendingAvatarUrl, setPendingAvatarUrl] = useState<string | undefined>(undefined);
+  const [avatarRetry, setAvatarRetry] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/signin')
-      return
+    if (status === "unauthenticated") {
+      router.push("/signin");
+      return;
     }
     if (session?.user) {
-      setName(session.user.name || '')
-      setBio(session.user.bio || '')
-      setAvatarUrl((session.user.image as string | undefined) || '/guest_icon.png')
-      setAvatarRetry(0)
+      setName(session.user.name || "");
+      setBio(session.user.bio || "");
+      setAvatarUrl((session.user.image as string | undefined) || "/guest_icon.png");
+      setAvatarRetry(0);
     }
-  }, [status, router, session])
+  }, [status, router, session]);
 
   const handleAvatarImgError = () => {
-    if (!avatarUrl || avatarUrl.includes('/guest_icon.png')) return
+    if (!avatarUrl || avatarUrl.includes("/guest_icon.png")) return;
     if (avatarRetry < 2) {
-      setAvatarRetry(avatarRetry + 1)
-      const sep = avatarUrl.includes('?') ? '&' : '?'
-      setAvatarUrl(`${avatarUrl}${sep}v=${Date.now()}`)
+      setAvatarRetry(avatarRetry + 1);
+      const sep = avatarUrl.includes("?") ? "&" : "?";
+      setAvatarUrl(`${avatarUrl}${sep}v=${Date.now()}`);
     } else {
-      setAvatarUrl('/guest_icon.png')
+      setAvatarUrl("/guest_icon.png");
     }
-  }
+  };
 
   const handleSave = async () => {
-    setLoading(true)
-    setMessage('')
+    setLoading(true);
+    setMessage("");
     try {
-      const res = await fetch('/api/user', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, bio, image: avatarUrl }),
-      })
+      const finalImage = pendingAvatarUrl ?? avatarUrl;
+      const res = await fetch("/api/user", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, bio, image: finalImage }),
+      });
       if (res.ok) {
-        await update({ name, bio, image: avatarUrl })
-        // For NextAuth v5, update merges into token via trigger:update, but ensure local UI uses new url
-        setAvatarUrl(avatarUrl)
-        setMessage('保存しました。')
+        await update({ name, bio, image: finalImage });
+        // 保存確定: 表示URLに反映し、保留URLはクリア
+        setAvatarUrl(finalImage);
+        setPendingAvatarUrl(undefined);
+        setMessage("保存しました。");
       } else {
-        const error = await res.json()
-        setMessage(`エラー: ${error.message}`)
+        const error = await res.json();
+        setMessage(`エラー: ${error.message}`);
       }
-    } catch (err) {
-      setMessage('予期せぬエラーが発生しました')
+    } catch {
+      setMessage("予期せぬエラーが発生しました");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleAvatarUpload = async (file: File) => {
-    setAvatarUploading(true)
+    setAvatarUploading(true);
     try {
-      const contentType = file.type || 'application/octet-stream'
-      const pres = await fetch('/api/user/avatar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const contentType = file.type || "application/octet-stream";
+      const pres = await fetch("/api/user/avatar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ contentType }),
-      })
-      if (!pres.ok) throw new Error('Failed to get presigned URL')
-      const { url, fields, publicUrl } = await pres.json()
+      });
+      if (!pres.ok) throw new Error("Failed to get presigned URL");
+      const presJson: { url: string; fields: Record<string, string>; publicUrl: string } =
+        await pres.json();
+      const { url, fields, publicUrl } = presJson;
 
-      const formData = new FormData()
-      Object.entries(fields).forEach(([k, v]) => formData.append(k, String(v)))
-      if (fields['Content-Type']) {
-        formData.append('Content-Type', contentType)
+      const formData = new FormData();
+      Object.entries(fields).forEach(([k, v]) => formData.append(k, String(v)));
+      if (fields["Content-Type"]) {
+        formData.append("Content-Type", contentType);
       }
-      formData.append('file', file)
+      formData.append("file", file);
 
-      const up = await fetch(url, { method: 'POST', body: formData })
+      const up = await fetch(url, { method: "POST", body: formData });
       if (!up.ok) {
-        const errText = await up.text().catch(() => '')
-        throw new Error(`Upload failed: ${up.status} ${errText?.slice(0,200)}`)
+        const errText = await up.text().catch(() => "");
+        throw new Error(`Upload failed: ${up.status} ${errText?.slice(0, 200)}`);
       }
 
-      setAvatarUrl(publicUrl)
-      setMessage('アイコンをアップロードしました。処理が完了すると自動で最適化版へ切替えます。')
+      setPendingAvatarUrl(publicUrl);
+      setMessage(
+        "アイコンをアップロードしました。最適化版が生成されるとプレビューに切替わります。保存すると確定します。",
+      );
+      // アップロードは完了したので、ここでアップロード中状態を解除
+      setAvatarUploading(false);
 
       // 派生画像の自動検知と切替え（128px）
       try {
-        const key: string | undefined = (fields as any)?.key
-        if (key && typeof key === 'string' && publicUrl) {
-          const origin = new URL(publicUrl).origin
-          const base = key.replace(/^avatars\/original\//, '').replace(/\.[^.]+$/, '')
-          const derivedKey = `avatars/derived/${base}.128.jpeg`
-          const derivedUrl = `${origin}/${derivedKey}`
+        const rawKey = fields["key"];
+        const key: string | undefined = typeof rawKey === "string" ? rawKey : undefined;
+        if (key && typeof key === "string" && publicUrl) {
+          const origin = new URL(publicUrl).origin;
+          const base = key.replace(/^avatars\/original\//, "").replace(/\.[^.]+$/, "");
+          const derivedKey = `avatars/derived/${base}.128.jpeg`;
+          const derivedUrl = `${origin}/${derivedKey}`;
 
-          setProcessingDerived(true)
-          const start = Date.now()
-          const timeoutMs = 60_000
-          const intervalMs = 3_000
-          let switched = false
+          setProcessingDerived(true);
+          const start = Date.now();
+          const timeoutMs = 60_000;
+          const intervalMs = 3_000;
+          let switched = false;
           while (Date.now() - start < timeoutMs) {
-            const resp = await fetch(derivedUrl, { method: 'HEAD', cache: 'no-store' })
+            const resp = await fetch(derivedUrl, { method: "HEAD", cache: "no-store" });
             if (resp.ok) {
-              setAvatarUrl(derivedUrl)
-              try {
-                const res = await fetch('/api/user', {
-                  method: 'PUT',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ name, bio, image: derivedUrl }),
-                })
-                if (res.ok) {
-                  await update({ name, bio, image: derivedUrl })
-                  setMessage('最適化画像に切替えました。')
-                }
-              } catch {}
-              switched = true
-              break
+              setPendingAvatarUrl(derivedUrl);
+              setMessage("最適化画像のプレビューに切替えました。保存すると確定します。");
+              switched = true;
+              break;
             }
-            await new Promise(r => setTimeout(r, intervalMs))
+            await new Promise((r) => setTimeout(r, intervalMs));
           }
           if (!switched) {
-            setMessage('最適化画像の生成を待機しましたが見つかりませんでした。後で保存してください。')
+            setMessage(
+              "最適化画像の生成を待機しましたが見つかりませんでした。時間をおいて再度お試しください。",
+            );
           }
         }
       } finally {
-        setProcessingDerived(false)
+        setProcessingDerived(false);
       }
-    } catch (e: any) {
-      setMessage(`アイコンのアップロードに失敗しました: ${e?.message ?? ''}`)
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : typeof e === "string" ? e : "";
+      setMessage(`アイコンのアップロードに失敗しました: ${message}`);
     } finally {
-      setAvatarUploading(false)
+      setAvatarUploading(false);
     }
-  }
+  };
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-400"></div>
             <p className="text-slate-300">読み込み中...</p>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <DashboardHeader title="プロフィール編集" subtitle={`${session?.user?.name ?? ''} さんのプロフィール情報`} />
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <DashboardHeader
+        title="プロフィール編集"
+        subtitle={`${session?.user?.name ?? ""} さんのプロフィール情報`}
+      />
 
       <div className="space-y-8">
         <Section title="現在の情報">
           <div className="space-y-3">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full border overflow-hidden">
-                <img
-                  src={avatarUrl || '/guest_icon.png'}
+              <div className="relative h-16 w-16 overflow-hidden rounded-full border">
+                <Image
+                  src={(pendingAvatarUrl ?? avatarUrl) || "/guest_icon.png"}
                   alt="avatar"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                   onError={handleAvatarImgError}
+                  sizes="64px"
                 />
               </div>
               <div className="flex items-center gap-3">
@@ -183,21 +191,28 @@ const ProfilePage = () => {
                   accept="image/*"
                   className="hidden"
                   onChange={(e) => {
-                    const f = e.target.files?.[0]
-                    if (f) handleAvatarUpload(f)
+                    const f = e.target.files?.[0];
+                    if (f) handleAvatarUpload(f);
                   }}
                 />
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  disabled={avatarUploading}
-                  className="px-3 py-2 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:bg-[var(--card-hover)] disabled:opacity-50"
+                  disabled={avatarUploading || processingDerived}
+                  className="rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 hover:bg-[var(--card-hover)] disabled:opacity-50"
                 >
                   {avatarUploading ? (
                     <span className="inline-flex items-center gap-2">
-                      <span className="animate-spin h-4 w-4 rounded-full border-2 border-[var(--primary)] border-t-transparent"></span>
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--primary)] border-t-transparent"></span>
                       アップロード中...
                     </span>
-                  ) : 'アイコンを選択'}
+                  ) : processingDerived ? (
+                    <span className="inline-flex items-center gap-2">
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--primary)] border-t-transparent"></span>
+                      最適化中...
+                    </span>
+                  ) : (
+                    "アイコンを選択"
+                  )}
                 </button>
                 {processingDerived && (
                   <span className="text-xs text-[var(--muted)]">最適化中です...</span>
@@ -205,16 +220,18 @@ const ProfilePage = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[var(--muted)] font-medium">ユーザー名:</span>
-              <span className="text-[var(--text)] font-semibold">{session?.user?.name || '未設定'}</span>
+              <span className="font-medium text-[var(--muted)]">ユーザー名:</span>
+              <span className="font-semibold text-[var(--text)]">
+                {session?.user?.name || "未設定"}
+              </span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[var(--muted)] font-medium">メールアドレス:</span>
+              <span className="font-medium text-[var(--muted)]">メールアドレス:</span>
               <span className="text-[var(--text)]/85">{session?.user?.email}</span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-[var(--muted)] font-medium">プロフィール:</span>
-              <span className="text-[var(--text)]/85">{session?.user?.bio || '未設定'}</span>
+              <span className="font-medium text-[var(--muted)]">プロフィール:</span>
+              <span className="text-[var(--text)]/85">{session?.user?.bio || "未設定"}</span>
             </div>
           </div>
         </Section>
@@ -223,9 +240,11 @@ const ProfilePage = () => {
         <Section title="プロフィールを編集">
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-[var(--text)] mb-3">ユーザー名</label>
+              <label className="mb-3 block text-sm font-medium text-[var(--text)]">
+                ユーザー名
+              </label>
               <input
-                className="w-full px-4 py-3 rounded-xl shadow-sm transition-all duration-300 bg-[var(--card)] text-[var(--text)] border border-[var(--border)] placeholder-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-[var(--text)] placeholder-[color:var(--muted)] shadow-sm transition-all duration-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)] focus:outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="ユーザー名を入力してください"
@@ -233,17 +252,24 @@ const ProfilePage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-[var(--text)] mb-3">プロフィール</label>
+              <label className="mb-3 block text-sm font-medium text-[var(--text)]">
+                プロフィール
+              </label>
               <textarea
-                className="w-full px-4 py-3 rounded-xl shadow-sm transition-all duration-300 resize-vertical bg-[var(--card)] text-[var(--text)] border border-[var(--border)] placeholder-[color:var(--muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
+                className="resize-vertical w-full rounded-xl border border-[var(--border)] bg-[var(--card)] px-4 py-3 text-[var(--text)] placeholder-[color:var(--muted)] shadow-sm transition-all duration-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)] focus:outline-none"
                 rows={4}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 placeholder="自己紹介やプロフィールを入力してください"
               />
-              <p className="text-xs text-[var(--muted)] mt-2 flex items-center">
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <p className="mt-2 flex items-center text-xs text-[var(--muted)]">
+                <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
                 あなたの興味や専門分野について書いてみましょう
               </p>
@@ -254,17 +280,27 @@ const ProfilePage = () => {
               <button
                 onClick={handleSave}
                 disabled={loading}
-                className="inline-flex items-center px-6 py-3 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 bg-[var(--primary)] text-[var(--primary-contrast)]"
+                className="inline-flex transform items-center rounded-xl bg-[var(--primary)] px-6 py-3 text-[var(--primary-contrast)] shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-b-2 border-white"></div>
                     保存中...
                   </>
                 ) : (
                   <>
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                      className="mr-2 h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                     保存
                   </>
@@ -274,13 +310,13 @@ const ProfilePage = () => {
 
             {/* メッセージ表示 */}
             {message && (
-              <Notice variant={message.includes('エラー') ? 'danger' : 'success'}>{message}</Notice>
+              <Notice variant={message.includes("エラー") ? "danger" : "success"}>{message}</Notice>
             )}
           </div>
         </Section>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;
